@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git clone:*)",
+      "WebFetch(domain:posit-dev.github.io)",
+      "mcp__r-mcptools__list_r_sessions"
+    ]
+  }
+}
