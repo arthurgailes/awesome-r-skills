@@ -12,7 +12,12 @@
       "WebFetch(domain:thedatasavvycorner.com)",
       "WebFetch(domain:yihui.org)",
       "WebFetch(domain:ardata-fr.github.io)",
-      "WebFetch(domain:andrewpwheeler.com)"
+      "WebFetch(domain:andrewpwheeler.com)",
+      "WebFetch(domain:r-pkgs.org)",
+      "WebFetch(domain:docs.posit.co)",
+      "WebFetch(domain:cran.r-project.org)",
+      "WebFetch(domain:style.tidyverse.org)",
+      "WebFetch(domain:walker-data.com)"
     ]
   }
 }
