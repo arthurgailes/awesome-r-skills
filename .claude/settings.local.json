@@ -5,7 +5,14 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(git clone:*)",
       "WebFetch(domain:posit-dev.github.io)",
-      "mcp__r-mcptools__list_r_sessions"
+      "mcp__r-mcptools__list_r_sessions",
+      "WebFetch(domain:quarto.org)",
+      "WebSearch",
+      "WebFetch(domain:pkgdown.r-lib.org)",
+      "WebFetch(domain:thedatasavvycorner.com)",
+      "WebFetch(domain:yihui.org)",
+      "WebFetch(domain:ardata-fr.github.io)",
+      "WebFetch(domain:andrewpwheeler.com)"
     ]
   }
 }

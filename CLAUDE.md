@@ -1,51 +1,54 @@
-# AwesomeRSkills
+# CLAUDE.md
 
-Opinionated R skills for Claude Code.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Core Principle
+## Project Purpose
 
-**Goal-oriented, not package-centric.**
-
-The value isn't in documenting packages (LLMs can fetch docs). The value is in:
-- **Judgment**: When to use collapse vs dplyr
-- **Opinions**: Which tool is best for a goal
-- **Cross-cutting patterns**: GDAL underneath sf, Arrow underneath DuckDB
-
-See `plan.md` for full context.
+AwesomeRSkills: Opinionated R skills for Claude Code. **Goal-oriented, not package-centric.** The value is judgment (when to use which tool), opinions (recommended approaches), and cross-cutting patterns.
 
 ## Skill Types
 
-1. **Goal skills** (`r-{goal}`): Encode judgment, recommend tools
+1. **Goal skills** (`r-{goal}`): Encode judgment, recommend tools for a goal
 2. **Package refs** (`r-{package}`): Detailed patterns for goal skills to reference
-3. **Meta skills**: How to create skills
+3. **Meta skills**: How to create skills (e.g., `writing-skills`)
 
-## Commands
+## Creating Skills
 
-- "Create goal skill for {goal}" - Judgment + tool recommendations
-- "Create package reference for {pkg}" - Use `skills/r-pkg-skill/SKILL.md`
+**Use TDD methodology** from `skills/writing-skills/SKILL.md`:
+1. Run pressure scenario WITHOUT skill (baseline)
+2. Write minimal skill addressing failures
+3. Re-test and close loopholes
 
-## Best Practices
+**SKILL.md structure:**
+```yaml
+---
+name: skill-name-with-hyphens
+description: Use when [triggering conditions]. Third person, no workflow summary.
+---
+```
 
-See `skills/writing-skills/anthropic-best-practices.md`.
+**Key constraints:**
+- <500 lines in SKILL.md; heavy docs go to `references/` subdirectory
+- Description starts with "Use when...", triggers only (NOT what skill does)
+- One excellent example beats many mediocre ones
 
-- **Concise**: <500 lines, heavy docs to `references/`
-- **Triggers**: Description = "Use when...", third person
-- **Judgment over docs**: Opinions, gotchas, when-to-use
+See `skills/writing-skills/anthropic-best-practices.md` for Anthropic's official guidance.
 
 ## R Conventions
 
 - `|>` not `%>%`
-- ASCII-safe only
+- ASCII-safe strings only (no unicode)
 
 ## Structure
 
 ```
-skills/        # SKILL.md + optional references/
-refs/          # Reference materials (gitignored)
-  docs/        # Package vignettes, extracted docs
-  clone/       # Cloned repos
+skills/           # Each skill: SKILL.md + optional references/
+refs/             # Research materials (gitignored)
+  docs/           # Package vignettes, extracted docs
+  clone/          # Cloned repos for reference
+plan.md           # Roadmap and interview queue
 ```
 
 ## Live R Access
 
-If mcptools configured, use for docs and code execution. See `refs/docs/mcptools-btw.md`.
+If mcptools MCP server is configured, use btw tools for docs and code execution. See `refs/docs/mcptools-btw.md`.
