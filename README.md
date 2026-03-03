@@ -12,21 +12,41 @@ R skills for AI coding agents.
 
 ## Installation
 
-### Claude Code
+**Note:** Installation differs by platform. Claude Code has a built-in plugin system. Codex and OpenCode require manual setup.
 
-```
-/plugin install github:arthurgailes/awesome-r-skills
-```
+### Claude Code (via Plugin Marketplace)
 
-### Cursor
+In Claude Code, register the marketplace first:
 
-```
-/plugin-add awesome-r-skills
+```bash
+/plugin marketplace add arthurgailes/awesome-r-skills-marketplace
 ```
 
-### Codex / OpenCode
+Then install the plugin from this marketplace:
 
-See [.codex/INSTALL.md](.codex/INSTALL.md) or [.opencode/INSTALL.md](.opencode/INSTALL.md)
+```bash
+/plugin install awesome-r-skills@awesome-r-skills-marketplace
+```
+
+### Codex
+
+Tell Codex:
+
+```
+Fetch and follow instructions from https://raw.githubusercontent.com/arthurgailes/awesome-r-skills/main/.codex/INSTALL.md
+```
+
+**Detailed docs:** [.codex/INSTALL.md](.codex/INSTALL.md)
+
+### OpenCode
+
+Tell OpenCode:
+
+```
+Fetch and follow instructions from https://raw.githubusercontent.com/arthurgailes/awesome-r-skills/main/.opencode/INSTALL.md
+```
+
+**Detailed docs:** [.opencode/INSTALL.md](.opencode/INSTALL.md)
 
 ## Skills
 
