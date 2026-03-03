@@ -23,6 +23,8 @@ description: Use when building LLM-powered R applications, connecting R to AI ag
 | **ragnar** | LLM searches your documents | `ragnar_register_tool_retrieve()` |
 | **vitals** | Test LLM output quality | `Task$new()` |
 
+**When NOT to use:** Single one-off API call (httr2 is simpler), non-chat ML tasks (tidymodels), or when you need streaming callbacks (ellmer streams but callbacks are limited).
+
 ## ellmer: Chat with LLMs
 
 ```r

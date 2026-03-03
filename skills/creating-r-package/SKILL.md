@@ -36,6 +36,19 @@ devtools::test()         # Ctrl+Shift+T - run tests
 devtools::check()        # Ctrl+Shift+E - validate package
 ```
 
+## Quick Reference
+
+| Task | Function |
+|------|----------|
+| Create package | `usethis::create_package()` |
+| Add dependency | `usethis::use_package("pkg")` |
+| Add test file | `usethis::use_test("feature")` |
+| Add function file | `usethis::use_r("function")` |
+| Simulate install | `devtools::load_all()` |
+| Update docs | `devtools::document()` |
+| Run tests | `devtools::test()` |
+| Full validation | `devtools::check()` |
+
 ## Package Naming
 
 **Rules:** Letters, numbers, periods only. Start with letter. No hyphens/underscores.

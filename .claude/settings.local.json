@@ -27,7 +27,10 @@
       "WebFetch(domain:ellmer.tidyverse.org)",
       "WebFetch(domain:ragnar.tidyverse.org)",
       "WebFetch(domain:vitals.tidyverse.org)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(where:*)",
+      "Bash(\"W:\\\\R\\\\R-4.5.2\\\\bin\\\\x64\\\\Rscript.exe\" \"W:\\\\arthur\\\\misc\\\\202602_awesome_r_skills\\\\get_collapse_docs.R\")",
+      "Bash(\"W:\\\\R\\\\R-4.5.2\\\\bin\\\\x64\\\\Rscript.exe\" \"W:\\\\arthur\\\\misc\\\\202602_awesome_r_skills\\\\extract_collapse.R\")"
     ]
   }
 }
