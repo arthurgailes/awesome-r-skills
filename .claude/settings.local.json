@@ -17,7 +17,12 @@
       "WebFetch(domain:docs.posit.co)",
       "WebFetch(domain:cran.r-project.org)",
       "WebFetch(domain:style.tidyverse.org)",
-      "WebFetch(domain:walker-data.com)"
+      "WebFetch(domain:walker-data.com)",
+      "WebFetch(domain:www.rdocumentation.org)",
+      "WebFetch(domain:rdrr.io)",
+      "WebFetch(domain:sebkrantz.github.io)",
+      "WebFetch(domain:fastverse.org)",
+      "WebFetch(domain:rstudio.github.io)"
     ]
   }
 }
