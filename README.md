@@ -16,16 +16,16 @@ R skills for AI coding agents.
 
 ### Claude Code (via Plugin Marketplace)
 
-In Claude Code, register the marketplace first:
+Register the marketplace:
 
 ```bash
-/plugin marketplace add arthurgailes/awesome-r-skills-marketplace
+/plugin marketplace add arthurgailes/awesome-r-skills
 ```
 
-Then install the plugin from this marketplace:
+Install the plugin:
 
 ```bash
-/plugin install awesome-r-skills@awesome-r-skills-marketplace
+/plugin install awesome-r-skills@awesome-r-skills
 ```
 
 ### Codex
