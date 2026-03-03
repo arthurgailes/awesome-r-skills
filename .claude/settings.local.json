@@ -22,7 +22,12 @@
       "WebFetch(domain:rdrr.io)",
       "WebFetch(domain:sebkrantz.github.io)",
       "WebFetch(domain:fastverse.org)",
-      "WebFetch(domain:rstudio.github.io)"
+      "WebFetch(domain:rstudio.github.io)",
+      "Bash(ls:*)",
+      "WebFetch(domain:ellmer.tidyverse.org)",
+      "WebFetch(domain:ragnar.tidyverse.org)",
+      "WebFetch(domain:vitals.tidyverse.org)",
+      "Bash(wc:*)"
     ]
   }
 }

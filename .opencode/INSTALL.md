@@ -42,6 +42,7 @@ Ask OpenCode: "What R skills do you have?"
 | r-collapse | Fast grouped/weighted stats, panel data, TRA transformations |
 | r-mapgl | Interactive WebGL maps with maplibre/mapbox |
 | r-flextable | Publication-ready tables |
+| r-ai | LLM chat (ellmer), RAG (ragnar), agent integration (mcptools), evaluation (vitals) |
 | creating-r-package | R package development patterns |
 | r-package-skill | Extract R package docs into skills |
 | writing-skills | TDD methodology for skill creation |

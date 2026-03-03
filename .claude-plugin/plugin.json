@@ -1,6 +1,6 @@
 {
   "name": "awesome-r-skills",
-  "description": "Opinionated R skills: collapse, mapgl, flextable, and patterns for fast data ops, interactive maps, and package skill creation",
+  "description": "Opinionated R skills: collapse, mapgl, flextable, r-ai for fast data ops, interactive maps, LLM integration, and skill creation",
   "version": "1.0.0",
   "author": {
     "name": "Arthur Gailes"

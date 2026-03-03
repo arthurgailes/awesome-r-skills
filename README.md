@@ -1,10 +1,10 @@
 # Awesome R Skills
 
-Opinionated R skills for AI coding agents. Encode expert judgment about *when* to use tools, not just *how*.
+Opinionated R skills for AI coding agents. Encode expert judgment about _when_ to use tools, not just _how_.
 
 ## Why?
 
-AI agents know R syntax but lack judgment. These skills provide:
+AI agents know R syntax but lack judgment and knowledge of newer packages:
 
 - **When-to-use guidance** - collapse vs dplyr vs data.table decision trees
 - **Non-obvious patterns** - TRA transformations, panel data decomposition, Shiny proxies
@@ -32,38 +32,46 @@ See [.codex/INSTALL.md](.codex/INSTALL.md) or [.opencode/INSTALL.md](.opencode/I
 
 ### Data Operations
 
-| Skill | When to Use |
-|-------|-------------|
-| [r-collapse](skills/r-collapse/SKILL.md) | Fast grouped/weighted stats, panel data, when dplyr is too slow |
+| Skill                                      | When to Use                                                            |
+| ------------------------------------------ | ---------------------------------------------------------------------- |
+| [r-collapse](skills/r-collapse/SKILL.md)   | Fast grouped/weighted stats, panel data, when dplyr is too slow        |
 | [r-flextable](skills/r-flextable/SKILL.md) | Publication tables for Word/PowerPoint/PDF with conditional formatting |
 
 ### Spatial & Visualization
 
-| Skill | When to Use |
-|-------|-------------|
+| Skill                              | When to Use                                                      |
+| ---------------------------------- | ---------------------------------------------------------------- |
 | [r-mapgl](skills/r-mapgl/SKILL.md) | Interactive WebGL maps, vector tiles, 3D terrain, Shiny map apps |
+
+### AI/LLM Integration
+
+| Skill                          | When to Use                                                  |
+| ------------------------------ | ------------------------------------------------------------ |
+| [r-ai](skills/r-ai/SKILL.md)   | LLM chat (ellmer), RAG (ragnar), agent integration (mcptools), evaluation (vitals) |
 
 ### Package Development
 
-| Skill | When to Use |
-|-------|-------------|
+| Skill                                                    | When to Use                           |
+| -------------------------------------------------------- | ------------------------------------- |
 | [creating-r-package](skills/creating-r-package/SKILL.md) | Starting a new R package from scratch |
 
 ### Meta (Creating Skills)
 
-| Skill | When to Use |
-|-------|-------------|
-| [writing-skills](skills/writing-skills/SKILL.md) | Creating new skills with TDD methodology |
+| Skill                                              | When to Use                                 |
+| -------------------------------------------------- | ------------------------------------------- |
+| [writing-skills](skills/writing-skills/SKILL.md)   | Creating new skills with TDD methodology    |
 | [r-package-skill](skills/r-package-skill/SKILL.md) | Extracting R package docs into skill format |
 
 ## Example: What Skills Add
 
 **Without r-collapse skill**, agent writes:
+
 ```r
 data |> group_by(id) |> mutate(demeaned = value - mean(value))
 ```
 
 **With r-collapse skill**, agent writes:
+
 ```r
 data |> fgroup_by(id) |> fmean(TRA = "-")  # 50-100x faster, single C pass
 ```

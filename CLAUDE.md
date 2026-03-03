@@ -31,6 +31,7 @@ description: Use when [triggering conditions]. Third person, no workflow summary
 - <500 lines in SKILL.md; heavy docs go to `references/` subdirectory
 - Description starts with "Use when...", triggers only (NOT what skill does)
 - One excellent example beats many mediocre ones
+- **Update README.md** when adding a new skill (add to skills table)
 
 See `skills/writing-skills/anthropic-best-practices.md` for Anthropic's official guidance.
 
