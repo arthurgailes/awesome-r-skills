@@ -4,11 +4,11 @@ Opinionated R skills for AI coding agents. Encode expert judgment about _when_ t
 
 ## Why?
 
-AI agents know R syntax but lack judgment and knowledge of newer packages:
+AI agents know R syntax but lack judgment about newer packages and integration patterns:
 
-- **When-to-use guidance** - collapse vs dplyr vs data.table decision trees
-- **Non-obvious patterns** - TRA transformations, panel data decomposition, Shiny proxies
-- **Gotcha prevention** - grouping incompatibilities, CRS requirements, output format quirks
+- **When-to-use guidance** - ellmer vs btw vs mcptools, collapse vs dplyr vs data.table
+- **Non-obvious patterns** - RAG with ragnar, MCP agent integration, TRA transformations
+- **Gotcha prevention** - embedding mismatches, stateful chat objects, grouping incompatibilities
 
 ## Installation
 
@@ -64,6 +64,22 @@ See [.codex/INSTALL.md](.codex/INSTALL.md) or [.opencode/INSTALL.md](.opencode/I
 
 ## Example: What Skills Add
 
+**Without r-ai skill**, agent writes:
+
+```r
+# Tries to use httr2 to call OpenAI API directly,
+# doesn't know about ellmer/ragnar ecosystem
+resp <- httr2::request("https://api.openai.com/v1/chat/completions") |> ...
+```
+
+**With r-ai skill**, agent writes:
+
+```r
+chat <- chat_openai()
+ragnar_register_tool_retrieve(chat, store)  # RAG-enabled chat
+chat$chat("What does the documentation say about X?")
+```
+
 **Without r-collapse skill**, agent writes:
 
 ```r
@@ -76,7 +92,7 @@ data |> group_by(id) |> mutate(demeaned = value - mean(value))
 data |> fgroup_by(id) |> fmean(TRA = "-")  # 50-100x faster, single C pass
 ```
 
-The skill encodes the judgment that collapse exists, when it's appropriate, and the idiomatic patterns.
+Skills encode judgment: which packages exist, when they're appropriate, and idiomatic patterns.
 
 ## Contributing
 

@@ -175,7 +175,10 @@ Eliminate all NOTEs, WARNINGS, ERRORS before submitting.
 
 ## References
 
+For detailed patterns, see `references/`:
+- `style-guide.md` - Error messages with `cli::cli_abort()`, NEWS format, documentation style
+- `testing.md` - Expectations reference, snapshot testing, fixtures, skip conditions
+
 **Related skill:** `r-package-skill` is for documenting *existing* R packages as skills, not creating new packages.
 
-Detailed docs: `refs/docs/creating-r-package/`
 Primary source: https://r-pkgs.org/
