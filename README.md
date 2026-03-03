@@ -1,14 +1,14 @@
 # Awesome R Skills
 
-Opinionated R skills for AI coding agents. Encode expert judgment about _when_ to use tools, not just _how_.
+R skills for AI coding agents.
 
 ## Why?
 
-AI agents know R syntax but lack judgment about newer packages and integration patterns:
+1. **Instant package knowledge** - Create a skill for any R package and your agent immediately knows the docs. New package? Rare package? Doesn't matter - make a skill and your agent knows how to use it.
 
-- **When-to-use guidance** - ellmer vs btw vs mcptools, collapse vs dplyr vs data.table
-- **Non-obvious patterns** - RAG with ragnar, MCP agent integration, TRA transformations
-- **Gotcha prevention** - embedding mismatches, stateful chat objects, grouping incompatibilities
+2. **Opinionated references** - Topics like R package development have large, scattered documentation. Skills consolidate this into opinionated defaults agents can access immediately.
+
+3. **Extensible** - `r-package-skill` and `writing-skills` let you create skills for your own packages.
 
 ## Installation
 
@@ -45,9 +45,9 @@ See [.codex/INSTALL.md](.codex/INSTALL.md) or [.opencode/INSTALL.md](.opencode/I
 
 ### AI/LLM Integration
 
-| Skill                          | When to Use                                                  |
-| ------------------------------ | ------------------------------------------------------------ |
-| [r-ai](skills/r-ai/SKILL.md)   | LLM chat (ellmer), RAG (ragnar), agent integration (mcptools), evaluation (vitals) |
+| Skill                        | When to Use                                                                        |
+| ---------------------------- | ---------------------------------------------------------------------------------- |
+| [r-ai](skills/r-ai/SKILL.md) | LLM chat (ellmer), RAG (ragnar), agent integration (mcptools), evaluation (vitals) |
 
 ### Package Development
 
