@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Purpose
 
-AwesomeRSkills: Opinionated R skills for Claude Code. **Goal-oriented, not package-centric.** The value is judgment (when to use which tool), opinions (recommended approaches), and cross-cutting patterns.
+R skills plugin for AI coding agents (Claude Code, Codex, OpenCode). Core value: `/r-package-skill` auto-generates skills from any R package's documentation, so agents can use packages they weren't trained on.
 
 ## Skill Types
 
-1. **Goal skills** (`r-{goal}`): Encode judgment, recommend tools for a goal
-2. **Package refs** (`r-{package}`): Detailed patterns for goal skills to reference
-3. **Meta skills**: How to create skills (e.g., `writing-skills`)
+1. **Skill generators** (`r-package-skill`, `writing-skills`): Tools to create new skills
+2. **Package skills** (`r-collapse`, `r-mapgl`, etc.): Reference docs for specific R packages
+3. **Development skills** (`creating-r-package`): R package development workflows
 
 ## Creating Skills
 
@@ -28,10 +28,11 @@ description: Use when [triggering conditions]. Third person, no workflow summary
 ```
 
 **Key constraints:**
-- <500 lines in SKILL.md; heavy docs go to `references/` subdirectory
+- <500 words in SKILL.md; heavy docs go to `references/` subdirectory
 - Description starts with "Use when...", triggers only (NOT what skill does)
 - One excellent example beats many mediocre ones
 - **Update README.md** when adding a new skill (add to skills table)
+- Required sections: Overview, When to Use, Quick Reference, Common Mistakes, When NOT to Use
 
 See `skills/writing-skills/anthropic-best-practices.md` for Anthropic's official guidance.
 
@@ -43,12 +44,22 @@ See `skills/writing-skills/anthropic-best-practices.md` for Anthropic's official
 ## Structure
 
 ```
-skills/           # Each skill: SKILL.md + optional references/
-refs/             # Research materials (gitignored)
-  docs/           # Package vignettes, extracted docs
-  clone/          # Cloned repos for reference
-plan.md           # Roadmap and interview queue
+skills/                  # Each skill: SKILL.md + optional references/
+.claude-plugin/          # Plugin marketplace metadata
+  marketplace.json       # Claude Code marketplace config
+  plugin.json           # Plugin metadata
+.codex/INSTALL.md       # Codex installation instructions
+.opencode/INSTALL.md    # OpenCode installation instructions
+refs/                   # Research materials (gitignored)
+  docs/                 # Package vignettes, extracted docs
+  clone/                # Cloned repos for reference
 ```
+
+## Plugin Distribution
+
+Plugin available for multiple agents:
+- **Claude Code**: `/plugin marketplace add arthurgailes/awesome-r-skills` then `/plugin install awesome-r-skills@awesome-r-skills`
+- **Codex/OpenCode**: Fetch installation instructions from `.codex/INSTALL.md` or `.opencode/INSTALL.md`
 
 ## Live R Access
 

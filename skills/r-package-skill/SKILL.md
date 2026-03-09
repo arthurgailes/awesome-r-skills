@@ -7,7 +7,15 @@ description: Use when creating a skill for an R package, before gathering docume
 
 ## Overview
 
-**Gather comprehensive package documentation before writing the skill.** This skill handles R-specific doc gathering; use `writing-skills` for TDD methodology and SKILL.md structure.
+**REQUIRED SUB-SKILL:** Use `writing-skills` for TDD methodology and SKILL.md structure.
+
+**This skill ONLY covers R-specific doc gathering.** You MUST invoke `/writing-skills` using the Skill tool for:
+
+- TDD baseline testing
+- SKILL.md structure requirements
+- Deployment checklist
+
+**Both skills work together - this is NOT optional.**
 
 ## When NOT to Use
 
@@ -17,12 +25,12 @@ description: Use when creating a skill for an R package, before gathering docume
 
 ## Quick Reference
 
-| Source | How | Best For |
-|--------|-----|----------|
-| Local R | `btw_tool_docs_*()` | Function help, vignettes |
-| CRAN | `cran.r-project.org/web/packages/{pkg}/` | Official reference |
-| pkgdown | `{author}.github.io/{pkg}/` | Articles, examples |
-| Web search | GitHub repos, R-bloggers | Real-world patterns |
+| Source     | How                                      | Best For                 |
+| ---------- | ---------------------------------------- | ------------------------ |
+| Local R    | `btw_tool_docs_*()`                      | Function help, vignettes |
+| CRAN       | `cran.r-project.org/web/packages/{pkg}/` | Official reference       |
+| pkgdown    | `{author}.github.io/{pkg}/`              | Articles, examples       |
+| Web search | GitHub repos, R-bloggers                 | Real-world patterns      |
 
 ## Documentation Gathering Order
 
@@ -68,40 +76,63 @@ Search for credible examples and patterns:
 
 **Credibility signals:** author's own examples, rOpenSci review, Posit/tidyverse team usage, R Journal publication, high GitHub stars.
 
-### 5. Store Gathered Docs
+### 5. Extract Full Function Reference
 
-Save comprehensive docs for reference during skill writing:
+**REQUIRED:** Always save the complete function reference to `skills/r-{package}/references/API.md`
+
+```r
+# Using btw tools
+help_topics <- btw_tool_docs_package_help_topics(package_name)
+# Extract each function's help page
+# Combine into references/API.md
+
+# OR download CRAN manual PDF, convert to markdown
+# https://cran.r-project.org/web/packages/{pkg}/{pkg}.pdf
+```
+
+**This is NOT optional.** Every package skill must have `references/API.md` with complete function documentation.
+
+### 6. Store Working Docs
+
+Save working materials for reference during skill writing:
 
 ```
 refs/docs/{package}/
-  vignettes/        # Extracted vignettes
+  vignettes/        # Extracted vignettes (working copies)
   examples/         # Credible code examples
   notes.md          # Your synthesis
 ```
 
 This directory is gitignored - it's working material, not part of the skill.
 
-## What to Extract
+**Flow:**
 
-Focus on judgment-relevant content:
-
-| Extract                         | Skip                      |
-| ------------------------------- | ------------------------- |
-| When to use vs alternatives     | Basic function signatures |
-| Common gotchas and pitfalls     | Obvious parameter docs    |
-| Non-obvious patterns            | Exhaustive API reference  |
-| Performance considerations      | Rarely-used features      |
-| Integration with other packages |                           |
+1. Gather docs → `refs/docs/{package}/` (gitignored working area)
+2. Extract manual → `skills/r-{package}/references/API.md` (REQUIRED)
+3. Polish vignettes → `skills/r-{package}/references/vignette-name.md` (as needed)
+4. Write SKILL.md → `skills/r-{package}/SKILL.md` (<500 words)
 
 ## Skill Structure for Packages
 
 ```
 skills/r-{package}/
-  SKILL.md              # Overview, when-to-use, quick reference, gotchas
-  references/           # Optional: heavy docs split by topic
-    formatting.md
-    advanced.md
+  SKILL.md              # Overview, when-to-use, quick reference, gotchas (<500 words)
+  references/           # REQUIRED
+    API.md           # REQUIRED: Full function reference from CRAN/help pages
+    vignette-name.md    # Full vignette converted to markdown
+    advanced.md         # Advanced patterns, edge cases (as needed)
 ```
+
+**REQUIRED in references/:**
+
+- **API.md** - Complete function reference (ALWAYS include this)
+
+**Optional in references/:**
+
+- Full vignette content
+- Advanced techniques
+- Performance optimization details
+- Edge cases and subtleties
 
 **SKILL.md should answer:**
 
@@ -109,22 +140,54 @@ skills/r-{package}/
 - What are the 5-10 most common operations?
 - What breaks or surprises people?
 
+**DO NOT put in SKILL.md:**
+
+- Complete function signatures (→ `references/API.md`)
+- Full vignette content (→ `references/vignette-name.md`)
+- Advanced edge cases (→ `references/advanced.md`)
+
 ## Common Mistakes
 
-| Mistake | Fix |
-|---------|-----|
-| Skipping btw tools when available | Local docs are authoritative and fast |
-| Creating skill without checking goal skills | Package skill should support existing goals |
-| Exhaustive API documentation | Focus on judgment and gotchas, not signatures |
-| Not testing skill with subagent | TDD applies to skills too |
-| Storing gathered docs in skill directory | Use `refs/docs/` (gitignored) |
+| Mistake                                     | Fix                                                                                |
+| ------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Not invoking `/writing-skills`              | Use Skill tool to load writing-skills - required for TDD and structure             |
+| Not creating `references/API.md`            | REQUIRED: Full function reference must be in `references/API.md`                   |
+| SKILL.md >500 words                         | Move function docs, vignettes, advanced content to `references/`                   |
+| Not using references/ for vignettes         | Vignettes ALWAYS go in `skills/r-{pkg}/references/`, not inline                    |
+| Storing final docs in refs/docs/            | `refs/docs/` is for gathering only; polished content goes in skill's `references/` |
+| Skipping btw tools when available           | Local docs are authoritative and fast                                              |
+| Creating skill without checking goal skills | Package skill should support existing goals                                        |
+| Putting function signatures in SKILL.md     | All function docs go in `references/API.md`, not SKILL.md                          |
+| Not testing skill with subagent             | TDD applies to skills too                                                          |
 
 ## Workflow
 
-1. **Check existing skills** - are there goal skills (r-fast-data, r-spatial, etc.) that would reference this package? The package skill should support them.
-2. **Gather docs** using order above, store in `refs/docs/{package}/`
-3. **Identify opinions** - what's the recommended approach?
-4. **Apply writing-skills TDD** - baseline test, write skill, verify
-5. **Cross-reference** - link from/to goal skills that use this package
+**STEP 1: INVOKE `/writing-skills`**
 
-**REQUIRED:** Use `writing-skills` for TDD methodology, SKILL.md structure, and deployment checklist. Both skills are available - invoke writing-skills directly.
+Use the Skill tool now. Don't skip ahead. You need the TDD methodology loaded before gathering docs.
+
+**STEP 2: R-Specific Doc Gathering (this skill)**
+
+1. Check existing skills - are there goal skills that would reference this package?
+2. Gather docs using order above, store in `refs/docs/{package}/`
+3. **REQUIRED:** Extract full function reference to `skills/r-{package}/references/API.md`
+4. Extract vignettes to `skills/r-{package}/references/` as needed
+5. Identify opinions - what's the recommended approach?
+
+**STEP 3: Back to `/writing-skills`**
+
+Follow the TDD cycle from writing-skills:
+
+- RED: Baseline test without skill
+- GREEN: Write minimal skill addressing failures
+- REFACTOR: Close loopholes
+
+## Red Flags - STOP
+
+- Writing SKILL.md without running baseline tests
+- Skipping TDD because "docs are straightforward"
+- "I'll test after writing the skill"
+- Not using the Skill tool to invoke writing-skills
+- **Not creating `references/API.md` with full function reference**
+
+**All of these mean: Stop. Invoke `/writing-skills` first and follow the required structure.**
