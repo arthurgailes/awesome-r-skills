@@ -1,86 +1,62 @@
 # Awesome R Skills
 
-R skills for AI coding agents.
+You want your AI agent to use R packages correctly.
 
-## Why?
+But your agent hallucinates APIs, writes verbose base R when fast packages exist, or doesn't know enough about new packages.
 
-1. **Instant package knowledge** - Create a skill for any R package and your agent immediately knows the docs. New package? Rare package? Doesn't matter - make a skill and your agent knows how to use it.
+**`/r-package-skill` fixes it:**
 
-2. **Opinionated references** - Topics like R package development have large, scattered documentation. Skills consolidate this into opinionated defaults agents can access immediately.
+```
+/r-package-skill collapse
+```
 
-3. **Extensible** - `r-package-skill` and `writing-skills` let you create skills for your own packages.
+Extracts the docs. Outputs a skill your agent can use. Works for any package—CRAN, GitHub, your team's internal code.
 
 ## Installation
 
-**Note:** Installation differs by platform. Claude Code has a built-in plugin system. Codex and OpenCode require manual setup.
-
-### Claude Code (via Plugin Marketplace)
-
-Register the marketplace:
+### Claude Code
 
 ```bash
 /plugin marketplace add arthurgailes/awesome-r-skills
-```
-
-Install the plugin:
-
-```bash
 /plugin install awesome-r-skills@awesome-r-skills
 ```
 
 ### Codex
 
-Tell Codex:
-
 ```
 Fetch and follow instructions from https://raw.githubusercontent.com/arthurgailes/awesome-r-skills/main/.codex/INSTALL.md
 ```
 
-**Detailed docs:** [.codex/INSTALL.md](.codex/INSTALL.md)
-
 ### OpenCode
-
-Tell OpenCode:
 
 ```
 Fetch and follow instructions from https://raw.githubusercontent.com/arthurgailes/awesome-r-skills/main/.opencode/INSTALL.md
 ```
 
-**Detailed docs:** [.opencode/INSTALL.md](.opencode/INSTALL.md)
+## Included Skills
 
-## Skills
+### Skill Generators (the main event)
 
-### Data Operations
+| Skill                                              | What It Does                                                         |
+| -------------------------------------------------- | -------------------------------------------------------------------- |
+| [r-package-skill](skills/r-package-skill/SKILL.md) | **Generate a skill from any R package** - point at docs, get a skill |
+| [writing-skills](skills/writing-skills/SKILL.md)   | Create skills from scratch with TDD methodology                      |
 
-| Skill                                      | When to Use                                                            |
-| ------------------------------------------ | ---------------------------------------------------------------------- |
-| [r-collapse](skills/r-collapse/SKILL.md)   | Fast grouped/weighted stats, panel data, when dplyr is too slow        |
-| [r-flextable](skills/r-flextable/SKILL.md) | Publication tables for Word/PowerPoint/PDF with conditional formatting |
+### Ready-to-Use Package Skills
 
-### Spatial & Visualization
+| Skill                                        | When to Use                                               |
+| -------------------------------------------- | --------------------------------------------------------- |
+| [r-collapse](skills/r-collapse/SKILL.md)     | Fast grouped/weighted stats, panel data, dplyr too slow   |
+| [r-flextable](skills/r-flextable/SKILL.md)   | Publication tables for Word/PowerPoint/PDF                |
+| [r-mapgl](skills/r-mapgl/SKILL.md)           | Interactive WebGL maps, vector tiles, Shiny map apps      |
+| [r-freestiler](skills/r-freestiler/SKILL.md) | PMTiles vector tilesets from large spatial datasets       |
+| [r-ai](skills/r-ai/SKILL.md)                 | LLM chat, RAG, agent integration (ellmer/ragnar/mcptools) |
 
-| Skill                              | When to Use                                                      |
-| ---------------------------------- | ---------------------------------------------------------------- |
-| [r-mapgl](skills/r-mapgl/SKILL.md) | Interactive WebGL maps, vector tiles, 3D terrain, Shiny map apps |
-
-### AI/LLM Integration
-
-| Skill                        | When to Use                                                                        |
-| ---------------------------- | ---------------------------------------------------------------------------------- |
-| [r-ai](skills/r-ai/SKILL.md) | LLM chat (ellmer), RAG (ragnar), agent integration (mcptools), evaluation (vitals) |
-
-### Package Development
+### R Development
 
 | Skill                                                    | When to Use                           |
 | -------------------------------------------------------- | ------------------------------------- |
 | [creating-r-package](skills/creating-r-package/SKILL.md) | Starting a new R package from scratch |
-
-### Meta (Creating Skills)
-
-| Skill                                              | When to Use                                 |
-| -------------------------------------------------- | ------------------------------------------- |
-| [writing-skills](skills/writing-skills/SKILL.md)   | Creating new skills with TDD methodology    |
-| [r-package-skill](skills/r-package-skill/SKILL.md) | Extracting R package docs into skill format |
 
 ## Example: What Skills Add
 
