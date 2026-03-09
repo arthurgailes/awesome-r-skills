@@ -84,7 +84,7 @@ server <- function(input, output, session) {
 1. **Layer order matters:** Later layers render on top. Use `before_id` to insert below
 2. **Source vs layer:** One source can have multiple layers styling it
 3. **CRS requirement:** Data must be WGS84 (EPSG:4326). Use `st_transform()` first
-4. **Large datasets:** Convert to vector tiles (PMTiles) for >10k features
+4. **Large datasets:** Convert to vector tiles (PMTiles) for >10k features. See `r-freestiler` skill
 5. **Filter expressions:** Must be built as lists: `list(">=", get_column("value"), 10)`
 6. **Proxy scope:** Only works within reactive context (observeEvent, reactive)
 
