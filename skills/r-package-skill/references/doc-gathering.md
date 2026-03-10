@@ -50,14 +50,19 @@ Search for credible examples and patterns:
 
 **REQUIRED:** Always save complete function reference to `skills/r-{package}/references/API.md`
 
+**NOTE:** If the context7 MCP server is available, use it to fetch function reference documentation directly. The context7 MCP provides comprehensive package documentation access.
+
 ```r
-# Using btw tools
+# Using btw tools (if mcptools MCP is configured)
 help_topics <- btw_tool_docs_package_help_topics(package_name)
 # Extract each function's help page
 # Combine into references/API.md
 
 # OR download CRAN manual PDF, convert to markdown
 # https://cran.r-project.org/web/packages/{pkg}/{pkg}.pdf
+
+# OR use context7 MCP (if available)
+# Access through MCP server for comprehensive function reference
 ```
 
 **This is NOT optional.** Every package skill must have `references/API.md`.

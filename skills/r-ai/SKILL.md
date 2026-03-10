@@ -93,6 +93,11 @@ store <- ragnar_store_create("local.duckdb",
 
 See `references/` for:
 - **integration-patterns.md**: Cross-package integration, RAG evaluation, full stack
+- **ellmer-api.md**: Complete ellmer function reference
+- **btw-api.md**: Complete btw function reference (30+ tools)
+- **mcptools-api.md**: Complete mcptools function reference
+- **ragnar-api.md**: Complete ragnar function reference
+- **vitals-api.md**: Complete vitals function reference
 - **ellmer.md**: Providers, models, tools, multimodal
 - **btw.md**: Available tools, MCP server, config
 - **ragnar.md**: Chunking, embedding providers, retrieval
