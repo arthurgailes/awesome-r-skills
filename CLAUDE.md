@@ -64,3 +64,18 @@ Plugin available for multiple agents:
 ## Live R Access
 
 If mcptools MCP server is configured, use btw tools for docs and code execution. See `refs/docs/mcptools-btw.md`.
+
+## Updating Package Skills
+
+**When user says "update package skills" (plural):**
+1. Identify ALL R package skills in `skills/r-*/`
+2. For EACH package skill, thoroughly:
+   - Fetch latest documentation (pkgdown site, function reference)
+   - Compare against existing `SKILL.md` and `references/API.md`
+   - Identify: new functions, new parameters, changed defaults, deprecated features
+   - Update all affected files (SKILL.md, API.md, reference docs)
+   - Be thorough - check function reference index, not just main docs
+
+**When user says "update skills/r-{package}" (singular):**
+- Apply same process to that specific package skill only
+- See `skills/r-package-skill/SKILL.md` for detailed workflow
