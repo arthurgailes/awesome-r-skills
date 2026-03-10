@@ -48,19 +48,19 @@ Search for credible examples and patterns:
 
 ## Extracting Function Reference
 
-**REQUIRED:** Always save complete function reference to `skills/r-{package}/references/manual.md`
+**REQUIRED:** Always save complete function reference to `skills/r-{package}/references/API.md`
 
 ```r
 # Using btw tools
 help_topics <- btw_tool_docs_package_help_topics(package_name)
 # Extract each function's help page
-# Combine into references/manual.md
+# Combine into references/API.md
 
 # OR download CRAN manual PDF, convert to markdown
 # https://cran.r-project.org/web/packages/{pkg}/{pkg}.pdf
 ```
 
-**This is NOT optional.** Every package skill must have `references/manual.md`.
+**This is NOT optional.** Every package skill must have `references/API.md`.
 
 ## Working Directory Structure
 
@@ -74,6 +74,6 @@ refs/docs/{package}/       # Gitignored working area
 ## Processing Flow
 
 1. **Gather** → `refs/docs/{package}/` (gitignored working area)
-2. **Extract manual** → `skills/r-{package}/references/manual.md` (REQUIRED)
+2. **Extract manual** → `skills/r-{package}/references/API.md` (REQUIRED)
 3. **Polish vignettes** → `skills/r-{package}/references/vignette-name.md` (as needed)
 4. **Write SKILL.md** → `skills/r-{package}/SKILL.md` (<500 words)

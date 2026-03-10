@@ -23,123 +23,78 @@ description: Use when building LLM-powered R applications, connecting R to AI ag
 | **ragnar** | LLM searches your documents | `ragnar_register_tool_retrieve()` |
 | **vitals** | Test LLM output quality | `Task$new()` |
 
-**When NOT to use:** Single one-off API call (httr2 is simpler), non-chat ML tasks (tidymodels), or when you need streaming callbacks (ellmer streams but callbacks are limited).
+**When NOT to use:** Single one-off API call (httr2 simpler), non-chat ML (tidymodels), streaming callbacks needed.
 
-## ellmer: Chat with LLMs
+## Quick Start
 
 ```r
+# ellmer: Chat
 library(ellmer)
-chat <- chat_openai()                        # Uses OPENAI_API_KEY
-chat <- chat_anthropic()                     # Uses ANTHROPIC_API_KEY
-chat <- chat_ollama(model = "llama3.2")      # Local, no API key
+chat <- chat_openai()
+chat$chat("Explain this error")
 
-chat$chat("Explain this error")              # Interactive
-response <- chat$chat("...", echo = "none")  # Programmatic
-chat$set_tools(my_tools)                     # Add tools
-```
-
-**Key insight:** Chat objects are stateful - history persists across calls. Create new chat for fresh context.
-
-## btw: Context Tools
-
-```r
+# btw: Context tools
 library(btw)
-btw("ggplot2")              # Copy package docs to clipboard
+btw("ggplot2")              # Copy docs to clipboard
 chat$set_tools(btw_tools()) # Register with ellmer
-btw_app()                   # Interactive chat UI
-```
 
-## mcptools: Agent Integration
-
-```r
+# mcptools: Agent access
 library(mcptools)
-mcp_session()  # Run in console (not scripts), each R session
-```
+mcp_session()  # In console, each startup
 
-**Claude Code config:** `claude mcp add r-mcptools -- Rscript -e "mcptools::mcp_server()"`
-
-## ragnar: RAG Workflows
-
-```r
+# ragnar: RAG
 library(ragnar)
-
-# Create store (supports PDF, markdown, HTML)
-docs <- read_as_markdown("path/to/docs/")
+docs <- read_as_markdown("docs/")
 chunks <- markdown_chunk(docs)
 store <- ragnar_store_create("docs.duckdb")
-ragnar_store_insert(store, chunks)  # Embeds with OpenAI by default
+ragnar_store_insert(store, chunks)
 
-# Reopen existing store
-store <- ragnar_store_connect("docs.duckdb")
-
-# Integrate with chat
 chat <- chat_openai()
 ragnar_register_tool_retrieve(chat, store)
-chat$chat("What does the documentation say about X?")
-```
+chat$chat("What does the documentation say?")
 
-**Local embeddings (Ollama):**
-```r
-store <- ragnar_store_create("docs.duckdb",
-  embed = ragnar_embed_ollama(model = "nomic-embed-text"))
-```
-
-## vitals: LLM Evaluation
-
-```r
+# vitals: Evaluation
 library(vitals)
 task <- Task$new(
-  dataset = tibble::tibble(
-    input = c("What is 2+2?", "Capital of France?"),
-    target = c("4", "Paris")
-  ),
+  dataset = test_cases,
   solver = generate(),
   scorer = model_graded_qa()
 )
 task$run(chat_openai())
-task$view()
 ```
 
-**Evaluate RAG pipeline:**
-```r
-rag_solver <- function(input) chat$chat(input, echo = "none")
-task <- Task$new(dataset = test_cases, solver = rag_solver, scorer = model_graded_qa())
-task$run()
-```
+## Common Gotchas
+
+| Issue | Solution |
+|-------|----------|
+| Stateful chat | Each `$chat()` adds to history. New chat = fresh context |
+| btw vs mcptools | btw gives tools TO ellmer; mcptools lets agents INTO R |
+| Embedding mismatch | Store and retrieval must use same provider |
+| mcp_session() per-session | Call each R startup, in console not scripts |
+| Ollama not running | Start with `ollama serve` first |
 
 ## Integration Patterns
 
 ```r
-# Chat + context tools
+# Chat + context
 chat <- chat_openai()
 chat$set_tools(btw_tools())
 
 # Chat + RAG
-store <- ragnar_store_connect("docs.duckdb")
 ragnar_register_tool_retrieve(chat, store)
 
-# Agent access + RAG (in console)
-mcp_session()  # Claude Code can now query store via R
-
-# Fully local (Ollama)
+# Fully local
 chat <- chat_ollama(model = "llama3.2")
 store <- ragnar_store_create("local.duckdb",
   embed = ragnar_embed_ollama(model = "nomic-embed-text"))
 ```
 
-## Common Gotchas
+## Advanced
 
-1. **Stateful chat:** Each `$chat()` adds to history. New chat = fresh context
-2. **btw vs mcptools:** btw gives tools TO ellmer; mcptools lets agents INTO R
-3. **Embedding mismatch:** Store and retrieval must use same provider
-4. **mcp_session() per-session:** Call each R startup, in console not scripts
-5. **Ollama must run:** Start with `ollama serve` before using
-
-## Detailed Reference
-
-For full API details, see `references/`:
-- `ellmer.md` - Providers, models, tools, multimodal
-- `btw.md` - Available tools, MCP server, config
-- `ragnar.md` - Chunking, embedding providers, retrieval
-- `mcptools.md` - Agent config (Claude, VS Code), security
-- `vitals.md` - Solvers, scorers, custom evaluation
+See `references/` for:
+- **integration-patterns.md**: Cross-package integration, RAG evaluation, full stack
+- **ellmer.md**: Providers, models, tools, multimodal
+- **btw.md**: Available tools, MCP server, config
+- **ragnar.md**: Chunking, embedding providers, retrieval
+- **mcptools.md**: Agent config (Claude, VS Code), security
+- **vitals.md**: Solvers, scorers, custom evaluation

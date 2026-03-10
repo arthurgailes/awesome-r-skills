@@ -112,6 +112,8 @@ maplibre() |>
 
 ## Advanced
 
-See `references/` for workflows, zoom strategy, SQL patterns, performance tips.
+See `references/` for:
+- **API.md**: Complete function reference
+- Workflows, zoom strategy, SQL patterns, performance tips
 
 **Resources:** [Docs](https://walker-data.com/freestiler/) | [GitHub](https://github.com/walkerke/freestiler/) | See `r-mapgl` skill

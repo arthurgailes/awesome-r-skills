@@ -99,4 +99,5 @@ maplibre_view(sf_object, column = "value")  # Choropleth
 
 ## Detailed Reference
 
-For data-driven styling, basemap styles, controls, and camera operations, see `references/styling.md`.
+- **API.md**: Complete function reference (120+ functions)
+- **styling.md**: Data-driven styling, basemap styles, controls, camera operations

@@ -82,4 +82,5 @@ data |> fgroup_by(id) |> fmean(TRA = "fill") # Fill with group mean
 
 ## Detailed Reference
 
-For panel data, dplyr integration, and performance patterns, see `references/advanced.md`.
+- **API.md**: Complete function reference (240+ functions)
+- **advanced.md**: Panel data, dplyr integration, performance patterns

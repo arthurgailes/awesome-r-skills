@@ -14,15 +14,15 @@ Core principle: Separate data from display. Build from a data.frame, then layer 
 ## When to Use
 
 **Use flextable when:**
-- Output to Word/PowerPoint is required (officer integration)
-- Need cell merging, conditional formatting, or mini charts
-- Cross-references and auto-numbered captions matter
-- Same table must render across multiple formats
+- Output to Word/PowerPoint required
+- Need cell merging, conditional formatting, mini charts
+- Cross-references and auto-numbered captions
+- Same table across multiple formats
 
-**Consider alternatives when:**
-- HTML-only output: gt or reactable may be simpler
-- LaTeX-heavy workflow: kableExtra has deeper LaTeX support
-- Interactive dashboards: DT for full interactivity
+**Consider alternatives:**
+- HTML-only: gt or reactable
+- LaTeX-heavy: kableExtra
+- Interactive dashboards: DT
 
 ## Quick Reference
 
@@ -32,132 +32,69 @@ Core principle: Separate data from display. Build from a data.frame, then layer 
 | Format numbers | `colformat_double()`, `colformat_int()` |
 | Bold/italic/color | `bold()`, `italic()`, `color()` |
 | Background color | `bg()` |
-| Cell padding | `padding()` |
 | Merge cells | `merge_v()`, `merge_h()`, `merge_at()` |
-| Add header row | `add_header_row()` |
-| Add footer | `add_footer_lines()` |
+| Add header | `add_header_row()` |
 | Auto-size | `autofit()` |
 | Apply theme | `theme_vanilla()`, `theme_zebra()` |
 | Save to Word | `save_as_docx()` |
 | Save to PowerPoint | `save_as_pptx()` |
-| Save as image | `save_as_image()` |
 
 ## Core Pattern
 
 ```r
 library(flextable)
 
-# Basic workflow: create -> format -> output
+# Create -> format -> output
 ft <- flextable(head(mtcars, 5)) |>
-  # Format numbers
-
-colformat_double(digits = 1) |>
+  colformat_double(digits = 1) |>
   # Conditional formatting with formula selectors
   color(i = ~ mpg > 20, j = "mpg", color = "darkgreen") |>
   bold(i = ~ mpg > 20, j = "mpg") |>
-  # Add spanning header
+  # Spanning header
   add_header_row(
     values = c("Performance", "Engine", "Transmission"),
     colwidths = c(2, 4, 5)
   ) |>
-  # Apply theme and auto-size
   theme_vanilla() |>
   autofit()
 
-# Output
 save_as_docx(ft, path = "table.docx")
 ```
 
-## Selectors (Critical Concept)
+## Selectors (Key Concept)
 
-Selectors target cells for formatting. Two types:
-
-**Row selector (`i`):** Formula referencing data columns
-```r
-bold(ft, i = ~ cyl == 6)           # Rows where cyl == 6
-color(ft, i = ~ mpg > 20 & hp < 150, color = "blue")
-```
-
-**Column selector (`j`):** Formula with column names
-```r
-bg(ft, j = ~ mpg + hp, bg = "lightgray")  # mpg and hp columns
-bold(ft, j = c("mpg", "cyl"))              # Same with character vector
-```
-
-**Part selector:** header, body, footer, or all
-```r
-bold(ft, part = "header")  # Bold entire header
-bg(ft, i = 1, part = "footer", bg = "yellow")
-```
-
-## Multi-Content Cells
-
-For rich cell content (formatted text, images, charts), use `mk_par()` with `as_paragraph()`:
+Target cells for formatting:
 
 ```r
-ft |>
-  mk_par(
-    j = "name",
-    value = as_paragraph(
-      as_b(name),              # Bold
-      " (",
-      as_i(species),           # Italic
-      ")"
-    )
-  )
+# Row selector (formula)
+bold(ft, i = ~ cyl == 6)
+
+# Column selector
+bg(ft, j = ~ mpg + hp, bg = "lightgray")
+
+# Part selector
+bold(ft, part = "header")
 ```
 
-## Mini Charts
-
-Embed visualizations directly in cells:
-
-```r
-# Prepare data with list column of ggplot objects
-dat$sparkline <- lapply(dat$values, function(x) {
-  ggplot(data.frame(y = x), aes(x = seq_along(y), y = y)) +
-    geom_line() + theme_void()
-})
-
-ft |>
-  mk_par(j = "sparkline", value = as_paragraph(
-    gg_chunk(sparkline, width = 1, height = 0.3)
-  ))
-```
+See `references/selectors.md` for details on multi-content cells, mini charts, output-specific notes.
 
 ## Common Mistakes
 
 | Mistake | Fix |
 |---------|-----|
 | Theme doesn't format new header | Apply theme AFTER `add_header_row()` |
-| `autofit()` overflows margins | Use `set_table_properties(layout = "autofit")` instead |
+| `autofit()` overflows margins | Use `set_table_properties(layout = "autofit")` |
 | `height()` has no effect | Set `hrule(rule = "exact")` first |
 | Formula selectors fail in header | Use integer indices for header rows |
 | Images missing in Word | Use `officedown::rdocx_document()` |
 | PDF ignores padding | Use `ft.tabcolsep` chunk option |
-| `add_header_row` values wrong | One value per span, not per column; colwidths must sum to ncol |
+| `add_header_row` values wrong | One value per span; colwidths sum to ncol |
 
-## Output-Specific Notes
+## Advanced
 
-**Word/PowerPoint:**
-- Full feature support
-- Use `paginate()` for page break control
-- Use officer package for programmatic document building
-
-**PDF:**
-- Requires `latex_engine: xelatex` for custom fonts
-- Padding ignored (use `ft.tabcolsep`, `ft.arraystretch`)
-- Borders limited to solid lines
-- No text rotation
-
-**PowerPoint:**
-- No images in cells (export table as image instead)
-- Auto height not supported
-
-## Detailed References
-
-For comprehensive coverage, see reference files:
-- `references/formatting.md` - All formatting functions and options
-- `references/layout.md` - Merging, sizing, headers/footers
-- `references/output.md` - Rendering to all formats
-- `references/crosstabs.md` - Tabulator and cross-tabulation
-- `references/advanced.md` - Programming patterns, mini charts
+See `references/` for:
+- **API.md**: Complete function reference (240+ functions)
+- **selectors.md**: Multi-content cells, mini charts, output-specific notes
+- **formatting.md**: All formatting functions and options
+- **layout.md**: Merging, sizing, headers/footers
+- **output.md**: Rendering to all formats
