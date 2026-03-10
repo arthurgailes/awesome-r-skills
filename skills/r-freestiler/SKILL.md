@@ -25,10 +25,13 @@ description: Use when creating PMTiles vector tilesets from large spatial datase
 
 | Function | Use Case | Key Params |
 |----------|----------|------------|
-| `freestile()` | Tile sf objects | `input`, `output`, `layer_name`, `min_zoom`, `max_zoom` |
+| `freestile()` | Tile sf objects | `input`, `output`, `layer_name`, `min_zoom`, `max_zoom`, `tile_format` |
 | `freestile_query()` | Tile from SQL (streaming) | `query`, `output`, `layer_name`, `streaming = "always"` |
-| `freestile_file()` | Tile without loading | `input`, `output`, `layer_name` |
+| `freestile_file()` | Tile without loading | `input`, `output`, `layer_name`, `engine` |
 | `freestile_layer()` | Multi-layer specs | Per-layer zoom configuration |
+| `view_tiles()` | Quick visualization | `input`, `layer`, `layer_type`, `color` |
+| `serve_tiles()` | Start local server | `path`, `port` |
+| `stop_server()` | Stop local server | None |
 
 ## Quick Start
 
@@ -40,6 +43,12 @@ library(sf)
 nc <- st_read(system.file("shape/nc.shp", package = "sf"))
 freestile(input = nc, output = "nc.pmtiles", layer_name = "counties",
           min_zoom = 4, max_zoom = 12)
+
+# Quick visualization (easiest way to view)
+view_tiles("nc.pmtiles")  # Auto-starts server + opens map
+
+# Customize visualization
+view_tiles("roads.pmtiles", layer_type = "line", color = "red", opacity = 0.8)
 
 # Large datasets: streaming
 freestile_query(
@@ -55,13 +64,35 @@ freestile_file(input = "data.gpkg", output = "output.pmtiles",
                layer_name = "features")
 ```
 
-## mapgl Integration
+## Visualization Options
 
+### Option 1: view_tiles() (Easiest)
 ```r
-# Create tiles
-freestile(input = data, output = "data.pmtiles", layer_name = "layer1")
+# Create and instantly view tiles
+freestile(input = nc, output = "nc.pmtiles", layer_name = "counties")
+view_tiles("nc.pmtiles")  # Auto-launches server + opens map
 
-# Visualize (absolute path required)
+# Customize
+view_tiles("data.pmtiles", layer_type = "fill", color = "navy", opacity = 0.6)
+```
+
+### Option 2: Manual Server + mapgl
+```r
+# Start server for directory of tiles
+serve_tiles("W:/project/tiles/")
+
+# Use in mapgl with http:// URL
+maplibre() |>
+  add_pmtiles_source(id = "src", url = "http://localhost:8080/data.pmtiles") |>
+  add_fill_layer(source = "src", source_layer = "layer1")
+
+# Stop when done
+stop_server()
+```
+
+### Option 3: Direct file:// (No Server)
+```r
+# For local files without server (requires absolute path)
 maplibre() |>
   add_pmtiles_source(id = "src", url = "file://W:/project/data.pmtiles") |>
   add_fill_layer(source = "src", source_layer = "layer1")
@@ -78,14 +109,19 @@ maplibre() |>
    freestile(data = nc, tileset = "nc.pmtiles", layer = "counties")
    ```
 
-2. **freestile() accepts relative paths, mapgl needs absolute:**
+2. **Prefer view_tiles() for quick visualization:**
    ```r
-   # Creating tiles - relative works
+   # Easiest - handles server automatically
    freestile(input = nc, output = "nc.pmtiles", layer_name = "counties")
+   view_tiles("nc.pmtiles")  # Correct - just works
 
-   # Viewing - MUST use absolute with file://
-   add_pmtiles_source(url = "file://W:/project/nc.pmtiles")  # Correct
+   # Manual mapgl - file:// needs absolute path
+   add_pmtiles_source(url = "file://W:/project/nc.pmtiles")  # Works
    add_pmtiles_source(url = "nc.pmtiles")  # Won't work
+
+   # Manual mapgl - http:// needs serve_tiles() first
+   serve_tiles("nc.pmtiles")
+   add_pmtiles_source(url = "http://localhost:8080/nc.pmtiles")  # Works
    ```
 
 3. **Source layer name must match:**
@@ -108,6 +144,16 @@ maplibre() |>
 6. **Streaming for massive points:** Critical for 10M+ features
    ```r
    freestile_query(..., streaming = "always")
+   ```
+
+7. **Tile format defaults to MLT:** MapLibre Tiles (MLT) is now default, producing smaller files
+   ```r
+   # Default: MLT format (smaller files)
+   freestile(input = data, output = "out.pmtiles", layer_name = "layer")
+
+   # Explicit MVT for compatibility
+   freestile(input = data, output = "out.pmtiles", layer_name = "layer",
+             tile_format = "mvt")
    ```
 
 ## Advanced

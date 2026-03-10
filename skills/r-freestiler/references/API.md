@@ -418,3 +418,170 @@ freestile(
 ```
 
 This allows fine-grained control over when each geographic layer appears during map zooming operations.
+
+---
+
+## view_tiles()
+
+Quickly visualize a PMTiles file on an interactive map. Automatically starts a local server and opens the map in a viewer. Returns a mapgl map object that can be further customized.
+
+### Signature
+
+```r
+view_tiles(
+  input,
+  layer = NULL,
+  layer_type = NULL,
+  color = NULL,
+  opacity = 0.5,
+  port = 8080,
+  promote_id = NULL
+)
+```
+
+### Parameters
+
+**input**
+
+- Path to a `.pmtiles` file
+
+**layer**
+
+- Source layer name within the tileset
+- Defaults to the first layer if not specified
+
+**layer_type**
+
+- Type of map layer: `"fill"`, `"line"`, or `"circle"`
+- Auto-detected from geometry type if omitted
+
+**color**
+
+- Layer color
+- Defaults: `"navy"` (fill/line) or `"steelblue"` (circles)
+
+**opacity**
+
+- Layer transparency (0-1)
+- Default: 0.5
+
+**port**
+
+- Local server port number
+- Default: 8080
+
+**promote_id**
+
+- Feature property name to enable interactive hover behavior
+- Optional
+
+### Return Value
+
+Returns a mapgl map object that can be piped to additional mapgl functions.
+
+### Examples
+
+```r
+# Basic usage
+view_tiles("nc.pmtiles")
+
+# Customize appearance
+view_tiles("roads.pmtiles", layer_type = "line", color = "red")
+
+view_tiles("airports.pmtiles", layer_type = "circle", color = "orange", opacity = 0.7)
+
+# Chain with mapgl operations
+view_tiles("data.pmtiles") |>
+  add_navigation_control()
+```
+
+---
+
+## serve_tiles()
+
+Start a local HTTP server to serve PMTiles files with CORS headers and HTTP range request support. Enables consumption by mapgl, MapLibre GL JS, and other tile clients.
+
+### Signature
+
+```r
+serve_tiles(path, port = 8080)
+```
+
+### Parameters
+
+**path**
+
+- Directory containing PMTiles files OR
+- Path to a single PMTiles file (its parent directory will be served)
+
+**port**
+
+- HTTP server port number
+- Default: 8080
+
+### Return Value
+
+Returns invisibly a list containing:
+- `url`: Server URL
+- `port`: Port number
+- `dir`: Directory being served
+
+The server handle is stored internally for management via `stop_server()`.
+
+### Details
+
+- Runs as a background process
+- If a server is already running on the specified port, it stops automatically before starting
+- Suitable for files up to approximately 1 GB
+- Larger files benefit from external servers (e.g., Caddy, nginx)
+
+### Examples
+
+```r
+# Serve a directory of tiles
+serve_tiles("W:/project/tiles/")
+
+# Serve a single file
+serve_tiles("us_counties.pmtiles")
+
+# Use custom port
+serve_tiles("data.pmtiles", port = 3000)
+
+# Use in mapgl
+serve_tiles("nc.pmtiles")
+maplibre() |>
+  add_pmtiles_source(id = "src", url = "http://localhost:8080/nc.pmtiles") |>
+  add_fill_layer(source = "src", source_layer = "counties")
+
+# Stop when finished
+stop_server()
+```
+
+---
+
+## stop_server()
+
+Stop the local tile server started by `serve_tiles()` or `view_tiles()`.
+
+### Signature
+
+```r
+stop_server()
+```
+
+### Parameters
+
+None.
+
+### Return Value
+
+Invisibly returns `NULL`.
+
+### Examples
+
+```r
+# Start and stop server
+serve_tiles("data.pmtiles")
+# ... use tiles ...
+stop_server()
+```

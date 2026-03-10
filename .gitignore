@@ -3,3 +3,9 @@ refs/clone
 settings.local*
 .claude
 exploration
+exploration_log.md
+screenshots/
+*.pmtiles
+screenshot_example.R
+.Rproj.user
+.Rhistory
