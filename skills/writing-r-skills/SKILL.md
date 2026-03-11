@@ -1,5 +1,5 @@
 ---
-name: writing-skills
+name: writing-r-skills
 description: Use when creating new skills, editing existing skills, or verifying skills work before deployment
 ---
 
@@ -14,6 +14,7 @@ description: Use when creating new skills, editing existing skills, or verifying
 **When writing skills for R packages:** Use `r-package-skill` first for documentation gathering, then return here for TDD methodology. Both skills are available - invoke r-package-skill directly.
 
 **Skill installation paths:**
+
 - **Personal** (agent-specific): `~/.claude/skills/` (Claude Code), `~/.agents/skills/` (Codex), `~/.config/opencode/skills/` (OpenCode)
 - **Project**: `./skills/` in current project (for plugins/team repos)
 - **Custom**: Any path you specify
@@ -316,7 +317,7 @@ wc -w skills/path/SKILL.md
 
 Use skill name only, with explicit requirement markers:
 
-- ✅ Good: `**REQUIRED SUB-SKILL:** Use writing-skills`
+- ✅ Good: `**REQUIRED SUB-SKILL:** Use writing-r-skills`
 - ✅ Good: `**REQUIRED BACKGROUND:** You MUST understand r-debugging`
 - ❌ Bad: `See skills/testing/test-driven-development` (unclear if required)
 - ❌ Bad: `@skills/testing/test-driven-development/SKILL.md` (force-loads, burns context)
