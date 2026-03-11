@@ -37,20 +37,21 @@ Fetch and follow instructions from https://raw.githubusercontent.com/arthurgaile
 
 ### Skill Generators (the main event)
 
-| Skill                                              | What It Does                                                         |
-| -------------------------------------------------- | -------------------------------------------------------------------- |
-| [r-package-skill](skills/r-package-skill/SKILL.md) | **Generate a skill from any R package** - point at docs, get a skill |
-| [writing-skills](skills/writing-skills/SKILL.md)   | Create skills from scratch with TDD methodology                      |
+| Skill                                                | What It Does                                                         |
+| ---------------------------------------------------- | -------------------------------------------------------------------- |
+| [r-package-skill](skills/r-package-skill/SKILL.md)   | **Generate a skill from any R package** - point at docs, get a skill |
+| [writing-r-skills](skills/writing-r-skills/SKILL.md) | Create skills from scratch with TDD methodology                      |
 
 ### Ready-to-Use Package Skills
 
-| Skill                                        | When to Use                                               |
-| -------------------------------------------- | --------------------------------------------------------- |
-| [r-collapse](skills/r-collapse/SKILL.md)     | Fast grouped/weighted stats, panel data, dplyr too slow   |
-| [r-flextable](skills/r-flextable/SKILL.md)   | Publication tables for Word/PowerPoint/PDF                |
-| [r-mapgl](skills/r-mapgl/SKILL.md)           | Interactive WebGL maps, vector tiles, Shiny map apps      |
-| [r-freestiler](skills/r-freestiler/SKILL.md) | PMTiles vector tilesets from large spatial datasets       |
-| [r-ai](skills/r-ai/SKILL.md)                 | LLM chat, RAG, agent integration (ellmer/ragnar/mcptools) |
+| Skill                                          | When to Use                                               |
+| ---------------------------------------------- | --------------------------------------------------------- |
+| [r-ai](skills/r-ai/SKILL.md)                   | LLM chat, RAG, agent integration (ellmer/ragnar/mcptools) |
+| [r-collapse](skills/r-collapse/SKILL.md)       | Fast grouped/weighted stats, panel data, dplyr too slow   |
+| [r-duckspatial](skills/r-duckspatial/SKILL.md) | Large spatial datasets, lazy spatial ops with DuckDB      |
+| [r-flextable](skills/r-flextable/SKILL.md)     | Publication tables for Word/PowerPoint/PDF                |
+| [r-freestiler](skills/r-freestiler/SKILL.md)   | PMTiles vector tilesets from large spatial datasets       |
+| [r-mapgl](skills/r-mapgl/SKILL.md)             | Interactive WebGL maps, vector tiles, Shiny map apps      |
 
 ### R Development
 
@@ -93,7 +94,7 @@ Skills encode judgment: which packages exist, when they're appropriate, and idio
 ## Contributing
 
 1. Fork
-2. Follow [writing-skills](skills/writing-skills/SKILL.md) TDD methodology
+2. Follow [writing-r-skills](skills/writing-r-skills/SKILL.md) TDD methodology
 3. Prefer goal-oriented skills over package-centric skills
 4. PR
 

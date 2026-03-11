@@ -18,12 +18,14 @@ git clone https://github.com/arthurgailes/awesome-r-skills.git ~/.config/opencod
 2. **Create symlinks:**
 
 **macOS/Linux:**
+
 ```bash
 mkdir -p ~/.config/opencode/skills
 ln -s ~/.config/opencode/awesome-r-skills/skills ~/.config/opencode/skills/awesome-r-skills
 ```
 
 **Windows (PowerShell as Administrator):**
+
 ```powershell
 New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.config\opencode\skills"
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.config\opencode\skills\awesome-r-skills" -Target "$env:USERPROFILE\.config\opencode\awesome-r-skills\skills"
@@ -37,15 +39,15 @@ Ask OpenCode: "What R skills do you have?"
 
 ## Included Skills
 
-| Skill | Purpose |
-|-------|---------|
-| r-collapse | Fast grouped/weighted stats, panel data, TRA transformations |
-| r-mapgl | Interactive WebGL maps with maplibre/mapbox |
-| r-flextable | Publication-ready tables |
-| r-ai | LLM chat (ellmer), RAG (ragnar), agent integration (mcptools), evaluation (vitals) |
-| creating-r-package | R package development patterns |
-| r-package-skill | Extract R package docs into skills |
-| writing-skills | TDD methodology for skill creation |
+| Skill              | Purpose                                                                            |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| r-collapse         | Fast grouped/weighted stats, panel data, TRA transformations                       |
+| r-mapgl            | Interactive WebGL maps with maplibre/mapbox                                        |
+| r-flextable        | Publication-ready tables                                                           |
+| r-ai               | LLM chat (ellmer), RAG (ragnar), agent integration (mcptools), evaluation (vitals) |
+| creating-r-package | R package development patterns                                                     |
+| r-package-skill    | Extract R package docs into skills                                                 |
+| writing-r-skills   | TDD methodology for skill creation                                                 |
 
 ## Skill Precedence
 
