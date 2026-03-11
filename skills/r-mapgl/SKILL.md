@@ -54,6 +54,25 @@ mapboxgl(style = mapbox_style("light")) |>
 | Density | `add_heatmap_layer()` | `heatmap_color`, `heatmap_radius` |
 | 3D | `add_fill_extrusion_layer()` | `fill_extrusion_height` |
 
+## Interactive Legends (v0.4.4+)
+
+**Filter data directly from legends:**
+- **Categorical**: Click to toggle layer visibility with visual indicators
+- **Continuous**: Drag dual handles to filter data ranges in real-time
+- **Draggable**: Use `draggable = TRUE` to reposition legends (mouse + touch)
+- **Shiny integration**: Access filter state via `input$MAPID_legend_filter`
+
+```r
+# Interactive continuous legend
+maplibre() |>
+  add_continuous_legend(
+    values = c(0, 100),
+    colors = c("blue", "red"),
+    interactive = TRUE,
+    draggable = TRUE
+  )
+```
+
 ## Shiny Integration
 
 ```r
@@ -79,12 +98,39 @@ server <- function(input, output, session) {
 }
 ```
 
+## Drawing & Measurement (v0.4.1+)
+
+**Enhanced drawing modes with live measurements:**
+```r
+map |>
+  add_draw_control(
+    modes = c("point", "line", "polygon", "rectangle", "circle"),
+    show_measurements = TRUE,
+    measurement_units = "both"  # "metric", "imperial", or "both"
+  )
+```
+- **Rectangle**: Two corner points
+- **Circle**: Center to edge (radius)
+- **Live preview**: Shows distance, area, perimeter as you draw
+
+## New Controls
+
+**Screenshot export** (v0.4.4):
+```r
+map |> add_screenshot_control(resolution = 300)  # PNG download with DPI control
+```
+
+**Grouped layers** (v0.4.1):
+```r
+map |> add_layers_control(groups = list("Base" = c("layer1", "layer2")))
+```
+
 ## Common Gotchas
 
 1. **Layer order matters:** Later layers render on top. Use `before_id` to insert below
 2. **Source vs layer:** One source can have multiple layers styling it
 3. **CRS requirement:** Data must be WGS84 (EPSG:4326). Use `st_transform()` first
-4. **Large datasets:** Convert to vector tiles (PMTiles) for >10k features. See `r-freestiler` skill
+4. **Large datasets:** Convert to vector tiles (PMTiles/MLT) for >10k features. See `r-freestiler` skill
 5. **Filter expressions:** Must be built as lists: `list(">=", get_column("value"), 10)`
 6. **Proxy scope:** Only works within reactive context (observeEvent, reactive)
 

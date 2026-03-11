@@ -2,6 +2,12 @@
 
 Complete function reference for the mapgl package.
 
+**Current version:** 0.4.5 (Updated 2026-03-11)
+- **v0.4.5** (Latest): Esri styles, MLT format support, library updates
+- **v0.4.4**: Interactive legends, screenshot control, globe in compare view
+- **v0.4.1**: Drawing enhancements (rectangle/circle, measurements), grouped layers, OpenFreeMap
+- **v0.4.0**: Turf.js integration for client-side geospatial analysis
+
 ## Creating Maps
 
 | Function | Purpose |
@@ -58,13 +64,19 @@ map |>
 | `add_image_source()` | Add an image source to a Mapbox GL or Maplibre GL map |
 | `add_video_source()` | Add a video source to a Mapbox GL or Maplibre GL map |
 | `add_h3j_source()` | Add a hexagon source from the H3 geospatial indexing system |
-| `add_pmtiles_source()` | Add a PMTiles source to a Mapbox GL or Maplibre GL map |
+| `add_pmtiles_source()` | Add a PMTiles source (v0.4.5: supports PMTiles and MLT formats) |
 
 **PMTiles example:**
 ```r
+# PMTiles (Protomaps standard)
 map |>
   add_pmtiles_source("tiles", url = "path/to/tiles.pmtiles") |>
   add_fill_layer(source = "tiles", source_layer = "layer_name")
+
+# MapLibre Tiles (MLT) format (v0.4.5+)
+map |>
+  add_pmtiles_source("mlt_tiles", url = "path/to/tiles.mlt") |>
+  add_fill_layer(source = "mlt_tiles", source_layer = "layer_name")
 ```
 
 ## Map Controls
@@ -74,13 +86,13 @@ map |>
 | `add_navigation_control()` | Add a navigation control to a map |
 | `add_fullscreen_control()` | Add a fullscreen control to a map |
 | `add_scale_control()` | Add a scale control to a map |
-| `add_layers_control()` | Add a layers control to the map |
-| `add_draw_control()` | Add a draw control to a map |
+| `add_layers_control()` | Add a layers control to the map (v0.4.1: supports grouped layers) |
+| `add_draw_control()` | Add a draw control to a map (v0.4.1: rectangle/circle modes, measurements) |
 | `add_geocoder_control()` | Add a geocoder control to a map |
 | `add_reset_control()` | Add a reset control to a map |
 | `add_geolocate_control()` | Add a geolocate control to a map |
 | `add_globe_control()` | Add a globe control to a map |
-| `add_screenshot_control()` | Add a screenshot control to a map |
+| `add_screenshot_control()` | Add a screenshot control to a map (v0.4.4: PNG export with resolution control) |
 | `add_control()` | Add a custom control to a map |
 | `clear_controls()` | Clear controls from a Mapbox GL or Maplibre GL map in a Shiny app |
 
@@ -89,7 +101,26 @@ map |>
 map |>
   add_navigation_control() |>
   add_fullscreen_control() |>
-  add_scale_control()
+  add_scale_control() |>
+  add_screenshot_control(resolution = 300)
+
+# Drawing with measurements (v0.4.1+)
+map |>
+  add_draw_control(
+    modes = c("point", "line", "polygon", "rectangle", "circle"),
+    show_measurements = TRUE,
+    measurement_units = "both"  # "metric", "imperial", or "both"
+  )
+
+# Grouped layers control (v0.4.1+)
+map |>
+  add_layers_control(
+    groups = list(
+      "Base Layers" = c("layer1", "layer2"),
+      "Overlays" = c("layer3", "layer4")
+    ),
+    collapsed = TRUE
+  )
 ```
 
 ## Legends
@@ -97,20 +128,53 @@ map |>
 | Function | Purpose |
 |----------|---------|
 | `add_legend()` | Add legends to Mapbox GL and MapLibre GL maps |
-| `add_categorical_legend()` | Add categorical legends to Mapbox GL and MapLibre GL maps |
-| `add_continuous_legend()` | Add continuous legends to Mapbox GL and MapLibre GL maps |
+| `add_categorical_legend()` | Add categorical legends (v0.4.4: interactive toggle, draggable) |
+| `add_continuous_legend()` | Add continuous legends (v0.4.4: interactive filtering, draggable) |
 | `legend_style()` | Create custom styling for map legends |
 | `clear_legend()` | Clear legends from a map |
 
 **Example:**
 ```r
+# Basic continuous legend
 map |>
   add_continuous_legend(
     values = c(0, 100),
     colors = c("blue", "red"),
     title = "Population"
   )
+
+# Interactive legends (v0.4.4+)
+map |>
+  add_continuous_legend(
+    layer_id = "data_layer",
+    values = c(0, 100),
+    colors = c("blue", "red"),
+    interactive = TRUE,      # Enable dual-handle range filtering
+    draggable = TRUE,        # Allow repositioning
+    title = "Population"
+  )
+
+# Categorical with toggle (v0.4.4+)
+map |>
+  add_categorical_legend(
+    values = c("Type A", "Type B"),
+    colors = c("red", "blue"),
+    interactive = TRUE       # Click to show/hide layers
+  )
+
+# Shiny: Access filter state
+observeEvent(input$map_legend_filter, {
+  range <- input$map_legend_filter  # Current filtered range
+})
 ```
+
+**Features (v0.4.4+):**
+- Interactive filtering for continuous legends (drag dual handles)
+- Toggle visibility for categorical legends (with visual indicators)
+- Draggable positioning with mouse or touch
+- Smart number formatting (K/M notation)
+- Full Shiny integration for filter state access
+- Works with GeoJSON, vector tiles, and PMTiles sources
 
 ## Markers
 
@@ -133,12 +197,12 @@ map |>
 
 | Function | Purpose |
 |----------|---------|
-| `mapbox_style()` | Get Mapbox Style URL |
-| `maptiler_style()` | Get MapTiler Style URL |
-| `carto_style()` | Get CARTO Style URL |
-| `openfreemap_style()` | Get OpenFreeMap Style URL |
-| `esri_style()` | Get Esri ArcGIS Basemap Style URL |
-| `esri_open_style()` | Get Esri Open Basemap Style URL |
+| `mapbox_style()` | Get Mapbox Style URL (requires MAPBOX_PUBLIC_TOKEN) |
+| `maptiler_style()` | Get MapTiler Style URL (requires API key) |
+| `carto_style()` | Get CARTO Style URL (free, no key required) |
+| `openfreemap_style()` | Get OpenFreeMap Style URL (v0.4.1+, free, no key) |
+| `esri_style()` | Get Esri ArcGIS Basemap Style URL (v0.4.5+, requires ArcGIS API key) |
+| `esri_open_style()` | Get Esri Open Basemap Style URL (v0.4.5+, no key required) |
 | `interpolate()` | Create an interpolation expression |
 | `match_expr()` | Create a match expression |
 | `step_expr()` | Create a step expression |
@@ -148,13 +212,37 @@ map |>
 | `cluster_options()` | Prepare cluster options for circle layers |
 | `palette_to_lut()` | Convert R color palette to mapgl LUT |
 
-**Example:**
+**Basemap Styles:**
 ```r
-# Color by column value
+# Mapbox (needs token)
+mapboxgl(style = mapbox_style("streets"))
+
+# CARTO (free)
+maplibre(style = carto_style("positron"))
+
+# OpenFreeMap (v0.4.1+, free, open-source)
+maplibre(style = openfreemap_style("liberty"))
+
+# Esri (v0.4.5+)
+maplibre(style = esri_style("streets"))       # Needs ArcGIS API key
+maplibre(style = esri_open_style("topo"))     # Free, no key
+```
+
+**Data-driven styling:**
+```r
+# Continuous (interpolate)
 fill_color = interpolate(
   get_column("population"),
   values = c(0, 1000, 5000),
   palette = "viridis"
+)
+
+# Categorical (match)
+fill_color = match_expr(
+  get_column("type"),
+  values = c("A", "B", "C"),
+  stops = c("red", "green", "blue"),
+  default = "gray"
 )
 ```
 
@@ -297,7 +385,7 @@ buffered <- turf_buffer(features, distance = 1, units = "miles")
 
 | Function | Purpose |
 |----------|---------|
-| `compare()` | Create a Compare widget |
+| `compare()` | Create a Compare widget (v0.4.4: globe projection support) |
 | `add_globe_minimap()` | Add a Globe Minimap to a map |
 | `add_image()` | Add an image to the map |
 | `get_drawn_features()` | Get drawn features from the map |
@@ -308,12 +396,22 @@ buffered <- turf_buffer(features, distance = 1, units = "miles")
 
 **Example:**
 ```r
-# Drawing in Shiny
+# Drawing in Shiny (v0.4.1: enhanced with measurements)
 map |>
-  add_draw_control()
+  add_draw_control(
+    modes = c("polygon", "rectangle", "circle"),
+    show_measurements = TRUE,
+    measurement_units = "both"
+  )
 
 # Get drawn features
 drawn <- get_drawn_features("map")
+
+# Compare maps (v0.4.4: globe projection supported)
+compare(
+  maplibre(style = carto_style("positron")) |> set_projection("globe"),
+  maplibre(style = carto_style("dark-matter")) |> set_projection("globe")
+)
 ```
 
 ## Story Maps
@@ -341,3 +439,9 @@ story_maplibre() |>
 
 **Package site:** https://walker-data.com/mapgl/
 **GitHub:** https://github.com/walkerke/mapgl
+
+## Library Versions (v0.4.5)
+
+- **Mapbox GL JS:** v3.19.1
+- **MapLibre GL JS:** v5.19.0
+- **Turf.js:** v7.2.0
