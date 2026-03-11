@@ -48,7 +48,11 @@ Search for credible examples and patterns:
 
 ## Extracting Function Reference
 
-**REQUIRED:** Always save complete function reference to `skills/r-{package}/references/API.md`
+**REQUIRED:** Always save complete function reference to `{base_path}/references/API.md`
+
+**Format:** Replicate the CRAN reference manual - all functions with signatures, arguments, descriptions, examples.
+
+**NOTE:** `{base_path}` is determined in STEP 0 of the workflow. See SKILL.md "Where to Install" section.
 
 **NOTE:** If the context7 MCP server is available, use it to fetch function reference documentation directly. The context7 MCP provides comprehensive package documentation access.
 
@@ -67,18 +71,12 @@ help_topics <- btw_tool_docs_package_help_topics(package_name)
 
 **This is NOT optional.** Every package skill must have `references/API.md`.
 
-## Working Directory Structure
-
-```
-refs/docs/{package}/       # Gitignored working area
-  vignettes/               # Extracted vignettes (working copies)
-  examples/                # Credible code examples
-  notes.md                 # Your synthesis
-```
-
 ## Processing Flow
 
-1. **Gather** → `refs/docs/{package}/` (gitignored working area)
-2. **Extract manual** → `skills/r-{package}/references/API.md` (REQUIRED)
-3. **Polish vignettes** → `skills/r-{package}/references/vignette-name.md` (as needed)
-4. **Write SKILL.md** → `skills/r-{package}/SKILL.md` (<500 words)
+1. **Detect path** → Auto-detect `{base_path}` (see SKILL.md STEP 0)
+2. **Gather docs** → Fetch from sources (CRAN, pkgdown, local R)
+3. **Extract manual** → `{base_path}/references/API.md` (REQUIRED)
+4. **Polish vignettes** → `{base_path}/references/vignette-name.md` (as needed)
+5. **Write SKILL.md** → `{base_path}/SKILL.md` (<500 words)
+
+**Temporary files:** Use appropriate temp directory if needed during doc gathering. Clean up after extraction.
