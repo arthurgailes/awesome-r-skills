@@ -526,6 +526,12 @@ After skill works, optimize description for triggering accuracy. Generate 20 rea
 
 **See references/description-optimization.md for query format, should/shouldn't patterns, and optimization mechanics.**
 
+## Packaging Skills
+
+After validation, bundle SKILL.md + references/scripts/assets into .skill file for marketplace distribution.
+
+**See references/packaging.md for package structure and validation requirements.**
+
 ## Bulletproofing Skills Against Rationalization
 
 Skills that enforce discipline (like TDD) need to resist rationalization. Agents are smart and will find loopholes when under pressure.
