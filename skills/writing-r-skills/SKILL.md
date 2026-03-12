@@ -508,6 +508,12 @@ Skills should be tested before deployment. Store test cases in `evals.json`, spa
 
 **See references/testing.md for complete testing workflow, evals.json format, grading process, and iteration patterns.**
 
+## Grading Agents
+
+Grader agents evaluate test outputs against assertions. Supports objective checks (code patterns, execution) and subjective checks (readability, design quality).
+
+**See references/grading.md for grading workflow, assertion checking, domain validators, and grading.json format. See agents/grader.md for agent instructions.**
+
 ## Bulletproofing Skills Against Rationalization
 
 Skills that enforce discipline (like TDD) need to resist rationalization. Agents are smart and will find loopholes when under pressure.
