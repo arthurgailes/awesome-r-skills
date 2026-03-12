@@ -1,6 +1,6 @@
 ---
 name: r-collapse
-description: Use when performing fast grouped/weighted statistical operations, panel data analysis, or when dplyr/data.table performance is insufficient
+description: Use when performing fast grouped/weighted statistical operations, panel data analysis, using the collapse package in R, or when dplyr performance is insufficient
 ---
 
 # collapse: Fast Data Transformation in R
@@ -11,12 +11,12 @@ description: Use when performing fast grouped/weighted statistical operations, p
 
 ## When to Use collapse vs Alternatives
 
-| Use collapse when... | Use dplyr when... | Use data.table when... |
-|---------------------|-------------------|------------------------|
-| Grouped stats on large data | Readability matters most | Reference semantics (`:=` chains) |
-| Weighted computations | Arbitrary grouped functions | Keyed joins, rolling joins |
-| Panel data (between/within) | Small datasets | Non-equi joins |
-| Time series lags/diffs | Plugin ecosystem | In-place modification needed |
+| Use collapse when...        | Use dplyr when...           | Use data.table when...            |
+| --------------------------- | --------------------------- | --------------------------------- |
+| Grouped stats on large data | Readability matters most    | Reference semantics (`:=` chains) |
+| Weighted computations       | Arbitrary grouped functions | Keyed joins, rolling joins        |
+| Panel data (between/within) | Small datasets              | Non-equi joins                    |
+| Time series lags/diffs      | Plugin ecosystem            | In-place modification needed      |
 
 **Key insight:** collapse works on tibbles, data.tables, and xts without conversion.
 
@@ -45,23 +45,23 @@ data |> fgroup_by(id) |> fsd(TRA = "/")      # Scale by group SD
 data |> fgroup_by(id) |> fmean(TRA = "fill") # Fill with group mean
 ```
 
-| TRA | Operation | Use |
-|-----|-----------|-----|
-| `"-"` | Subtract | Demeaning |
-| `"/"` | Divide | Scaling |
-| `"fill"` | Replace | Imputation |
-| `"-+"` | Center | Standardization |
+| TRA      | Operation | Use             |
+| -------- | --------- | --------------- |
+| `"-"`    | Subtract  | Demeaning       |
+| `"/"`    | Divide    | Scaling         |
+| `"fill"` | Replace   | Imputation      |
+| `"-+"`   | Center    | Standardization |
 
 ## Quick Reference
 
-| Task | Function |
-|------|----------|
+| Task          | Function                                   |
+| ------------- | ------------------------------------------ |
 | Grouped stats | `fmean`, `fsum`, `fsd`, `fmedian`, `fmode` |
-| Aggregation | `collap(df, ~ by, FUN)`, `fsummarise()` |
-| Transform | `ftransform()`, `fmutate()` |
-| Selection | `fselect()`, `fsubset()` (~100x faster) |
-| Time series | `flag()`, `fdiff()`, `fgrowth()` |
-| Panel data | `qsu()`, `fwithin()`, `fbetween()` |
+| Aggregation   | `collap(df, ~ by, FUN)`, `fsummarise()`    |
+| Transform     | `ftransform()`, `fmutate()`                |
+| Selection     | `fselect()`, `fsubset()` (~100x faster)    |
+| Time series   | `flag()`, `fdiff()`, `fgrowth()`           |
+| Panel data    | `qsu()`, `fwithin()`, `fbetween()`         |
 
 ## Common Gotchas
 
@@ -74,6 +74,7 @@ data |> fgroup_by(id) |> fmean(TRA = "fill") # Fill with group mean
 4. **fwithin/fbetween don't collapse:** They return same rows (centered or group means)
 
 5. **Global options affect behavior:** In packages, set arguments explicitly:
+
    ```r
    set_collapse(na.rm = TRUE, nthreads = 4, sort = FALSE)
    ```

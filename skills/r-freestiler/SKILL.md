@@ -1,6 +1,6 @@
 ---
 name: r-freestiler
-description: Use when creating PMTiles vector tilesets from large spatial datasets, serving vector tiles from static hosting, or preparing spatial data for mapgl visualization
+description: Use when creating PMTiles vector tilesets from large spatial datasets, using the freestiler package in R, serving vector tiles from static hosting, or preparing spatial data for mapgl visualization
 ---
 
 # freestiler: Vector Tile Generator

@@ -1,6 +1,6 @@
 ---
 name: r-duckspatial
-description: Use when working with large spatial vector datasets in R that don't fit in memory, performing spatial joins or areal interpolation on big data, or needing faster spatial operations than sf provides
+description: Use when working with large spatial vector datasets in R that don't fit in memory, using the duckspatial package, performing spatial joins or areal interpolation on big data, or needing faster spatial operations than sf provides
 ---
 
 # duckspatial: Memory-Efficient Spatial Analysis

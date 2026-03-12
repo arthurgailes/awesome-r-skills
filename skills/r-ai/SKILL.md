@@ -1,6 +1,6 @@
 ---
 name: r-ai
-description: Use when building LLM-powered R applications, connecting R to AI agents, implementing RAG workflows, or evaluating AI outputs
+description: Use when building LLM-powered R applications, using ellmer/ragnar/mcptools packages in R, connecting R to AI agents, implementing RAG workflows, or evaluating AI outputs
 ---
 
 # R AI Ecosystem

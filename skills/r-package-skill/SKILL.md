@@ -5,9 +5,19 @@ description: Use when creating a skill for an R package, before gathering docume
 
 # R Package Skill Creation
 
+<MANDATORY-PREREQUISITE>
+This skill requires writing-r-skills context. If you have not yet invoked writing-r-skills in this conversation:
+
+**STOP. Invoke writing-r-skills NOW.**
+
+Do NOT skip this. Do NOT rationalize that you "understand TDD". Invoke the writing-r-skills Skill tool, then return here.
+
+If you already invoked writing-r-skills, proceed below.
+</MANDATORY-PREREQUISITE>
+
 ## Overview
 
-**Creates skills for R packages using TDD methodology.** This skill embeds the RED-GREEN-REFACTOR workflow - test without skill, gather docs, write skill, iterate.
+This skill covers R-specific documentation gathering. The actual skill creation methodology (TDD, structure, testing) comes from writing-r-skills (which you loaded above).
 
 ## When NOT to Use
 
@@ -51,8 +61,6 @@ Agent-specific paths:
   SKILL.md              # <500 words: overview, when-to-use, gotchas
   references/
     API.md              # REQUIRED: Complete CRAN reference manual
-    example.R           # REQUIRED: Working examples (<400 lines, <30s runtime)
-    bad-code.md         # REQUIRED: Anti-patterns discovered during development
     vignette-name.md    # Optional: Full vignettes
     advanced.md         # Optional: Advanced patterns
 ```
@@ -62,14 +70,30 @@ Agent-specific paths:
 **REQUIRED files:**
 
 - `references/API.md` - Complete CRAN reference manual with all function signatures
-- `references/example.R` - Working code demonstrating key functionality
-- `references/bad-code.md` - Common mistakes and anti-patterns
 
 **SKILL.md should answer:**
 
 - When to use this package vs alternatives?
 - What are the 5-10 most common operations?
 - What breaks or surprises people?
+
+**Critical: Description field must trigger on USAGE and include package name:**
+
+```yaml
+# ❌ BAD: No package name, won't trigger on library(collapse)
+description: Use when performing fast grouped operations
+
+# ❌ BAD: Triggers on skill creation, not package usage
+description: Use when creating a skill for the duckplyr package
+
+# ✅ GOOD: Includes package name + use cases
+description: Use when processing datasets >100k rows with dplyr syntax, using the duckplyr package in R, needing lazy evaluation
+```
+
+**Requirements:**
+- Include package name(s) in description so skill triggers when user mentions package or writes `library(package)`
+- Focus on USAGE scenarios (when working with the package), not skill creation
+- Skill invoked when someone is writing R code with that package
 
 **DO NOT put in SKILL.md:**
 
@@ -78,6 +102,25 @@ Agent-specific paths:
 - Advanced edge cases → `references/advanced.md`
 
 ## Workflow (TDD: RED → GREEN → REFACTOR)
+
+```dot
+digraph r_package_skill_entry {
+    rankdir=LR;
+    "Already invoked writing-r-skills?" [shape=diamond];
+    "Invoke writing-r-skills" [shape=box, style=filled, fillcolor="#ffcccc"];
+    "Determine Installation Path" [shape=box];
+
+    "Already invoked writing-r-skills?" -> "Invoke writing-r-skills" [label="no"];
+    "Already invoked writing-r-skills?" -> "Determine Installation Path" [label="yes"];
+    "Invoke writing-r-skills" -> "Determine Installation Path";
+}
+```
+
+**PREREQUISITE CHECK: If you haven't invoked writing-r-skills yet, do so NOW (see `<MANDATORY-PREREQUISITE>` above)**
+
+With writing-r-skills context loaded, proceed with R-specific workflow below:
+
+---
 
 **STEP 0: Determine Installation Path**
 
@@ -116,16 +159,6 @@ Now gather documentation to address baseline failures:
 3. **REQUIRED:** Extract full function reference to `{base_path}/references/API.md`
 4. Extract vignettes to `{base_path}/references/` as needed
 5. Identify opinions - what's the recommended approach?
-6. **REQUIRED:** Create and test `{base_path}/references/example.R`:
-   - Showcase 5-10 key package functions
-   - Keep under 400 lines of code
-   - Must run in under 30 seconds
-   - Test by running with R (e.g., `Rscript example.R`)
-   - If R execution fails, use `AskUserQuestion` to:
-     - Get path to R installation, OR
-     - Skip example.R testing (still create file)
-   - Log ALL mistakes/errors to `{base_path}/references/bad-code.md`
-   - Include what went wrong and the correct approach
 
 ---
 
@@ -154,38 +187,43 @@ Address ONLY the specific failures from RED phase:
 3. If new mistakes appear:
    - Add to Common Mistakes table
    - Update Quick Reference
-   - Add to bad-code.md
 4. Re-test until agent succeeds consistently
 
 **Detail reference:** See `writing-r-skills` skill for comprehensive TDD methodology and best practices
 
 ## Common Mistakes
 
-| Mistake                               | Fix                                    |
-| ------------------------------------- | -------------------------------------- |
-| Skipping RED baseline test            | MUST run scenario without skill first  |
-| Writing SKILL.md before baseline      | Baseline reveals what to document      |
-| Asking too many path questions        | Auto-detect personal path (default)    |
-| Not creating `references/API.md`      | REQUIRED for every package skill       |
-| Not creating `references/example.R`   | REQUIRED - demonstrates key functions  |
-| Not logging mistakes to `bad-code.md` | Document all errors during development |
-| example.R too long (>400 lines)       | Focus on 5-10 key functions only       |
-| example.R runs too slow (>30s)        | Use small datasets, limit iterations   |
-| SKILL.md >500 words                   | Move content to `references/`          |
-| Function signatures in SKILL.md       | All go in `references/API.md`          |
+| Mistake                          | Fix                                   |
+| -------------------------------- | ------------------------------------- |
+| Skipping RED baseline test       | MUST run scenario without skill first |
+| Writing SKILL.md before baseline | Baseline reveals what to document     |
+| Asking too many path questions   | Auto-detect personal path (default)   |
+| Not creating `references/API.md` | REQUIRED for every package skill |
+| SKILL.md >500 words              | Move content to `references/`    |
+| Function signatures in SKILL.md  | All go in `references/API.md`         |
 
 ## Red Flags - STOP
 
+**Rationalizations for skipping writing-r-skills invocation:**
+
+| Thought                                          | Reality                                               |
+| ------------------------------------------------ | ----------------------------------------------------- |
+| "I understand TDD"                               | TDD ≠ writing-r-skills process. Invoke it.            |
+| "The instructions in r-package-skill are enough" | You need writing-r-skills context first. Invoke it.   |
+| "I'll just follow RED-GREEN-REFACTOR inline"     | That's NOT invoking the Skill tool. Invoke it.        |
+| "I already read writing-r-skills before"         | Invoke it again. Skills evolve.                       |
+| "This is simple docs gathering"                  | ALL skill creation uses TDD. Invoke writing-r-skills. |
+
+**Workflow violations:**
+
+- **Skipping writing-r-skills invocation** - MUST invoke before proceeding
 - **Skipping RED phase** - gathering docs before baseline test
 - **Writing SKILL.md before baseline** - must see agent fail first
 - Asking user for install path when auto-detection works
 - Skipping TDD because "docs are straightforward"
-- **Not creating `references/API.md`**
-- **Not creating `references/example.R`**
-- **Not creating `references/bad-code.md`**
-- Not testing example.R execution
+- **Not creating `references/API.md`** - REQUIRED
 
-**Stop. Run baseline test FIRST (RED), then gather docs, then write skill (GREEN).**
+**Stop. Invoke writing-r-skills FIRST. Then run baseline test (RED), gather docs, write skill (GREEN).**
 
 ## Documentation Gathering
 

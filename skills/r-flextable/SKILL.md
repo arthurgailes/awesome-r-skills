@@ -1,6 +1,6 @@
 ---
 name: r-flextable
-description: Use when creating publication-quality tables for Word, PowerPoint, HTML, or PDF output in R, or when needing conditional cell formatting, merged cells, mini charts in tables, or cross-references
+description: Use when creating publication-quality tables for Word, PowerPoint, HTML, or PDF output in R, using the flextable package, or when needing conditional cell formatting, merged cells, mini charts in tables, or cross-references
 ---
 
 # R flextable
