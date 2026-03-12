@@ -520,6 +520,12 @@ After initial skill draft, iterate automatically until pass_rate >= 90% AND no i
 
 **See references/improvement-loop.md for stopping criteria, failure analysis patterns, and iteration tracking.**
 
+## Description Optimization
+
+After skill works, optimize description for triggering accuracy. Generate 20 realistic eval queries (should/shouldn't trigger), test against held-out set, iterate.
+
+**See references/description-optimization.md for query format, should/shouldn't patterns, and optimization mechanics.**
+
 ## Bulletproofing Skills Against Rationalization
 
 Skills that enforce discipline (like TDD) need to resist rationalization. Agents are smart and will find loopholes when under pressure.
