@@ -514,6 +514,12 @@ Grader agents evaluate test outputs against assertions. Supports objective check
 
 **See references/grading.md for grading workflow, assertion checking, domain validators, and grading.json format. See agents/grader.md for agent instructions.**
 
+## Autonomous Improvement Loop
+
+After initial skill draft, iterate automatically until pass_rate >= 90% AND no improvement for 2 iterations. Analyze failures, update skill, re-test.
+
+**See references/improvement-loop.md for stopping criteria, failure analysis patterns, and iteration tracking.**
+
 ## Bulletproofing Skills Against Rationalization
 
 Skills that enforce discipline (like TDD) need to resist rationalization. Agents are smart and will find loopholes when under pressure.
