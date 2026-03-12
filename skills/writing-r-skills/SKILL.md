@@ -500,6 +500,14 @@ Different skill types need different test approaches:
 
 **All of these mean: Test before deploying. No exceptions.**
 
+## Test Infrastructure
+
+Skills should be tested before deployment. Store test cases in `evals.json`, spawn subagents with/without skill, grade outputs against assertions, iterate until 90% pass rate + plateau (no improvement for 2 iterations).
+
+**Assertion types:** code patterns, execution validation, file existence, qualitative judgments, domain validators.
+
+**See references/testing.md for complete testing workflow, evals.json format, grading process, and iteration patterns.**
+
 ## Bulletproofing Skills Against Rationalization
 
 Skills that enforce discipline (like TDD) need to resist rationalization. Agents are smart and will find loopholes when under pressure.
