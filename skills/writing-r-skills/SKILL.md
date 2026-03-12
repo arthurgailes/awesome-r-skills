@@ -11,7 +11,7 @@ description: Use when creating new skills, editing existing skills, or verifying
 
 **Writing skills IS Test-Driven Development applied to process documentation.**
 
-**When writing skills for R packages:** Use `r-package-skill` first for documentation gathering, then return here for TDD methodology. Both skills are available - invoke r-package-skill directly.
+**When writing skills for R packages:** After loading this skill, invoke `r-package-skill` for R-specific documentation gathering patterns. The TDD methodology in this skill applies to ALL skill creation, including R package skills.
 
 **Skill installation paths:**
 
@@ -19,7 +19,7 @@ description: Use when creating new skills, editing existing skills, or verifying
 - **Project**: `./skills/` in current project (for plugins/team repos)
 - **Custom**: Any path you specify
 
-For R package skills, see `r-package-skill` STEP 0 for installation path selection workflow.
+For R package skills, invoke `r-package-skill` after loading this skill - it provides installation path detection and R-specific documentation patterns.
 
 You write test cases (pressure scenarios with subagents), watch them fail (baseline behavior), write the skill (documentation), watch tests pass (agents comply), and refactor (close loopholes).
 

@@ -41,10 +41,10 @@ See `skills/writing-r-skills/anthropic-best-practices.md` for Anthropic's offici
 
 ## Adding Package Skills to Plugin
 
-**When user says "add a package skill" or "add skills/r-{package}":**
+**When user says "add [or write] a package skill" or "add skills/r-{package}":**
 
+- Read all contents of `skills/r-package-skill` and `skills/writing-r-skills`
 - Add to `./skills/r-{package}/` in THIS repository (the plugin itself)
-- Follow workflow in `skills/r-package-skill/SKILL.md`
 - Update `README.md` with new skill entry
 - This is DISTINCT from users adding skills to their own `~/.claude/skills/` locally
 

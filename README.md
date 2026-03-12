@@ -48,6 +48,7 @@ Fetch and follow instructions from https://raw.githubusercontent.com/arthurgaile
 | ---------------------------------------------- | --------------------------------------------------------- |
 | [r-ai](skills/r-ai/SKILL.md)                   | LLM chat, RAG, agent integration (ellmer/ragnar/mcptools) |
 | [r-collapse](skills/r-collapse/SKILL.md)       | Fast grouped/weighted stats, panel data, dplyr too slow   |
+| [r-duckplyr](skills/r-duckplyr/SKILL.md)       | Lazy dplyr for >100k rows, larger-than-memory datasets    |
 | [r-duckspatial](skills/r-duckspatial/SKILL.md) | Large spatial datasets, lazy spatial ops with DuckDB      |
 | [r-flextable](skills/r-flextable/SKILL.md)     | Publication tables for Word/PowerPoint/PDF                |
 | [r-freestiler](skills/r-freestiler/SKILL.md)   | PMTiles vector tilesets from large spatial datasets       |
