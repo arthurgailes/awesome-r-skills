@@ -1,87 +1,105 @@
 ---
 name: r-collapse
-description: Use when performing fast grouped/weighted statistical operations, panel data analysis, using the collapse package in R, or when dplyr performance is insufficient
+description: Use when performing fast grouped/weighted statistical operations, panel data analysis, using the collapse package in R, or when dplyr/data.table performance is insufficient
 ---
 
-# collapse: Fast Data Transformation in R
+# collapse: Fast Data Transformation
 
 ## Overview
 
-**collapse is a C/C++-based package for high-performance grouped and weighted statistical computing.** It's 50-100x faster than dplyr for grouped operations and matches data.table speed while working with any data frame type.
+**collapse provides C/C++-based high-performance grouped and weighted statistics.** 50-100x faster than dplyr for grouped operations, matches data.table speed while working with any data frame type (tibbles, data.tables, xts).
 
-## When to Use collapse vs Alternatives
+**Core principle:** Fast aggregation, transformation, and panel data operations through vectorized C code.
 
-| Use collapse when...        | Use dplyr when...           | Use data.table when...            |
-| --------------------------- | --------------------------- | --------------------------------- |
-| Grouped stats on large data | Readability matters most    | Reference semantics (`:=` chains) |
-| Weighted computations       | Arbitrary grouped functions | Keyed joins, rolling joins        |
-| Panel data (between/within) | Small datasets              | Non-equi joins                    |
-| Time series lags/diffs      | Plugin ecosystem            | In-place modification needed      |
+## When to Use
 
-**Key insight:** collapse works on tibbles, data.tables, and xts without conversion.
+**Use collapse when:**
 
-## Quick Start
+- Dataset >100k rows with grouped operations
+- Weighted statistics required
+- Panel data (between/within transformations)
+- Time series lags/diffs/growth rates
+- Performance bottleneck in dplyr pipeline
+
+**Don't use:**
+
+- Small datasets (<10k rows) - dplyr is clearer
+- Need arbitrary grouped functions (use dplyr)
+- Working with sf (use sf and dplyr)
+- Need reference semantics/in-place modification (use data.table)
+- Complex joins (data.table's keyed/rolling/non-equi joins better)
+
+**vs Alternatives:**
+
+| Scenario                  | Use This   |
+| ------------------------- | ---------- |
+| Large grouped stats       | collapse   |
+| Weighted computations     | collapse   |
+| sf manipulation           | dplyr      |
+| Reference semantics       | data.table |
+| Complex joins             | data.table |
+| Arbitrary group functions | dplyr      |
+
+## Quick Reference
+
+| Task              | Function/Example                          |
+| ----------------- | ----------------------------------------- |
+| **Grouped stats** | `fmean()`, `fsum()`, `fsd()`, `fmedian()` |
+| **Aggregation**   | `collap(df, ~ by, list(fmean, fsd))`      |
+| **Transform**     | `ftransform()`, `fmutate()`               |
+| **Selection**     | `fselect()`, `fsubset()` (~100x faster)   |
+| **Time series**   | `flag()`, `fdiff()`, `fgrowth()`          |
+| **Panel data**    | `fwithin()`, `fbetween()`, `qsu()`        |
+| **Grouping**      | `fgroup_by()`, `GRP()`                    |
+
+## Core Pattern
 
 ```r
 library(collapse)
 
-# Fast grouped mean (50-100x faster than dplyr)
+# Basic: grouped mean (50-100x faster than dplyr)
 data |> fgroup_by(category) |> fmean()
 
 # Weighted aggregation
 data |> fgroup_by(region) |> fmean(w = weight_col)
 
-# Multiple stats
+# Multiple stats at once
 collap(data, ~ category, list(fmean, fsd, fmedian))
-```
 
-## The TRA Argument (Key Differentiator)
-
-Apply transformations in a single C pass - far faster than separate mutate steps:
-
-```r
+# TRA transformations (key differentiator - single C pass)
 data |> fgroup_by(id) |> fmean(TRA = "-")    # Demean (fixed effects)
 data |> fgroup_by(id) |> fsd(TRA = "/")      # Scale by group SD
 data |> fgroup_by(id) |> fmean(TRA = "fill") # Fill with group mean
 ```
 
-| TRA      | Operation | Use             |
-| -------- | --------- | --------------- |
-| `"-"`    | Subtract  | Demeaning       |
-| `"/"`    | Divide    | Scaling         |
-| `"fill"` | Replace   | Imputation      |
-| `"-+"`   | Center    | Standardization |
+## TRA Transformations
 
-## Quick Reference
+Apply transformations in single C pass (faster than separate mutate):
 
-| Task          | Function                                   |
-| ------------- | ------------------------------------------ |
-| Grouped stats | `fmean`, `fsum`, `fsd`, `fmedian`, `fmode` |
-| Aggregation   | `collap(df, ~ by, FUN)`, `fsummarise()`    |
-| Transform     | `ftransform()`, `fmutate()`                |
-| Selection     | `fselect()`, `fsubset()` (~100x faster)    |
-| Time series   | `flag()`, `fdiff()`, `fgrowth()`           |
-| Panel data    | `qsu()`, `fwithin()`, `fbetween()`         |
+| TRA         | Operation   | Use Case         |
+| ----------- | ----------- | ---------------- |
+| `"-"`       | Subtract    | Demeaning        |
+| `"/"`       | Divide      | Scaling          |
+| `"fill"`    | Replace     | Imputation       |
+| `"-+"`      | Center      | Standardization  |
+| `"replace"` | Return stat | Group aggregates |
 
-## Common Gotchas
+## Common Mistakes
 
-1. **Grouping incompatibility:** `group_by()` groups are ignored by collapse functions. Use `fgroup_by()` or pass `g =` explicitly
+| Mistake                                    | Fix                                                      |
+| ------------------------------------------ | -------------------------------------------------------- |
+| Using `group_by()` with collapse functions | Use `fgroup_by()` or pass `g = GRP(groupvar)`            |
+| `collap()` applies to ALL numeric columns  | Explicitly select columns before calling                 |
+| Expecting `na.rm = FALSE` default          | collapse defaults to `na.rm = TRUE`                      |
+| `fwithin()`/`fbetween()` collapse rows     | They return same # rows (centered/group means)           |
+| Global options affect behavior             | Set arguments explicitly in package code                 |
+| Ignoring `sort = FALSE` speedup            | Add `sort = FALSE` when order doesn't matter (3x faster) |
 
-2. **collap applies to ALL numeric columns:** Unlike dplyr's `summarise()`, must be explicit about columns
+## Advanced
 
-3. **Default na.rm = TRUE:** Unlike base R, collapse skips NA by default
-
-4. **fwithin/fbetween don't collapse:** They return same rows (centered or group means)
-
-5. **Global options affect behavior:** In packages, set arguments explicitly:
-
-   ```r
-   set_collapse(na.rm = TRUE, nthreads = 4, sort = FALSE)
-   ```
-
-6. **sort = FALSE for speed:** When order doesn't matter, can be 3x faster
-
-## Detailed Reference
+See `references/` for:
 
 - **API.md**: Complete function reference (240+ functions)
-- **advanced.md**: Panel data, dplyr integration, performance patterns
+- **advanced.md**: Panel data patterns, dplyr integration, performance tuning
+
+**Resources:** [Docs](https://sebkrantz.github.io/collapse/) | [Vignettes](https://cran.r-project.org/web/packages/collapse/vignettes/)
