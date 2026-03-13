@@ -15,6 +15,22 @@ Do NOT skip this. Do NOT rationalize that you "understand TDD". Invoke the writi
 If you already invoked writing-r-skills, proceed below.
 </MANDATORY-PREREQUISITE>
 
+## Red Flags - STOP Before Proceeding
+
+**Rationalizations for skipping writing-r-skills invocation:**
+
+| Thought                                          | Reality                                               | Action                     |
+| ------------------------------------------------ | ----------------------------------------------------- | -------------------------- |
+| "I understand TDD"                               | TDD knowledge ≠ writing-r-skills process. Different.  | **STOP. Invoke the skill** |
+| "The r-package-skill instructions are clear"     | You need writing-r-skills context loaded first.       | **STOP. Invoke the skill** |
+| "I'll follow RED-GREEN-REFACTOR inline"          | That's NOT invoking the Skill tool. Won't work.       | **STOP. Invoke the skill** |
+| "This is just doc gathering"                     | ALL skill creation uses TDD. No exceptions.           | **STOP. Invoke the skill** |
+| "I already read writing-r-skills"                | Reading ≠ invoking. Skills evolve. Load current one.  | **STOP. Invoke the skill** |
+| "I can infer the methodology"                    | You can't. Invoke to get full grading/testing flow.   | **STOP. Invoke the skill** |
+| "The user didn't explicitly say invoke it"       | This prerequisite IS the requirement. Do it.          | **STOP. Invoke the skill** |
+
+**If you recognized ANY of these thoughts, STOP NOW and invoke writing-r-skills.**
+
 ## Workflow Entry Point
 
 ```dot
@@ -22,19 +38,36 @@ digraph r_package_skill_entry {
     rankdir=LR;
     "Already invoked writing-r-skills?" [shape=diamond];
     "Invoke writing-r-skills" [shape=box, style=filled, fillcolor="#ffcccc"];
-    "Proceed to R Doc Gathering" [shape=box];
+    "Run baseline test" [shape=box];
+    "Gather R docs" [shape=box];
 
     "Already invoked writing-r-skills?" -> "Invoke writing-r-skills" [label="no"];
-    "Already invoked writing-r-skills?" -> "Proceed to R Doc Gathering" [label="yes"];
-    "Invoke writing-r-skills" -> "Proceed to R Doc Gathering";
+    "Already invoked writing-r-skills?" -> "Run baseline test" [label="yes"];
+    "Invoke writing-r-skills" -> "Run baseline test";
+    "Run baseline test" -> "Gather R docs";
 }
 ```
 
-**PREREQUISITE CHECK: If you haven't invoked writing-r-skills yet, do so NOW (see `<MANDATORY-PREREQUISITE>` above)**
+**PREREQUISITE CHECK: If you haven't invoked writing-r-skills yet, STOP and do so NOW (see `<MANDATORY-PREREQUISITE>` above)**
+
+**Terminal state: writing-r-skills invoked AND baseline test run for the R package**
+
+---
+
+**HARD-GATE**: Before proceeding to "Overview" section, confirm:
+- [ ] I invoked writing-r-skills Skill tool
+- [ ] I understand this skill only covers R doc gathering
+- [ ] I will follow TDD methodology from writing-r-skills
+
+**If any checkbox is unchecked, STOP and invoke writing-r-skills NOW.**
+
+---
 
 ## Overview
 
 This skill covers R-specific documentation gathering. The actual skill creation methodology (TDD, structure, testing, grading, optimization, packaging) comes from writing-r-skills (which you loaded above).
+
+**REMINDER: If you skipped invoking writing-r-skills and jumped straight here, STOP. Go back and invoke it.**
 
 ## When NOT to Use
 
@@ -86,25 +119,17 @@ See writing-r-skills for how validators integrate with grading agents.
 
 ## Workflow
 
+**STOP: If you haven't invoked writing-r-skills yet, do NOT proceed with this workflow. Invoke it first.**
+
 Follow writing-r-skills TDD methodology:
 
-**RED Phase:** Run baseline scenario without skill
-**Doc Gathering:** Fetch R documentation addressing baseline failures
-**GREEN Phase:** Write minimal SKILL.md
-**REFACTOR Phase:** Test and iterate
+**RED Phase:** Run baseline scenario without skill (writing-r-skills defines how)
+**Doc Gathering:** Fetch R documentation addressing baseline failures (this skill defines what)
+**GREEN Phase:** Write minimal SKILL.md (writing-r-skills defines structure)
+**REFACTOR Phase:** Test and iterate (writing-r-skills defines grading)
 
-See writing-r-skills for complete workflow details.
+See writing-r-skills for complete workflow details. This skill only supplements with R-specific documentation sources.
 
-## Red Flags - STOP
+---
 
-**Rationalizations for skipping writing-r-skills invocation:**
-
-| Thought                                          | Reality                                               |
-| ------------------------------------------------ | ----------------------------------------------------- |
-| "I understand TDD"                               | TDD ≠ writing-r-skills process. Invoke it.            |
-| "The instructions in r-package-skill are enough" | You need writing-r-skills context first. Invoke it.   |
-| "I'll just follow RED-GREEN-REFACTOR inline"     | That's NOT invoking the Skill tool. Invoke it.        |
-| "I already read writing-r-skills before"         | Invoke it again. Skills evolve.                       |
-| "This is simple docs gathering"                  | ALL skill creation uses TDD. Invoke writing-r-skills. |
-
-**Stop. Invoke writing-r-skills FIRST. Then gather R docs.**
+**Final STOP**: If you reached here without invoking writing-r-skills, you skipped multiple gates. Go back to `<MANDATORY-PREREQUISITE>` block at top and invoke it NOW.
