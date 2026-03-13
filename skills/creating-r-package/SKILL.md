@@ -3,6 +3,16 @@ name: creating-r-package
 description: Use when creating a new R package from scratch, setting up package structure, or starting package development workflow
 ---
 
+<MANDATORY-PREREQUISITE>
+This skill uses TDD methodology from writing-r-skills. If you have not yet invoked writing-r-skills:
+
+**STOP. Invoke writing-r-skills NOW.**
+
+Creating R packages benefits from skill creation patterns (testing, iteration). Invoke writing-r-skills, then return here.
+
+If you already invoked writing-r-skills, proceed below.
+</MANDATORY-PREREQUISITE>
+
 # Creating R Packages
 
 ## Overview
