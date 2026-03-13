@@ -15,6 +15,23 @@ Do NOT skip this. Do NOT rationalize that you "understand TDD". Invoke the writi
 If you already invoked writing-r-skills, proceed below.
 </MANDATORY-PREREQUISITE>
 
+## Workflow Entry Point
+
+```dot
+digraph r_package_skill_entry {
+    rankdir=LR;
+    "Already invoked writing-r-skills?" [shape=diamond];
+    "Invoke writing-r-skills" [shape=box, style=filled, fillcolor="#ffcccc"];
+    "Proceed to R Doc Gathering" [shape=box];
+
+    "Already invoked writing-r-skills?" -> "Invoke writing-r-skills" [label="no"];
+    "Already invoked writing-r-skills?" -> "Proceed to R Doc Gathering" [label="yes"];
+    "Invoke writing-r-skills" -> "Proceed to R Doc Gathering";
+}
+```
+
+**PREREQUISITE CHECK: If you haven't invoked writing-r-skills yet, do so NOW (see `<MANDATORY-PREREQUISITE>` above)**
+
 ## Overview
 
 This skill covers R-specific documentation gathering. The actual skill creation methodology (TDD, structure, testing, grading, optimization, packaging) comes from writing-r-skills (which you loaded above).
