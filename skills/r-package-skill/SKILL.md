@@ -1,6 +1,6 @@
 ---
 name: r-package-skill
-description: Use when creating a skill for an R package, before gathering documentation or writing SKILL.md
+description: Use when gathering R package documentation (CRAN, pkgdown, vignettes) for skill creation. Invoke AFTER writing-r-skills is loaded.
 ---
 
 # R Package Skill Creation
