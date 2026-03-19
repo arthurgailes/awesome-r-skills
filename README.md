@@ -1,16 +1,18 @@
 # Awesome R Skills
 
-You want your AI agent to use R packages correctly.
+AI agents don't know every R package. When they encounter unfamiliar ones, they hallucinate APIs or fall back to verbose base R.
 
-But your agent hallucinates APIs, writes verbose base R when fast packages exist, or doesn't know enough about new packages.
+This plugin teaches them.
 
-**`/r-package-skill` fixes it:**
+**Generate a skill from any R package:**
 
 ```
 /r-package-skill collapse
 ```
 
-Extracts the docs. Outputs a skill your agent can use. Works for any package—CRAN, GitHub, your team's internal code.
+Pulls documentation from CRAN, extracts patterns, writes a skill file. Your agent now knows when to use `collapse`, which functions matter, and how they compose.
+
+Works for any package—CRAN, GitHub, internal tools. Each skill is tested, graded, and optimized before deployment.
 
 ## Installation
 
@@ -35,69 +37,101 @@ Fetch and follow instructions from https://raw.githubusercontent.com/arthurgaile
 
 ## Included Skills
 
-### Skill Generators (the main event)
+### Skill Generators
 
-| Skill                                                | What It Does                                                         |
-| ---------------------------------------------------- | -------------------------------------------------------------------- |
-| [r-package-skill](skills/r-package-skill/SKILL.md)   | **Generate a skill from any R package** - point at docs, get a skill |
-| [writing-r-skills](skills/writing-r-skills/SKILL.md) | Create skills from scratch with TDD methodology                      |
+| Skill                                                | Description                                        |
+| ---------------------------------------------------- | -------------------------------------------------- |
+| [r-package-skill](skills/r-package-skill/SKILL.md)   | Generate a skill from any R package documentation  |
+| [writing-r-skills](skills/writing-r-skills/SKILL.md) | Build skills from scratch using TDD methodology    |
 
-### Ready-to-Use Package Skills
+### Package Skills
 
-| Skill                                          | When to Use                                               |
+| Skill                                          | Focus                                                     |
 | ---------------------------------------------- | --------------------------------------------------------- |
-| [r-ai](skills/r-ai/SKILL.md)                   | LLM chat, RAG, agent integration (ellmer/ragnar/mcptools) |
-| [r-collapse](skills/r-collapse/SKILL.md)       | Fast grouped/weighted stats, panel data, dplyr too slow   |
-| [r-duckplyr](skills/r-duckplyr/SKILL.md)       | Lazy dplyr for >100k rows, larger-than-memory datasets    |
-| [r-duckspatial](skills/r-duckspatial/SKILL.md) | Large spatial datasets, lazy spatial ops with DuckDB      |
-| [r-flextable](skills/r-flextable/SKILL.md)     | Publication tables for Word/PowerPoint/PDF                |
-| [r-freestiler](skills/r-freestiler/SKILL.md)   | PMTiles vector tilesets from large spatial datasets       |
-| [r-mapgl](skills/r-mapgl/SKILL.md)             | Interactive WebGL maps, vector tiles, Shiny map apps      |
+| [r-ai](skills/r-ai/SKILL.md)                   | LLM integration, RAG workflows (ellmer/ragnar/mcptools)   |
+| [r-collapse](skills/r-collapse/SKILL.md)       | Fast grouped/weighted stats, panel data transformations   |
+| [r-duckplyr](skills/r-duckplyr/SKILL.md)       | Lazy evaluation for large datasets with DuckDB backend    |
+| [r-duckspatial](skills/r-duckspatial/SKILL.md) | Spatial operations on large geometries via DuckDB         |
+| [r-flextable](skills/r-flextable/SKILL.md)     | Publication-ready tables for Word/PowerPoint/PDF          |
+| [r-freestiler](skills/r-freestiler/SKILL.md)   | Vector tilesets (PMTiles) from large spatial data         |
+| [r-mapgl](skills/r-mapgl/SKILL.md)             | Interactive WebGL maps, vector tiles, Shiny applications  |
 
-### R Development
+### Development Workflows
 
-| Skill                                                    | When to Use                           |
+| Skill                                                    | Focus                                 |
 | -------------------------------------------------------- | ------------------------------------- |
-| [creating-r-package](skills/creating-r-package/SKILL.md) | Starting a new R package from scratch |
+| [creating-r-package](skills/creating-r-package/SKILL.md) | R package creation and project setup  |
 
-## Example: What Skills Add
+## What Skills Do
 
-**Without r-ai skill**, agent writes:
+Skills encode judgment. They teach agents which packages exist, when to use them, and how they compose.
+
+**Without r-ai skill:**
 
 ```r
-# Tries to use httr2 to call OpenAI API directly,
-# doesn't know about ellmer/ragnar ecosystem
-resp <- httr2::request("https://api.openai.com/v1/chat/completions") |> ...
+# Agent defaults to direct API calls
+resp <- httr2::request("https://api.openai.com/v1/chat/completions") |>
+  httr2::req_auth_bearer_token(key) |>
+  httr2::req_body_json(list(messages = ...))
 ```
 
-**With r-ai skill**, agent writes:
+**With r-ai skill:**
 
 ```r
+# Agent knows the ecosystem
 chat <- chat_openai()
-ragnar_register_tool_retrieve(chat, store)  # RAG-enabled chat
+ragnar_register_tool_retrieve(chat, store)
 chat$chat("What does the documentation say about X?")
 ```
 
-**Without r-collapse skill**, agent writes:
+**Without r-collapse skill:**
 
 ```r
+# Works, but slow on large data
 data |> group_by(id) |> mutate(demeaned = value - mean(value))
 ```
 
-**With r-collapse skill**, agent writes:
+**With r-collapse skill:**
 
 ```r
-data |> fgroup_by(id) |> fmean(TRA = "-")  # 50-100x faster, single C pass
+# Agent chooses the fast path
+data |> fgroup_by(id) |> fmean(TRA = "-")  # 50-100x faster
 ```
 
-Skills encode judgment: which packages exist, when they're appropriate, and idiomatic patterns.
+Each skill is tested against realistic scenarios, graded by specialized validators, and refined until it passes.
+
+## How Skills Are Built
+
+Skills follow a test-driven workflow:
+
+1. **RED**: Run a pressure scenario without the skill. Agent fails.
+2. **GREEN**: Write minimal skill addressing the failure. Agent passes.
+3. **REFACTOR**: Close loopholes, add edge cases, optimize.
+
+Validators check domain-specific correctness:
+- `plot-validator.R` - ggplot2 visualizations have required layers
+- `spatial-validator.R` - geometries are valid, projections correct
+- `html-validator.R` - tables render, conditional formatting works
+- `numerical-validator.R` - grouped stats match expected results
+
+Grading agents evaluate each test run, score assertions, and drive the improvement loop until tests consistently pass.
 
 ## Contributing
 
-1. Fork
-2. Follow [writing-r-skills](skills/writing-r-skills/SKILL.md) TDD methodology
-3. Prefer goal-oriented skills over package-centric skills
-4. PR
+New skills follow the TDD methodology in [writing-r-skills](skills/writing-r-skills/SKILL.md):
+
+1. **Baseline test** - Run realistic scenario without the skill
+2. **Minimal skill** - Write just enough to pass
+3. **Iterate** - Refine until grading agents consistently score 90%+
+
+Package skills go in `skills/r-{package}/`. Goal-oriented skills (workflows that span multiple packages) are preferred when they make sense.
+
+Each skill needs:
+- `SKILL.md` under 500 words (overview, when to use, common mistakes)
+- `references/` directory with detailed docs
+- Test cases in `tests/{skill-name}/evals.json`
+
+Fork, build, test, PR.
 
 ## License
 
