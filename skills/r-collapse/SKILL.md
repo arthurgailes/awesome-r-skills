@@ -67,22 +67,11 @@ data |> fgroup_by(region) |> fmean(w = weight_col)
 collap(data, ~ category, list(fmean, fsd, fmedian))
 
 # TRA transformations (key differentiator - single C pass)
-data |> fgroup_by(id) |> fmean(TRA = "-")    # Demean (fixed effects)
-data |> fgroup_by(id) |> fsd(TRA = "/")      # Scale by group SD
-data |> fgroup_by(id) |> fmean(TRA = "fill") # Fill with group mean
+data |> fgroup_by(id) |> fmean(TRA = "-")    # Demean: subtract group mean
+data |> fgroup_by(id) |> fsd(TRA = "/")      # Scale: divide by group SD
+data |> fgroup_by(id) |> fmean(TRA = "fill") # Fill: replace NA with group mean
+# See references/API.md for full TRA options ("-", "/", "fill", "-+", "replace")
 ```
-
-## TRA Transformations
-
-Apply transformations in single C pass (faster than separate mutate):
-
-| TRA         | Operation   | Use Case         |
-| ----------- | ----------- | ---------------- |
-| `"-"`       | Subtract    | Demeaning        |
-| `"/"`       | Divide      | Scaling          |
-| `"fill"`    | Replace     | Imputation       |
-| `"-+"`      | Center      | Standardization  |
-| `"replace"` | Return stat | Group aggregates |
 
 ## Common Mistakes
 
