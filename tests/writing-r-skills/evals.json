@@ -1,0 +1,98 @@
+{
+  "skill_name": "writing-r-skills",
+  "description": "Tests for universal skill creation methodology",
+  "evals": [
+    {
+      "id": 1,
+      "name": "skill-structure-validation",
+      "prompt": "Validate the r-collapse skill structure",
+      "expected_output": "Checks YAML frontmatter (name, description), required sections (Overview, When to Use, Quick Reference, Common Mistakes, When NOT to Use), word count < 500, references/ organization",
+      "files": ["skills/r-collapse/SKILL.md"],
+      "assertions": [
+        {
+          "type": "code_pattern",
+          "description": "Checks for YAML frontmatter",
+          "check": "output mentions 'frontmatter' or 'YAML' and validates name/description fields"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Validates required sections",
+          "check": "output confirms 'Overview', 'When to Use', 'Quick Reference', 'Common Mistakes', 'When NOT to Use' sections exist"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Checks word count",
+          "check": "output mentions word count and whether it's under 500"
+        },
+        {
+          "type": "qualitative",
+          "description": "Provides actionable feedback",
+          "check": "If issues found, output provides specific line numbers or sections to fix"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "improvement-loop-scenario",
+      "prompt": "Run a simple improvement loop: create a minimal test skill with evals.json (2 test cases), run it once with-skill vs baseline, grade outputs, then suggest one improvement based on failures",
+      "expected_output": "Creates evals.json, spawns subagents, grades outputs, identifies specific failure, suggests targeted improvement to SKILL.md",
+      "files": [],
+      "assertions": [
+        {
+          "type": "file_exists",
+          "description": "Creates evals.json with test cases",
+          "check": "evals.json exists with 2+ test cases"
+        },
+        {
+          "type": "file_exists",
+          "description": "Creates workspace structure",
+          "check": "workspace/iteration-1/ directory exists with eval subdirectories"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Runs with-skill and baseline tests",
+          "check": "output mentions spawning agents 'with_skill' and 'without_skill' or 'baseline'"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Grades outputs and identifies failures",
+          "check": "output contains grading results (pass/fail per assertion) and identifies at least one failure"
+        },
+        {
+          "type": "qualitative",
+          "description": "Suggests specific improvement",
+          "check": "Output provides concrete suggestion to improve SKILL.md based on identified failure"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "description-triggering-check",
+      "prompt": "Check if the r-collapse skill description triggers correctly. Test with these queries: 1) 'Calculate group means using collapse', 2) 'Use dplyr to calculate group means', 3) 'I need to aggregate this dataframe by group'. Which should trigger r-collapse?",
+      "expected_output": "Query 1 should trigger (mentions collapse), Query 2 should NOT trigger (explicitly mentions dplyr), Query 3 is ambiguous but collapse skill could trigger if description emphasizes performance/aggregation",
+      "files": ["skills/r-collapse/SKILL.md"],
+      "assertions": [
+        {
+          "type": "code_pattern",
+          "description": "Evaluates Query 1 correctly",
+          "check": "output says Query 1 SHOULD trigger r-collapse"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Evaluates Query 2 correctly",
+          "check": "output says Query 2 should NOT trigger r-collapse (dplyr mentioned)"
+        },
+        {
+          "type": "qualitative",
+          "description": "Provides reasoning about description quality",
+          "check": "Output analyzes whether r-collapse description is specific enough to avoid false positives/negatives"
+        },
+        {
+          "type": "qualitative",
+          "description": "Suggests description improvements if needed",
+          "check": "If description has issues, suggests specific edits to improve triggering accuracy"
+        }
+      ]
+    }
+  ]
+}

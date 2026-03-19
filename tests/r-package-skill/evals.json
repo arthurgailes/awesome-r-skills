@@ -1,0 +1,108 @@
+{
+  "skill_name": "r-package-skill",
+  "description": "Tests for R package skill creation functionality",
+  "evals": [
+    {
+      "id": 1,
+      "name": "ggplot2-plot-validation",
+      "prompt": "Create a skill for the ggplot2 package",
+      "expected_output": "Skill created with plot validation patterns, references/API.md exists, SKILL.md mentions geom_* functions and ggplot() constructor",
+      "files": [],
+      "assertions": [
+        {
+          "type": "file_exists",
+          "description": "SKILL.md created in correct location",
+          "check": "skills/r-ggplot2/SKILL.md exists"
+        },
+        {
+          "type": "file_exists",
+          "description": "API reference created",
+          "check": "skills/r-ggplot2/references/API.md exists"
+        },
+        {
+          "type": "code_pattern",
+          "description": "SKILL.md mentions plot validation",
+          "check": "contains 'plot' or 'visualization' or 'geom'"
+        },
+        {
+          "type": "code_pattern",
+          "description": "References plot-validator.R",
+          "check": "contains 'plot-validator' or discusses visual output validation"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Description includes package name for triggering",
+          "check": "description field contains 'ggplot2'"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "sf-geometry-validation",
+      "prompt": "Create a skill for the sf package",
+      "expected_output": "Skill created with spatial validation patterns, handles geometry operations, includes CRS guidance",
+      "files": [],
+      "assertions": [
+        {
+          "type": "file_exists",
+          "description": "SKILL.md created in correct location",
+          "check": "skills/r-sf/SKILL.md exists"
+        },
+        {
+          "type": "file_exists",
+          "description": "API reference created",
+          "check": "skills/r-sf/references/API.md exists"
+        },
+        {
+          "type": "code_pattern",
+          "description": "SKILL.md mentions spatial operations",
+          "check": "contains 'spatial' or 'geometry' or 'CRS' or 'coordinate'"
+        },
+        {
+          "type": "code_pattern",
+          "description": "References spatial-validator.R",
+          "check": "contains 'spatial-validator' or discusses geometry validation"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Description includes package name for triggering",
+          "check": "description field contains 'sf'"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "data-table-syntax-gotchas",
+      "prompt": "Create a skill for the data.table package",
+      "expected_output": "Skill captures data.table syntax gotchas (DT[i, j, by] pattern, := operator, .SD, .N, etc.), includes performance patterns",
+      "files": [],
+      "assertions": [
+        {
+          "type": "file_exists",
+          "description": "SKILL.md created in correct location",
+          "check": "skills/r-data.table/SKILL.md exists"
+        },
+        {
+          "type": "file_exists",
+          "description": "API reference created",
+          "check": "skills/r-data.table/references/API.md exists"
+        },
+        {
+          "type": "code_pattern",
+          "description": "SKILL.md mentions data.table syntax patterns",
+          "check": "contains ':=' or '.SD' or '.N' or 'DT[i, j, by]' or data.table-specific syntax"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Discusses performance or gotchas",
+          "check": "contains 'performance' or 'gotchas' or 'Common Mistakes' section exists"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Description includes package name for triggering",
+          "check": "description field contains 'data.table'"
+        }
+      ]
+    }
+  ]
+}
