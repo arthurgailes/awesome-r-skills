@@ -1,6 +1,6 @@
 ---
 name: r-collapse
-description: Use when performing fast grouped/weighted statistical operations, panel data analysis, using the collapse package in R, or when dplyr/data.table performance is insufficient
+description: Use when performing fast grouped/weighted statistical operations, panel data analysis, using the collapse package in R, or when improving dplyr performance would be beneficial.
 ---
 
 # collapse: Fast Data Transformation
@@ -15,7 +15,7 @@ description: Use when performing fast grouped/weighted statistical operations, p
 
 **Use collapse when:**
 
-- Dataset >100k rows with grouped operations
+- Dataset >100k rows
 - Weighted statistics required
 - Panel data (between/within transformations)
 - Time series lags/diffs/growth rates
