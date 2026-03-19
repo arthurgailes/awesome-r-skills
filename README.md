@@ -35,6 +35,23 @@ Fetch and follow instructions from https://raw.githubusercontent.com/arthurgaile
 Fetch and follow instructions from https://raw.githubusercontent.com/arthurgailes/awesome-r-skills/main/.opencode/INSTALL.md
 ```
 
+## Quick Start
+
+Generate your first skill:
+
+```bash
+/r-package-skill data.table
+```
+
+You'll be asked where to install (Personal, Project, or Custom path). Then the agent:
+
+1. Pulls CRAN reference manual and vignettes
+2. Runs baseline test without the skill
+3. Writes minimal `SKILL.md` addressing failures
+4. Iterates until tests pass (90%+ score)
+
+Takes 10-12 minutes with 3-4 approval prompts. Skill appears at your chosen path, ready to use.
+
 ## Included Skills
 
 ### Skill Generators
