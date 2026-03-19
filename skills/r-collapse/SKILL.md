@@ -86,9 +86,8 @@ data |> fgroup_by(id) |> fmean(TRA = "fill") # Fill: replace NA with group mean
 
 ## Advanced
 
-See `references/` for:
+See `references/` for API reference, vignette content (tidyverse comparison, sf integration, object handling, development guidelines), and panel data patterns.
 
-- **API.md**: Complete function reference (240+ functions)
-- **advanced.md**: Panel data patterns, dplyr integration, performance tuning
+**Validator:** `lib/r-validators/numerical-validator.R`
 
-**Resources:** [Docs](https://sebkrantz.github.io/collapse/) | [Vignettes](https://cran.r-project.org/web/packages/collapse/vignettes/)
+**Resources:** [Docs](https://sebkrantz.github.io/collapse/)

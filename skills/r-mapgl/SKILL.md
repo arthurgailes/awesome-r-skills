@@ -9,18 +9,22 @@ description: Use when creating interactive WebGL maps in R with mapgl, mapboxgl,
 
 **mapgl wraps Mapbox GL JS and MapLibre GL JS for R.** Use it for smooth, GPU-accelerated interactive maps with vector tiles, 3D terrain, and Shiny integration.
 
-## When to Use mapgl vs Alternatives
+## When to Use
 
-| Use mapgl when... | Use leaflet when... | Use tmap when... |
-|-------------------|---------------------|------------------|
-| Smooth zooming/panning | Simple marker maps | Static print maps |
-| Vector tiles / large data | Raster tile basemaps | Quick exploratory vis |
-| 3D terrain or buildings | Plugin ecosystem needed | tmap_mode("view") sufficient |
-| Custom WebGL styling | Wider browser support | |
+**Choose mapgl for:**
+- Smooth zooming/panning with large datasets (>10k features)
+- Vector tiles and 3D terrain/buildings
+- Custom WebGL styling and real-time interactivity
+- Shiny apps with dynamic map updates
 
-**API keys:**
-- **Mapbox:** Requires `MAPBOX_PUBLIC_TOKEN` env var
-- **MapLibre:** No key needed with CARTO or OpenFreeMap styles
+**API keys:** Mapbox requires `MAPBOX_PUBLIC_TOKEN`; MapLibre works without keys (CARTO/OpenFreeMap styles)
+
+## When NOT to Use
+
+- Simple marker maps (use leaflet)
+- Static print maps (use tmap)
+- Need wider browser support (WebGL not available)
+- Quick exploratory visualization (tmap_mode("view") sufficient)
 
 ## Quick Start
 
@@ -43,7 +47,7 @@ mapboxgl(style = mapbox_style("light")) |>
   add_circle_layer(id = "points", source = my_sf, circle_color = "red")
 ```
 
-## Layer Types
+## Quick Reference
 
 | Geometry | Function | Key params |
 |----------|----------|------------|
@@ -56,21 +60,11 @@ mapboxgl(style = mapbox_style("light")) |>
 
 ## Interactive Legends (v0.4.4+)
 
-**Filter data directly from legends:**
-- **Categorical**: Click to toggle layer visibility with visual indicators
-- **Continuous**: Drag dual handles to filter data ranges in real-time
-- **Draggable**: Use `draggable = TRUE` to reposition legends (mouse + touch)
-- **Shiny integration**: Access filter state via `input$MAPID_legend_filter`
+Filter data directly from legends. Categorical: click to toggle visibility. Continuous: drag handles to filter ranges. Use `draggable = TRUE` to reposition. Access state via `input$MAPID_legend_filter` in Shiny.
 
 ```r
-# Interactive continuous legend
-maplibre() |>
-  add_continuous_legend(
-    values = c(0, 100),
-    colors = c("blue", "red"),
-    interactive = TRUE,
-    draggable = TRUE
-  )
+maplibre() |> add_continuous_legend(values = c(0, 100), colors = c("blue", "red"),
+                                     interactive = TRUE, draggable = TRUE)
 ```
 
 ## Shiny Integration
@@ -98,52 +92,27 @@ server <- function(input, output, session) {
 }
 ```
 
-## Drawing & Measurement (v0.4.1+)
+## Drawing & Controls
 
-**Enhanced drawing modes with live measurements:**
-```r
-map |>
-  add_draw_control(
-    modes = c("point", "line", "polygon", "rectangle", "circle"),
-    show_measurements = TRUE,
-    measurement_units = "both"  # "metric", "imperial", or "both"
-  )
-```
-- **Rectangle**: Two corner points
-- **Circle**: Center to edge (radius)
-- **Live preview**: Shows distance, area, perimeter as you draw
+**Draw with measurements** (v0.4.1+): `add_draw_control(modes = c("point", "line", "polygon", "rectangle", "circle"), show_measurements = TRUE)`
 
-## New Controls
+**Other controls**: `add_screenshot_control(resolution = 300)` for PNG export, `add_layers_control(groups = list(...))` for grouped layer toggles
 
-**Screenshot export** (v0.4.4):
-```r
-map |> add_screenshot_control(resolution = 300)  # PNG download with DPI control
-```
+## Common Mistakes
 
-**Grouped layers** (v0.4.1):
-```r
-map |> add_layers_control(groups = list("Base" = c("layer1", "layer2")))
-```
+1. **Wrong CRS:** Data must be WGS84 (EPSG:4326). Use `st_transform()` first
+2. **Large datasets without tiles:** Convert to PMTiles/MLT for >10k features (see `r-freestiler`)
+3. **Filter expressions as strings:** Must be lists: `list(">=", get_column("value"), 10)`
+4. **Proxy outside reactive:** `maplibre_proxy()` only works in observeEvent/reactive contexts
+5. **Layer order:** Later layers render on top; use `before_id` to insert below existing layers
 
-## Common Gotchas
+## Quick View & Testing
 
-1. **Layer order matters:** Later layers render on top. Use `before_id` to insert below
-2. **Source vs layer:** One source can have multiple layers styling it
-3. **CRS requirement:** Data must be WGS84 (EPSG:4326). Use `st_transform()` first
-4. **Large datasets:** Convert to vector tiles (PMTiles/MLT) for >10k features. See `r-freestiler` skill
-5. **Filter expressions:** Must be built as lists: `list(">=", get_column("value"), 10)`
-6. **Proxy scope:** Only works within reactive context (observeEvent, reactive)
+**Rapid viz:** `maplibre_view(sf_object, column = "value")` for instant choropleth
 
-## Quick View
+**Test with validator:** Use `lib/r-validators/plot-validator.R` to verify map output in tests
 
-For rapid visualization without layer setup:
-
-```r
-maplibre_view(sf_object)                    # Auto-detects geometry
-maplibre_view(sf_object, column = "value")  # Choropleth
-```
-
-## Detailed Reference
+## Reference Files
 
 - **API.md**: Complete function reference (120+ functions)
 - **styling.md**: Data-driven styling, basemap styles, controls, camera operations

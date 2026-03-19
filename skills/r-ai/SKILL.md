@@ -23,7 +23,12 @@ description: Use when building LLM-powered R applications, using ellmer/ragnar/m
 | **ragnar** | LLM searches your documents | `ragnar_register_tool_retrieve()` |
 | **vitals** | Test LLM output quality | `Task$new()` |
 
-**When NOT to use:** Single one-off API call (httr2 simpler), non-chat ML (tidymodels), streaming callbacks needed.
+## When NOT to Use
+
+- Single one-off API call (use httr2 instead)
+- Non-chat ML workflows (use tidymodels)
+- Need streaming callbacks with custom handling
+- Building production REST APIs (use plumber)
 
 ## Quick Start
 
@@ -63,7 +68,7 @@ task <- Task$new(
 task$run(chat_openai())
 ```
 
-## Common Gotchas
+## Common Mistakes
 
 | Issue | Solution |
 |-------|----------|
@@ -92,14 +97,10 @@ store <- ragnar_store_create("local.duckdb",
 ## Advanced
 
 See `references/` for:
-- **integration-patterns.md**: Cross-package integration, RAG evaluation, full stack
-- **ellmer-api.md**: Complete ellmer function reference
-- **btw-api.md**: Complete btw function reference (30+ tools)
-- **mcptools-api.md**: Complete mcptools function reference
-- **ragnar-api.md**: Complete ragnar function reference
-- **vitals-api.md**: Complete vitals function reference
-- **ellmer.md**: Providers, models, tools, multimodal
-- **btw.md**: Available tools, MCP server, config
-- **ragnar.md**: Chunking, embedding providers, retrieval
-- **mcptools.md**: Agent config (Claude, VS Code), security
-- **vitals.md**: Solvers, scorers, custom evaluation
+- **ellmer-getting-started.md**: Getting started vignette
+- **ellmer-tool-calling.md**: Tool/function calling vignette
+- **ragnar-rag.md**: RAG vignette
+- **mcptools-server.md**: R as MCP server vignette
+- **integration-patterns.md**: Cross-package integration
+- **ellmer-api.md**, **btw-api.md**, **mcptools-api.md**, **ragnar-api.md**, **vitals-api.md**: Function references
+- **ellmer.md**, **btw.md**, **ragnar.md**, **mcptools.md**, **vitals.md**: Package documentation
