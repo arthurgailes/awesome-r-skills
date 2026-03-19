@@ -2,19 +2,18 @@
 
 When creating an R package skill, you must choose WHERE to install it. This affects discoverability and precedence across different AI agents.
 
-## Default: Personal Skills
+## ALWAYS Ask Where to Install
 
-**Most common:** Create in your personal skills directory for reuse across projects.
+**Every time you create a skill, ask the user where to put it.** No defaults, no auto-detection.
 
-**Only ask about path if:**
-- User explicitly says they're contributing to a repo
-- Current working directory is clearly a skills plugin/repository
-- User requests a specific location
+**Required question:** "Where should I create this skill?"
 
-**Default behavior:**
-- Detect agent from environment or common paths
-- Use agent-specific personal directory
-- No questions needed
+**Offer 3 options:**
+1. **Personal** - Your home skills directory (reusable across projects)
+2. **Project** - This repository's skills/ directory (for contributing/sharing)
+3. **Custom** - Specify exact path (for testing/experimenting)
+
+**After user chooses, detect agent and show exact path before proceeding.**
 
 ## Path Types
 
@@ -118,21 +117,19 @@ ln -s ~/.config/opencode/awesome-r-skills/skills ~/.config/opencode/skills/aweso
 
 ### Step 0: Determine Installation Path
 
-**Default behavior (most common):**
-1. Detect agent from environment or common paths
-2. Use agent-specific personal directory
-3. Proceed without asking user
+**ALWAYS ask the user - no defaults:**
 
-**Only ask if:**
-- User mentioned contributing to a repository
-- Current directory is a skills plugin repo
-- Agent detection fails
-- User requests specific location
+**Question:** "Where should I create this skill?"
 
-**Max 1 question:** "Are you contributing this to a repository, or is this for personal use?"
-- Personal → auto-detect agent, use personal path
-- Contributing → confirm project path
-- Other → ask for custom path
+**Options:**
+- **Personal** - Your home skills directory (e.g., `~/.claude/skills/r-{package}`)
+- **Project** - This repository (`./skills/r-{package}`)
+- **Custom** - You specify the exact path
+
+**After user chooses:**
+1. Detect agent (Claude Code, Codex, OpenCode) if needed for Personal option
+2. Show exact path: "Creating skill at: {path}"
+3. Wait for confirmation before proceeding
 
 ### During Workflow
 
