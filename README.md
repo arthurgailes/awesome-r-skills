@@ -96,12 +96,6 @@ Takes 10-12 minutes with 3-4 approval prompts. Skill appears at your chosen path
 | [r-freestiler](skills/r-freestiler/SKILL.md)   | Vector tilesets (PMTiles) from large spatial data        |
 | [r-mapgl](skills/r-mapgl/SKILL.md)             | Interactive WebGL maps, vector tiles, Shiny applications |
 
-### Development Workflows
-
-| Skill                                                    | Focus                                |
-| -------------------------------------------------------- | ------------------------------------ |
-| [creating-r-package](skills/creating-r-package/SKILL.md) | R package creation and project setup |
-
 ## What Skills Do
 
 Skills encode judgment. They teach agents which packages exist, when to use them, and how they compose.

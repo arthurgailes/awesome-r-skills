@@ -10,7 +10,6 @@ R skills plugin for AI coding agents (Claude Code, Codex, OpenCode). Core value:
 
 1. **Skill generators** (`r-package-skill`, `writing-r-skills`): Tools to create new skills
 2. **Package skills** (`r-collapse`, `r-mapgl`, etc.): Reference docs for specific R packages
-3. **Development skills** (`creating-r-package`): R package development workflows
 
 ## Creating Skills
 

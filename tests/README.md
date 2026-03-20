@@ -10,8 +10,6 @@ tests/
     evals.json          # 3 test cases for R package skill creation
   writing-r-skills/
     evals.json          # 3 test cases for universal skill methodology
-  creating-r-package/
-    evals.json          # 3 test cases for R package development
   README.md             # This file
 ```
 
@@ -52,23 +50,6 @@ tests/
    - Evaluates whether r-collapse description triggers correctly
    - Tests with should-trigger, should-not-trigger, and ambiguous queries
    - Suggests description improvements if needed
-
-### creating-r-package (3 tests)
-
-1. **initialize-package-structure**: Tests package initialization
-   - Creates DESCRIPTION, NAMESPACE, R/, tests/, man/ directories
-   - Verifies required fields in DESCRIPTION
-   - Checks package structure follows R standards
-
-2. **add-function-with-roxygen**: Tests function creation with documentation
-   - Creates R/add_numbers.R with roxygen2 comments
-   - Runs devtools::document() to generate man/add_numbers.Rd
-   - Verifies @param, @return, @export tags
-
-3. **run-r-cmd-check**: Tests package validation
-   - Executes R CMD check or rcmdcheck::rcmdcheck()
-   - Reports errors, warnings, notes
-   - Verifies package passes (0 errors, 0 warnings)
 
 ## Running Tests
 
