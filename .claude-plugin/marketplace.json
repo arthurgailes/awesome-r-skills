@@ -1,5 +1,5 @@
 {
-  "name": "awesome-r-skills-marketplace",
+  "name": "r-package-skills-marketplace",
   "description": "R skills for AI coding agents",
   "version": "1.0.0",
   "owner": {
@@ -7,12 +7,12 @@
   },
   "plugins": [
     {
-      "name": "awesome-r-skills",
+      "name": "r-package-skills",
       "description": "R skills: collapse, mapgl, flextable, r-ai, and tools for creating your own R package skills",
       "version": "1.0.0",
       "source": {
         "source": "url",
-        "url": "https://github.com/arthurgailes/awesome-r-skills.git"
+        "url": "https://github.com/arthurgailes/r-package-skills.git"
       },
       "author": {
         "name": "Arthur Gailes"

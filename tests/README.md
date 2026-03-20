@@ -1,6 +1,6 @@
 # Test Suite for R Skills
 
-This directory contains test cases for the three integrated skills in the awesome-r-skills plugin.
+This directory contains test cases for the three integrated skills in the r-package-skills plugin.
 
 ## Structure
 

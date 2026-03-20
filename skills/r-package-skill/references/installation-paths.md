@@ -46,7 +46,7 @@ Skills stored in the current project's skill directory.
 **Path:** `./skills/r-{package}/` (relative to project root)
 
 **When to use:**
-- Contributing to awesome-r-skills or similar plugin
+- Contributing to r-package-skills or similar plugin
 - Team repository with shared skills
 - Project-specific skill customizations
 
@@ -85,8 +85,8 @@ W:\temp\test-skills\r-mapboxapi/
 
 **Installation via plugin marketplace:**
 ```bash
-/plugin marketplace add arthurgailes/awesome-r-skills
-/plugin install awesome-r-skills@awesome-r-skills
+/plugin marketplace add arthurgailes/r-package-skills
+/plugin install r-package-skills@r-package-skills
 ```
 
 Plugin skills are symlinked to Claude's skill directory.
@@ -97,8 +97,8 @@ Plugin skills are symlinked to Claude's skill directory.
 
 **Manual installation:**
 ```bash
-git clone https://github.com/arthurgailes/awesome-r-skills.git ~/.codex/awesome-r-skills
-ln -s ~/.codex/awesome-r-skills/skills ~/.agents/skills/awesome-r-skills
+git clone https://github.com/arthurgailes/r-package-skills.git ~/.codex/r-package-skills
+ln -s ~/.codex/r-package-skills/skills ~/.agents/skills/r-package-skills
 ```
 
 ### OpenCode
@@ -109,8 +109,8 @@ ln -s ~/.codex/awesome-r-skills/skills ~/.agents/skills/awesome-r-skills
 
 **Manual installation:**
 ```bash
-git clone https://github.com/arthurgailes/awesome-r-skills.git ~/.config/opencode/awesome-r-skills
-ln -s ~/.config/opencode/awesome-r-skills/skills ~/.config/opencode/skills/awesome-r-skills
+git clone https://github.com/arthurgailes/r-package-skills.git ~/.config/opencode/r-package-skills
+ln -s ~/.config/opencode/r-package-skills/skills ~/.config/opencode/skills/r-package-skills
 ```
 
 ## Workflow Integration
@@ -175,7 +175,7 @@ Try detection in order:
 
 ### Contributing to a Plugin Repository
 
-If user says "I'm contributing to awesome-r-skills" or similar:
+If user says "I'm contributing to r-package-skills" or similar:
 
 ```
 Path type: Project

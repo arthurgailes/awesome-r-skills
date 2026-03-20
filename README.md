@@ -1,4 +1,4 @@
-# Awesome R Skills
+# R Package Skills
 
 AI agents don't know every R package. When they encounter unfamiliar ones, they hallucinate APIs or fall back to verbose base R.
 
@@ -19,20 +19,20 @@ Works for any package—CRAN, GitHub, internal tools. Each skill is tested, grad
 ### Claude Code
 
 ```bash
-/plugin marketplace add arthurgailes/awesome-r-skills
-/plugin install awesome-r-skills@awesome-r-skills
+/plugin marketplace add arthurgailes/r-package-skills
+/plugin install r-package-skills@r-package-skills
 ```
 
 ### Codex
 
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/arthurgailes/awesome-r-skills/main/.codex/INSTALL.md
+Fetch and follow instructions from https://raw.githubusercontent.com/arthurgailes/r-package-skills/main/.codex/INSTALL.md
 ```
 
 ### OpenCode
 
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/arthurgailes/awesome-r-skills/main/.opencode/INSTALL.md
+Fetch and follow instructions from https://raw.githubusercontent.com/arthurgailes/r-package-skills/main/.opencode/INSTALL.md
 ```
 
 ## Quick Start

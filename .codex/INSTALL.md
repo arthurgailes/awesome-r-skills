@@ -1,4 +1,4 @@
-# Installing Awesome R Skills for Codex
+# Installing R Package Skills for Codex
 
 Opinionated R skills for fast data operations, interactive maps, and package skill creation.
 
@@ -12,7 +12,7 @@ Opinionated R skills for fast data operations, interactive maps, and package ski
 1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/arthurgailes/awesome-r-skills.git ~/.codex/awesome-r-skills
+git clone https://github.com/arthurgailes/r-package-skills.git ~/.codex/r-package-skills
 ```
 
 2. **Create symlink for skill discovery:**
@@ -21,14 +21,14 @@ git clone https://github.com/arthurgailes/awesome-r-skills.git ~/.codex/awesome-
 
 ```bash
 mkdir -p ~/.agents/skills
-ln -s ~/.codex/awesome-r-skills/skills ~/.agents/skills/awesome-r-skills
+ln -s ~/.codex/r-package-skills/skills ~/.agents/skills/r-package-skills
 ```
 
 **Windows (PowerShell as Administrator):**
 
 ```powershell
 New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.agents\skills"
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.agents\skills\awesome-r-skills" -Target "$env:USERPROFILE\.codex\awesome-r-skills\skills"
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.agents\skills\r-package-skills" -Target "$env:USERPROFILE\.codex\r-package-skills\skills"
 ```
 
 3. **Restart Codex**
@@ -48,13 +48,13 @@ New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.agents\skills\awesome-r
 ## Updating
 
 ```bash
-cd ~/.codex/awesome-r-skills
+cd ~/.codex/r-package-skills
 git pull
 ```
 
 ## Uninstalling
 
 ```bash
-rm ~/.agents/skills/awesome-r-skills
-rm -rf ~/.codex/awesome-r-skills  # optional
+rm ~/.agents/skills/r-package-skills
+rm -rf ~/.codex/r-package-skills  # optional
 ```

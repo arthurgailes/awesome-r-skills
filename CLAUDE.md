@@ -76,7 +76,7 @@ refs/                   # Research materials (gitignored)
 
 Plugin available for multiple agents:
 
-- **Claude Code**: `/plugin marketplace add arthurgailes/awesome-r-skills` then `/plugin install awesome-r-skills@awesome-r-skills`
+- **Claude Code**: `/plugin marketplace add arthurgailes/r-package-skills` then `/plugin install r-package-skills@r-package-skills`
 - **Codex/OpenCode**: Fetch installation instructions from `.codex/INSTALL.md` or `.opencode/INSTALL.md`
 
 ## Live R Access
