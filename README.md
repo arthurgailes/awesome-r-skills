@@ -56,50 +56,51 @@ Takes 10-12 minutes with 3-4 approval prompts. Skill appears at your chosen path
 
 ### Skill Generators
 
-| Skill                                                | Description                                        |
-| ---------------------------------------------------- | -------------------------------------------------- |
-| [r-package-skill](skills/r-package-skill/SKILL.md)   | Generate a skill from any R package documentation  |
-| [writing-r-skills](skills/writing-r-skills/SKILL.md) | Build skills from scratch using TDD methodology    |
+| Skill                                                | Description                                       |
+| ---------------------------------------------------- | ------------------------------------------------- |
+| [r-package-skill](skills/r-package-skill/SKILL.md)   | Generate a skill from any R package documentation |
+| [writing-r-skills](skills/writing-r-skills/SKILL.md) | Build skills from scratch using TDD methodology   |
 
 ### Package Skills
 
-#### Meta-Skills (Cross-Package Integration)
+#### Meta-Skills (Multi-Package Integration)
 
-| Skill                                | Focus                                                     |
-| ------------------------------------ | --------------------------------------------------------- |
-| [r-ai](skills/r-ai/SKILL.md)         | R AI ecosystem navigation and integration patterns        |
+| Skill                                  | Focus                                              |
+| -------------------------------------- | -------------------------------------------------- |
+| [r-ai](skills/r-ai/SKILL.md)           | R AI ecosystem navigation and integration patterns |
+| [r-mapping](skills/r-mapping/SKILL.md) | R mapping workflow guidance (freestiler + mapgl)   |
 
 #### R AI Packages
 
-| Skill                                    | Focus                                                 |
-| ---------------------------------------- | ----------------------------------------------------- |
-| [r-ellmer](skills/r-ellmer/SKILL.md)     | Chat with LLMs, multi-provider support (hub package)  |
-| [r-btw](skills/r-btw/SKILL.md)           | Provide R context (docs, data) to LLMs                |
-| [r-mcptools](skills/r-mcptools/SKILL.md) | Let AI agents execute R code in live sessions         |
-| [r-ragnar](skills/r-ragnar/SKILL.md)     | RAG workflows, vector stores, document search         |
-| [r-vitals](skills/r-vitals/SKILL.md)    | LLM output evaluation and quality testing             |
+| Skill                                    | Focus                                                |
+| ---------------------------------------- | ---------------------------------------------------- |
+| [r-ellmer](skills/r-ellmer/SKILL.md)     | Chat with LLMs, multi-provider support (hub package) |
+| [r-btw](skills/r-btw/SKILL.md)           | Provide R context (docs, data) to LLMs               |
+| [r-mcptools](skills/r-mcptools/SKILL.md) | Let AI agents execute R code in live sessions        |
+| [r-ragnar](skills/r-ragnar/SKILL.md)     | RAG workflows, vector stores, document search        |
+| [r-vitals](skills/r-vitals/SKILL.md)     | LLM output evaluation and quality testing            |
 
 #### Data & Performance
 
-| Skill                                          | Focus                                                     |
-| ---------------------------------------------- | --------------------------------------------------------- |
-| [r-collapse](skills/r-collapse/SKILL.md)       | Fast grouped/weighted stats, panel data transformations   |
-| [r-duckplyr](skills/r-duckplyr/SKILL.md)       | Lazy evaluation for large datasets with DuckDB backend    |
+| Skill                                    | Focus                                                   |
+| ---------------------------------------- | ------------------------------------------------------- |
+| [r-collapse](skills/r-collapse/SKILL.md) | Fast grouped/weighted stats, panel data transformations |
+| [r-duckplyr](skills/r-duckplyr/SKILL.md) | Lazy evaluation for large datasets with DuckDB backend  |
 
 #### Spatial & Visualization
 
-| Skill                                          | Focus                                                     |
-| ---------------------------------------------- | --------------------------------------------------------- |
-| [r-duckspatial](skills/r-duckspatial/SKILL.md) | Spatial operations on large geometries via DuckDB         |
-| [r-flextable](skills/r-flextable/SKILL.md)     | Publication-ready tables for Word/PowerPoint/PDF          |
-| [r-freestiler](skills/r-freestiler/SKILL.md)   | Vector tilesets (PMTiles) from large spatial data         |
-| [r-mapgl](skills/r-mapgl/SKILL.md)             | Interactive WebGL maps, vector tiles, Shiny applications  |
+| Skill                                          | Focus                                                    |
+| ---------------------------------------------- | -------------------------------------------------------- |
+| [r-duckspatial](skills/r-duckspatial/SKILL.md) | Spatial operations on large geometries via DuckDB        |
+| [r-flextable](skills/r-flextable/SKILL.md)     | Publication-ready tables for Word/PowerPoint/PDF         |
+| [r-freestiler](skills/r-freestiler/SKILL.md)   | Vector tilesets (PMTiles) from large spatial data        |
+| [r-mapgl](skills/r-mapgl/SKILL.md)             | Interactive WebGL maps, vector tiles, Shiny applications |
 
 ### Development Workflows
 
-| Skill                                                    | Focus                                 |
-| -------------------------------------------------------- | ------------------------------------- |
-| [creating-r-package](skills/creating-r-package/SKILL.md) | R package creation and project setup  |
+| Skill                                                    | Focus                                |
+| -------------------------------------------------------- | ------------------------------------ |
+| [creating-r-package](skills/creating-r-package/SKILL.md) | R package creation and project setup |
 
 ## What Skills Do
 
@@ -149,6 +150,7 @@ Skills follow a test-driven workflow:
 3. **REFACTOR**: Close loopholes, add edge cases, optimize.
 
 Validators check domain-specific correctness:
+
 - `plot-validator.R` - ggplot2 visualizations have required layers
 - `spatial-validator.R` - geometries are valid, projections correct
 - `html-validator.R` - tables render, conditional formatting works
@@ -167,6 +169,7 @@ New skills follow the TDD methodology in [writing-r-skills](skills/writing-r-ski
 Package skills go in `skills/r-{package}/`. Goal-oriented skills (workflows that span multiple packages) are preferred when they make sense.
 
 Each skill needs:
+
 - `SKILL.md` under 500 words (overview, when to use, common mistakes)
 - `references/` directory with detailed docs
 - Test cases in `tests/{skill-name}/evals.json`
