@@ -1,106 +1,106 @@
 ---
 name: r-ai
-description: Use when building LLM-powered R applications, using ellmer/ragnar/mcptools packages in R, connecting R to AI agents, implementing RAG workflows, or evaluating AI outputs
+description: Use when building LLM-powered R applications, implementing RAG workflows, or needing guidance on which R AI package to use (meta-skill for ellmer/btw/mcptools/ragnar/vitals)
 ---
 
-# R AI Ecosystem
+# R AI Ecosystem (Meta-Skill)
 
 ## Overview
 
-**Five packages form the R AI stack:** ellmer (chat), btw (context tools), mcptools (agent integration), ragnar (RAG), vitals (evaluation). Ellmer is the hub.
+**This is a meta-skill** that helps you choose the right R AI package. The R AI stack consists of 5 specialized packages, each with its own skill.
 
-**Install:** `install.packages(c("ellmer", "btw", "mcptools", "ragnar", "vitals"))`
+**Install all:** `install.packages(c("ellmer", "btw", "mcptools", "ragnar", "vitals"))`
 
 **API keys:** Set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` in `.Renviron`
 
-## When to Use Which
+## When to Use Which Package
 
-| Package | Use When | Key Function |
-|---------|----------|--------------|
-| **ellmer** | Chat with any LLM from R | `chat_openai()`, `chat_ollama()` |
-| **btw** | Provide context (docs, data, git) to LLMs | `btw_tools()` |
-| **mcptools** | Let Claude/VS Code run R code | `mcp_session()` |
-| **ragnar** | LLM searches your documents | `ragnar_register_tool_retrieve()` |
-| **vitals** | Test LLM output quality | `Task$new()` |
+| Package | Use When | Skill |
+|---------|----------|-------|
+| **ellmer** | Chat with any LLM from R | `/r-ellmer` |
+| **btw** | Provide R context (docs, data) to LLMs | `/r-btw` |
+| **mcptools** | Let agents (Claude Code) run R code | `/r-mcptools` |
+| **ragnar** | LLM searches your documents (RAG) | `/r-ragnar` |
+| **vitals** | Test LLM output quality | `/r-vitals` |
+
+**Navigation:** When you know which package you need, invoke the specific skill above.
 
 ## When NOT to Use
 
-- Single one-off API call (use httr2 instead)
+- Single one-off API call (use httr2)
 - Non-chat ML workflows (use tidymodels)
-- Need streaming callbacks with custom handling
-- Building production REST APIs (use plumber)
+- Production REST APIs (use plumber)
 
-## Quick Start
+## Key Distinctions
+
+**btw vs mcptools:**
+- **btw** = Give tools TO ellmer (R → LLM): Chat can read R docs/data
+- **mcptools** = Let agents INTO R (LLM → R): Agents can run R code
+
+**ellmer vs ragnar:**
+- **ellmer** = Direct chat, limited by context window
+- **ragnar** = Chat searches documents first (RAG)
+
+## Common Integration Patterns
+
+### Chat + Context Tools
 
 ```r
-# ellmer: Chat
 library(ellmer)
-chat <- chat_openai()
-chat$chat("Explain this error")
-
-# btw: Context tools
 library(btw)
-btw("ggplot2")              # Copy docs to clipboard
-chat$set_tools(btw_tools()) # Register with ellmer
-
-# mcptools: Agent access
-library(mcptools)
-mcp_session()  # In console, each startup
-
-# ragnar: RAG
-library(ragnar)
-docs <- read_as_markdown("docs/")
-chunks <- markdown_chunk(docs)
-store <- ragnar_store_create("docs.duckdb")
-ragnar_store_insert(store, chunks)
-
-chat <- chat_openai()
-ragnar_register_tool_retrieve(chat, store)
-chat$chat("What does the documentation say?")
-
-# vitals: Evaluation
-library(vitals)
-task <- Task$new(
-  dataset = test_cases,
-  solver = generate(),
-  scorer = model_graded_qa()
-)
-task$run(chat_openai())
-```
-
-## Common Mistakes
-
-| Issue | Solution |
-|-------|----------|
-| Stateful chat | Each `$chat()` adds to history. New chat = fresh context |
-| btw vs mcptools | btw gives tools TO ellmer; mcptools lets agents INTO R |
-| Embedding mismatch | Store and retrieval must use same provider |
-| mcp_session() per-session | Call each R startup, in console not scripts |
-| Ollama not running | Start with `ollama serve` first |
-
-## Integration Patterns
-
-```r
-# Chat + context
 chat <- chat_openai()
 chat$set_tools(btw_tools())
+```
 
-# Chat + RAG
+### Chat + RAG
+
+```r
+library(ellmer)
+library(ragnar)
+chat <- chat_openai()
 ragnar_register_tool_retrieve(chat, store)
+```
 
-# Fully local
+### Agent Access to R
+
+```r
+library(mcptools)
+mcp_session()  # In console, each startup
+# Now Claude Code can run R code
+```
+
+### Fully Local (Ollama)
+
+```r
+library(ellmer)
 chat <- chat_ollama(model = "llama3.2")
+
+library(ragnar)
 store <- ragnar_store_create("local.duckdb",
   embed = ragnar_embed_ollama(model = "nomic-embed-text"))
+```
+
+### RAG Evaluation
+
+```r
+library(vitals)
+library(ellmer)
+library(ragnar)
+
+chat <- chat_openai()
+ragnar_register_tool_retrieve(chat, store)
+
+task <- Task$new(
+  dataset = test_cases,
+  solver = function(input) chat$chat(input, echo = "none"),
+  scorer = model_graded_qa()
+)
+task$run()
 ```
 
 ## Advanced
 
 See `references/` for:
-- **ellmer-getting-started.md**: Getting started vignette
-- **ellmer-tool-calling.md**: Tool/function calling vignette
-- **ragnar-rag.md**: RAG vignette
-- **mcptools-server.md**: R as MCP server vignette
-- **integration-patterns.md**: Cross-package integration
-- **ellmer-api.md**, **btw-api.md**, **mcptools-api.md**, **ragnar-api.md**, **vitals-api.md**: Function references
-- **ellmer.md**, **btw.md**, **ragnar.md**, **mcptools.md**, **vitals.md**: Package documentation
+- **integration-patterns.md**: Full cross-package integration examples
+
+For package-specific documentation, invoke the individual package skills above.

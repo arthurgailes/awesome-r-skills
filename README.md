@@ -63,11 +63,33 @@ Takes 10-12 minutes with 3-4 approval prompts. Skill appears at your chosen path
 
 ### Package Skills
 
+#### Meta-Skills (Cross-Package Integration)
+
+| Skill                                | Focus                                                     |
+| ------------------------------------ | --------------------------------------------------------- |
+| [r-ai](skills/r-ai/SKILL.md)         | R AI ecosystem navigation and integration patterns        |
+
+#### R AI Packages
+
+| Skill                                    | Focus                                                 |
+| ---------------------------------------- | ----------------------------------------------------- |
+| [r-ellmer](skills/r-ellmer/SKILL.md)     | Chat with LLMs, multi-provider support (hub package)  |
+| [r-btw](skills/r-btw/SKILL.md)           | Provide R context (docs, data) to LLMs                |
+| [r-mcptools](skills/r-mcptools/SKILL.md) | Let AI agents execute R code in live sessions         |
+| [r-ragnar](skills/r-ragnar/SKILL.md)     | RAG workflows, vector stores, document search         |
+| [r-vitals](skills/r-vitals/SKILL.md)    | LLM output evaluation and quality testing             |
+
+#### Data & Performance
+
 | Skill                                          | Focus                                                     |
 | ---------------------------------------------- | --------------------------------------------------------- |
-| [r-ai](skills/r-ai/SKILL.md)                   | LLM integration, RAG workflows (ellmer/ragnar/mcptools)   |
 | [r-collapse](skills/r-collapse/SKILL.md)       | Fast grouped/weighted stats, panel data transformations   |
 | [r-duckplyr](skills/r-duckplyr/SKILL.md)       | Lazy evaluation for large datasets with DuckDB backend    |
+
+#### Spatial & Visualization
+
+| Skill                                          | Focus                                                     |
+| ---------------------------------------------- | --------------------------------------------------------- |
 | [r-duckspatial](skills/r-duckspatial/SKILL.md) | Spatial operations on large geometries via DuckDB         |
 | [r-flextable](skills/r-flextable/SKILL.md)     | Publication-ready tables for Word/PowerPoint/PDF          |
 | [r-freestiler](skills/r-freestiler/SKILL.md)   | Vector tilesets (PMTiles) from large spatial data         |
@@ -92,12 +114,13 @@ resp <- httr2::request("https://api.openai.com/v1/chat/completions") |>
   httr2::req_body_json(list(messages = ...))
 ```
 
-**With r-ai skill:**
+**With r-ai meta-skill and package skills:**
 
 ```r
-# Agent knows the ecosystem
-chat <- chat_openai()
-ragnar_register_tool_retrieve(chat, store)
+# Agent knows the ecosystem and uses the right packages
+chat <- chat_openai()                          # r-ellmer
+chat$set_tools(btw_tools())                    # r-btw
+ragnar_register_tool_retrieve(chat, store)     # r-ragnar
 chat$chat("What does the documentation say about X?")
 ```
 
