@@ -13,6 +13,15 @@ description: Use when providing R context (docs, data, git info) to LLMs, regist
 
 **Install:** `install.packages("btw")`
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/API.md` - Complete function reference
+□ `references/package-docs.md` - Tool registration and usage patterns
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use
 
 - Copy R object descriptions to clipboard for LLMs

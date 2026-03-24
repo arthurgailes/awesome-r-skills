@@ -11,6 +11,14 @@ description: Use when working with large spatial vector datasets in R that don't
 
 **Core principle:** Lazy evaluation keeps data outside R memory. Operations execute in DuckDB's query engine with optimization before results return.
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/API.md` - Complete function reference and spatial operations
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use
 
 - Dataset too large for sf to load into memory

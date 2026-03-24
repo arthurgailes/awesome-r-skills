@@ -9,6 +9,18 @@ description: Use when creating PMTiles vector tilesets from large spatial datase
 
 **freestiler converts spatial data into PMTiles vector tilesets.** Rust-powered tool for creating `.pmtiles` from sf objects, files, or DuckDB SQL.
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/API.md` - Complete function reference with all parameters
+□ `references/getting-started.md` - Usage patterns and parameter examples
+□ `references/zoom-strategy.md` - Zoom level guidance by geometry type
+□ `references/workflows.md` - Complete workflows and integration patterns
+□ `references/mapping.md` - Visualization and server configuration
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use
 
 **Use when:**
@@ -23,13 +35,13 @@ description: Use when creating PMTiles vector tilesets from large spatial datase
 
 ## Quick Reference
 
-| Function            | Use Case                  | Key Params                                                             |
-| ------------------- | ------------------------- | ---------------------------------------------------------------------- |
-| `freestile()`       | Tile sf objects           | `input`, `output`, `layer_name`, `min_zoom`, `max_zoom`, `tile_format` |
-| `freestile_query()` | Tile from SQL (streaming) | `query`, `output`, `layer_name`, `streaming = "always"`                |
-| `freestile_file()`  | Tile without loading      | `input`, `output`, `layer_name`, `engine`                              |
-| `view_tiles()`      | Quick visualization       | `input`, `layer_type`, `color`                                         |
-| `serve_tiles()`     | Start local server        | `path`, `port`                                                         |
+| Function            | Use Case                  | Key Params                                                                                 |
+| ------------------- | ------------------------- | ------------------------------------------------------------------------------------------ |
+| `freestile()`       | Tile sf objects           | `input`, `output`, `layer_name`, `min_zoom`, `max_zoom`, `base_zoom` (opt), `drop_rate` (opt), `tile_format` (opt) |
+| `freestile_query()` | Tile from SQL (streaming) | `query`, `output`, `layer_name`, `min_zoom`, `max_zoom`, `streaming = "always"`           |
+| `freestile_file()`  | Tile without loading      | `input`, `output`, `layer_name`, `min_zoom`, `max_zoom`, `engine`                         |
+| `view_tiles()`      | Quick visualization       | `input`, `layer_type`, `color`                                                             |
+| `serve_tiles()`     | Start local server        | `path`, `port`                                                                             |
 
 ## Quick Start
 
@@ -37,9 +49,9 @@ description: Use when creating PMTiles vector tilesets from large spatial datase
 library(freestiler)
 library(sf)
 
-# Basic workflow
+# Basic workflow - counties use max_zoom = 10
 nc <- st_read(system.file("shape/nc.shp", package = "sf"))
-freestile(input = nc, output = "nc.pmtiles", layer_name = "counties")
+freestile(input = nc, output = "nc.pmtiles", layer_name = "counties", max_zoom = 10)
 view_tiles("nc.pmtiles")  # Auto-starts server + opens map
 
 # Large datasets: streaming

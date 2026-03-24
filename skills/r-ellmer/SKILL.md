@@ -13,6 +13,16 @@ description: Use when chatting with LLMs from R, creating chatbots, extracting s
 
 **API keys:** Set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` in `.Renviron`
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/API.md` - Complete function reference
+□ `references/getting-started.md` - Core workflow and chat patterns
+□ `references/tool-calling.md` - Tool registration and function calling
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use
 
 - Chat with any LLM from R

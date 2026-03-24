@@ -13,6 +13,16 @@ description: Use when connecting AI agents (Claude Code, VS Code) to running R s
 
 **Install:** `install.packages("mcptools")`
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/API.md` - Complete function reference
+□ `references/package-docs.md` - Setup and configuration
+□ `references/server.md` - MCP server setup and agent configuration
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use
 
 - Let Claude Code/VS Code run R code

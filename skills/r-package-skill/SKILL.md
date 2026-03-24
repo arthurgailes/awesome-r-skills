@@ -64,6 +64,37 @@ skills/r-{package}/
 
 **Description must include package name** so skill triggers when user mentions package or writes `library(package)`.
 
+## SKILL.md Template Requirements
+
+**Every generated SKILL.md must include a mandatory context block immediately after Overview:**
+
+```markdown
+## Overview
+
+[Package description]
+
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/API.md` - Complete function reference
+□ `references/getting-started.md` - Usage patterns and examples
+□ `references/[other-key-doc].md` - [specific guidance]
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+```
+
+**Checkpoint list must:**
+- List ALL files in `references/` (except truly optional advanced docs)
+- Use checkbox format (`□`) for clear verification
+- Include brief description of what each reference contains
+
+**Quick Reference table must be COMPLETE:**
+- Show ALL important parameters, even if optional/advanced
+- Mark tiers: required (no mark), `(opt)` optional, `(adv)` advanced
+- DO NOT hide parameters that affect performance/output size
+- Example: For tiling functions, MUST show zoom parameters even if they have defaults
+
 ## R-Specific Test Cases
 
 When testing R package skills (using methodology from writing-r-skills):

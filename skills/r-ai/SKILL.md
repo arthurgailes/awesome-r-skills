@@ -13,6 +13,14 @@ description: Use when building LLM-powered R applications, implementing RAG work
 
 **API keys:** Set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` in `.Renviron`
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/integration-patterns.md` - How packages work together in workflows
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use Which Package
 
 | Package | Use When | Skill |

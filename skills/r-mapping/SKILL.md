@@ -13,6 +13,14 @@ description: Use when creating interactive maps in R, working with large spatial
 
 **API keys:** Mapbox styles require `MAPBOX_PUBLIC_TOKEN`; MapLibre works without keys (CARTO/OpenFreeMap)
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/integration-patterns.md` - How freestiler and mapgl work together
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use Which Package
 
 | Package | Use When | Skill |

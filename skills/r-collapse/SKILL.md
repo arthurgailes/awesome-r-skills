@@ -11,6 +11,18 @@ description: Use when performing fast grouped/weighted statistical operations, p
 
 **Core principle:** Fast aggregation, transformation, and panel data operations through vectorized C code.
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/API.md` - Complete function reference
+□ `references/collapse-for-tidyverse-users.md` - Migration guide and patterns
+□ `references/collapse-documentation.md` - Core concepts and usage
+□ `references/collapse-and-sf.md` - Working with spatial data
+□ `references/collapse-object-handling.md` - Data structure handling
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use
 
 **Use collapse when:**

@@ -695,14 +695,19 @@ Deploying untested skills = deploying untested code. It's a violation of quality
 - [ ] Description written in third person
 - [ ] Keywords throughout for search (errors, symptoms, tools)
 - [ ] Clear overview with core principle
+- [ ] **For R package skills:** Add `<MANDATORY-CONTEXT>` block with checkbox list of all `references/` files
+- [ ] **Quick Reference table is COMPLETE:** Shows all important parameters (mark optional/advanced, but don't hide them)
 - [ ] Address specific baseline failures identified in RED
 - [ ] Code inline OR link to separate file
 - [ ] One excellent example (not multi-language)
-- [ ] Run scenarios WITH skill - verify agents now comply
+- [ ] Run scenarios WITH skill - verify agents READ ALL REFERENCES before writing code
+- [ ] Verify agents now comply with skill requirements
 
 **REFACTOR Phase - Close Loopholes:**
 
 - [ ] Identify NEW rationalizations from testing
+- [ ] **For R package skills:** Verify agents read ALL `references/` before writing code (not just SKILL.md)
+- [ ] **For R package skills:** Verify Quick Reference didn't hide critical parameters (zoom levels, performance params)
 - [ ] Add explicit counters (if discipline skill)
 - [ ] Build rationalization table from all test iterations
 - [ ] Create red flags list

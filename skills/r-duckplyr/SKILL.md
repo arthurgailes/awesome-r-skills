@@ -9,6 +9,14 @@ description: Use when processing datasets >100k rows with dplyr syntax, using th
 
 **duckplyr is a drop-in replacement for dplyr powered by DuckDB for speed and memory efficiency.** It uses identical syntax but lazy evaluation - operations execute only when results are needed, enabling processing of datasets larger than available RAM.
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/API.md` - Complete function reference and lazy evaluation patterns
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use duckplyr vs Alternatives
 
 | Use duckplyr when...       | Use dplyr when...      | Use duckspatial when...  | Use data.table when...       |

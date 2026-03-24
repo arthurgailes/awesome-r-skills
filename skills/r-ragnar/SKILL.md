@@ -11,6 +11,16 @@ description: Use when implementing RAG (Retrieval Augmented Generation), searchi
 
 **Install:** `install.packages("ragnar")`
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/API.md` - Complete function reference
+□ `references/package-docs.md` - Vector store setup and usage
+□ `references/rag.md` - RAG patterns and ellmer integration
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use
 
 - LLM needs to search your documentation

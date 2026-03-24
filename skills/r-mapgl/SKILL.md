@@ -9,6 +9,15 @@ description: Use when creating interactive WebGL maps in R with mapgl, mapboxgl,
 
 **mapgl wraps Mapbox GL JS and MapLibre GL JS for R.** Use it for smooth, GPU-accelerated interactive maps with vector tiles, 3D terrain, and Shiny integration.
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/API.md` - Complete function reference and layer types
+□ `references/styling.md` - Map styling, colors, and visual properties
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use
 
 **Choose mapgl for:**

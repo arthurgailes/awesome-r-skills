@@ -11,6 +11,15 @@ description: Use when evaluating LLM output quality, testing RAG retrieval accur
 
 **Install:** `install.packages("vitals")`
 
+<MANDATORY-CONTEXT>
+Before using this skill, you MUST read:
+
+□ `references/API.md` - Complete function reference
+□ `references/package-docs.md` - Test suite creation and scoring patterns
+
+DO NOT write code until verifying all references above are read.
+</MANDATORY-CONTEXT>
+
 ## When to Use
 
 - Test LLM output quality
