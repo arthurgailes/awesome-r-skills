@@ -79,4 +79,6 @@ help_topics <- btw_tool_docs_package_help_topics(package_name)
 4. **Polish vignettes** → `{base_path}/references/vignette-name.md` (as needed)
 5. **Write SKILL.md** → `{base_path}/SKILL.md` (<500 words)
 
-**Temporary files:** Use appropriate temp directory if needed during doc gathering. Clean up after extraction.
+**Temporary files during doc gathering:** Use appropriate temp directory if needed during doc gathering. Clean up after extraction.
+
+**NOTE:** This is about temp files during skill CREATION. For temp files during skill USAGE (executing R code), see "R Execution Patterns" in SKILL.md.
