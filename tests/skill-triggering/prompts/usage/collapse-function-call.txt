@@ -1,0 +1,1 @@
+I need to compute weighted averages across groups in my panel data. I heard collapse::fmean is good for this but I'm not sure how to use it with weights.

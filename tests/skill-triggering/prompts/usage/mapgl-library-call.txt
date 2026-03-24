@@ -1,0 +1,13 @@
+Help me write a script that creates an interactive map. Here's what I have so far:
+
+```r
+library(mapgl)
+library(sf)
+
+# Load some spatial data
+data <- st_read("cities.geojson")
+
+# TODO: Create an interactive map showing these cities
+```
+
+Can you complete this script?
