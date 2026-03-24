@@ -82,6 +82,17 @@ When testing R package skills (using methodology from writing-r-skills):
 
 See writing-r-skills for how validators integrate with grading agents.
 
+## R Execution Patterns
+
+**Prefer ad hoc code over script files:**
+- Default: `Rscript -e "code"` or mcptools MCP
+- Only create scripts if user requests OR code is long-running (hours+)
+
+**If scripts are unavoidable:**
+- Label as temp: `temp_*.R` or use `tempfile()`
+- Clean up: `on.exit(unlink("temp_script.R"))` or `file.remove()`
+- Never leave `download_data.R`, `analysis.R`, etc. cluttering the project
+
 ## Workflow
 
 Follow writing-r-skills TDD methodology:
