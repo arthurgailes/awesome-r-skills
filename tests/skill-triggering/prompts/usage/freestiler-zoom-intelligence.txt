@@ -1,0 +1,1 @@
+I have county-level population data in an sf object called `counties`. Create a PMTiles tileset for visualization with mapgl. The output should be called "counties_pop.pmtiles" with layer name "counties".

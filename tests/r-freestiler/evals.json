@@ -1,0 +1,59 @@
+{
+  "skill_name": "r-freestiler",
+  "description": "Tests that r-freestiler skill reads references and applies parameter intelligence",
+  "evals": [
+    {
+      "id": 1,
+      "name": "county-zoom-intelligence",
+      "prompt": "I have county-level population data in an sf object called `counties` with 3,222 features. Create a PMTiles tileset for visualization with mapgl. The output should be called 'counties_pop.pmtiles' with layer name 'counties'.",
+      "expected_output": "Agent reads references/zoom-strategy.md and uses max_zoom = 10 for county data (not default 0-14)",
+      "files": [],
+      "assertions": [
+        {
+          "type": "code_pattern",
+          "description": "Code includes max_zoom parameter",
+          "check": "contains 'max_zoom' parameter in freestile() call"
+        },
+        {
+          "type": "code_pattern",
+          "description": "max_zoom value is appropriate for counties (8-11, not 14)",
+          "check": "max_zoom = 8, 9, 10, or 11 (appropriate for county-level data)"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Does NOT use bloated default zoom levels",
+          "check": "does NOT contain 'max_zoom = 14' or 'max_zoom = 13' or 'max_zoom = 12'"
+        },
+        {
+          "type": "qualitative",
+          "description": "Agent demonstrates reading references/zoom-strategy.md",
+          "check": "Output mentions zoom guidance for county data OR cites zoom-strategy.md OR explains why max_zoom = 10 is appropriate"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "mandatory-context-compliance",
+      "prompt": "Create vector tiles from this buildings dataset using freestiler. The data has 50,000 building footprints.",
+      "expected_output": "Agent reads MANDATORY-CONTEXT block references before writing code",
+      "files": [],
+      "assertions": [
+        {
+          "type": "code_pattern",
+          "description": "Uses appropriate zoom for small features (buildings)",
+          "check": "max_zoom value between 12-16 (appropriate for building-level detail)"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Includes layer_name parameter",
+          "check": "contains 'layer_name' parameter"
+        },
+        {
+          "type": "qualitative",
+          "description": "Shows evidence of reading references before coding",
+          "check": "Agent mentions reading references OR cites specific guidance from zoom-strategy.md for building-level features"
+        }
+      ]
+    }
+  ]
+}

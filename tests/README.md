@@ -10,6 +10,9 @@ tests/
     evals.json          # 3 test cases for R package skill creation
   writing-r-skills/
     evals.json          # 3 test cases for universal skill methodology
+  r-freestiler/
+    evals.json          # 2 test cases for reference-reading and parameter intelligence
+  skill-triggering/     # Simple trigger tests (bash scripts)
   README.md             # This file
 ```
 
@@ -50,6 +53,22 @@ tests/
    - Evaluates whether r-collapse description triggers correctly
    - Tests with should-trigger, should-not-trigger, and ambiguous queries
    - Suggests description improvements if needed
+
+### r-freestiler (2 tests)
+
+1. **county-zoom-intelligence**: Tests parameter intelligence from references
+   - Agent creates tileset for 3,222 county features
+   - Verifies max_zoom = 8-11 (appropriate for counties, NOT default 0-14)
+   - Checks code includes max_zoom parameter
+   - Confirms agent read zoom-strategy.md reference
+
+2. **mandatory-context-compliance**: Tests that <MANDATORY-CONTEXT> block works
+   - Agent creates tileset for building footprints (small features)
+   - Verifies max_zoom = 12-16 (appropriate for buildings)
+   - Confirms agent demonstrates reading references before writing code
+   - Tests that references/ docs are not skipped
+
+**Why these tests exist**: Prevents regression of the "intelligence gap" where skills provide correct API but fail to surface parameter guidance. Before the `<MANDATORY-CONTEXT>` fix, agents would skip references and generate bloated tilesets (195k+ tiles at zoom 11 for counties).
 
 ## Running Tests
 
