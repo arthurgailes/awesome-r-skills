@@ -43,6 +43,18 @@ run_test "r-mapgl" "prompts/usage/mapgl-library-call.txt"
 # Test 3: Package skill trigger on package::function() call
 run_test "r-collapse" "prompts/usage/collapse-function-call.txt"
 
+# Test 4: Trigger on pacman::p_load() with multiple packages
+run_test "r-mapgl" "prompts/usage/pacman-p-load-multi.txt"
+
+# Test 5: Trigger on .pmtiles file reference (no package name)
+run_test "r-freestiler" "prompts/usage/pmtiles-file-only.txt"
+
+# Test 6: Trigger on namespace::function() call (ellmer)
+run_test "r-ellmer" "prompts/usage/namespace-ellmer.txt"
+
+# Test 7: Trigger on library() + file extension (.docx)
+run_test "r-flextable" "prompts/usage/library-flextable-docx.txt"
+
 echo "================================"
 echo "Test Summary"
 echo "================================"
