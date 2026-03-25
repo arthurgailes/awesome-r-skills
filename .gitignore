@@ -12,3 +12,4 @@ screenshot_example.R
 .playwright-mcp
 docs
 .env
+*.db
