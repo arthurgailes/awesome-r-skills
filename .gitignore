@@ -11,3 +11,4 @@ screenshot_example.R
 .Rhistory
 .playwright-mcp
 docs
+.env

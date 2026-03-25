@@ -1,4 +1,4 @@
-# R Package Skills
+# R Package Skills <img src="man/figures/logo.png" align="right" height="139" />
 
 AI agents don't know every R package. When they encounter unfamiliar ones, they hallucinate APIs or fall back to verbose base R.
 
