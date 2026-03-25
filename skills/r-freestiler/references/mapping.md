@@ -174,15 +174,33 @@ freestile(bgs, "us_income_mvt.pmtiles",
 )
 ```
 
-## Serving Large Tilesets
+## Serving Large Tilesets (>500 MB)
 
-The included `serve_tiles()` function works effectively for files up to approximately 1 GB. For larger datasets, deploy an external server with superior concurrency capabilities. Using Node's http-server (if installed):
+The included `serve_tiles()` function works for files up to ~1 GB. For larger tilesets, use `npx http-server` from within R for better byte-range request performance:
 
-```bash
-npx http-server /path/to/tiles -p 8082 --cors -c-1
+```r
+# Check npx availability and start server for large PMTiles
+start_npx_server <- function(tile_path, port = 8080) {
+  if (system2("npx", "--version", stdout = FALSE, stderr = FALSE) != 0) {
+    warning("npx not found. Install Node.js or use serve_tiles() instead.")
+    return(invisible(NULL))
+  }
+  tile_dir <- dirname(tile_path)
+  proc <- processx::process$new(
+    "npx", c("http-server", tile_dir, "-p", as.character(port), "--cors", "-c-1"),
+    stdout = NULL, stderr = NULL
+  )
+  Sys.sleep(2)
+  message(sprintf("Server running at http://localhost:%s", port))
+  message("Stop with: proc$kill()")
+  proc
+}
+
+# Usage
+proc <- start_npx_server("tiles/large_file.pmtiles", port = 8082)
 ```
 
-Update your source URL to reference the external server:
+Then reference the external server in your map source:
 
 ```r
 add_pmtiles_source(
@@ -192,7 +210,9 @@ add_pmtiles_source(
 )
 ```
 
-Note: External servers deliver improved performance across all dataset sizes. Terminate with Ctrl+C when finished.
+**When to use:** File size >1 GB, or `serve_tiles()` is slow/unresponsive. `npx http-server` handles concurrent byte-range requests much better than R's built-in server.
+
+Note: Python's `http.server` does NOT support byte-range requests for PMTiles.
 
 ## Cleanup
 

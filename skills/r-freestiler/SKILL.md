@@ -24,24 +24,26 @@ DO NOT write code until verifying all references above are read.
 ## When to Use
 
 **Use when:**
+
 - Dataset >10k features (too large for direct mapgl)
 - Need static hosting
 - Dataset exceeds memory
 
 **Don't use:**
+
 - <10k features - pass sf to mapgl directly
 - Quick exploration - use `maplibre_view()`
 - Existing tile pipeline works
 
 ## Quick Reference
 
-| Function            | Use Case                  | Key Params                                                                                 |
-| ------------------- | ------------------------- | ------------------------------------------------------------------------------------------ |
+| Function            | Use Case                  | Key Params                                                                                                         |
+| ------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `freestile()`       | Tile sf objects           | `input`, `output`, `layer_name`, `min_zoom`, `max_zoom`, `base_zoom` (opt), `drop_rate` (opt), `tile_format` (opt) |
-| `freestile_query()` | Tile from SQL (streaming) | `query`, `output`, `layer_name`, `min_zoom`, `max_zoom`, `streaming = "always"`           |
-| `freestile_file()`  | Tile without loading      | `input`, `output`, `layer_name`, `min_zoom`, `max_zoom`, `engine`                         |
-| `view_tiles()`      | Quick visualization       | `input`, `layer_type`, `color`                                                             |
-| `serve_tiles()`     | Start local server        | `path`, `port`                                                                             |
+| `freestile_query()` | Tile from SQL (streaming) | `query`, `output`, `layer_name`, `min_zoom`, `max_zoom`, `streaming = "always"`                                    |
+| `freestile_file()`  | Tile without loading      | `input`, `output`, `layer_name`, `min_zoom`, `max_zoom`, `engine`                                                  |
+| `view_tiles()`      | Quick visualization       | `input`, `layer_type`, `color`                                                                                     |
+| `serve_tiles()`     | Start local server        | `path`, `port`                                                                                                     |
 
 ## Quick Start
 
@@ -87,9 +89,7 @@ maplibre() |>
 4. **Large sf objects:** Use `freestile_file()` or `freestile_query()` to avoid loading into memory
 5. **Massive points (10M+):** Add `streaming = "always"` to `freestile_query()`
 6. **Tile format:** MLT (default, smaller files) vs MVT (broader compatibility, use for Python)
-7. **Large tilesets (>1GB):** Built-in server limited; use `npx http-server /path/to/tiles -p 8082 --cors -c-1`
-
-Note: Python's `http.server` does NOT support byte-range requests for PMTiles.
+7. **Large tilesets (>500MB):** `serve_tiles()` struggles with byte-range requests; launch `npx http-server` from R via `processx::process$new()` instead. See `references/mapping.md` "Serving Large Tilesets" for a ready-made helper function.
 
 ## When NOT to Use
 
@@ -100,6 +100,7 @@ Note: Python's `http.server` does NOT support byte-range requests for PMTiles.
 ## Advanced
 
 See `references/` for:
+
 - **API.md**: Complete function reference
 - **getting-started.md**, **mapping.md**: CRAN vignettes
 - Workflows, zoom strategy, SQL patterns, performance tips
