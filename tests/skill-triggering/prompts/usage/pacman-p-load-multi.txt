@@ -1,0 +1,5 @@
+Help me finish this script:
+
+pacman::p_load(mapgl, tileserver)
+
+# Load and display exploration/name_methodology_change/either_test.pmtiles

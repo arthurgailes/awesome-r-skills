@@ -1,6 +1,6 @@
 ---
 name: r-vitals
-description: Use when evaluating LLM output quality, testing RAG retrieval accuracy, scoring AI-generated responses, or benchmarking prompt changes
+description: Use when code loads or uses vitals (library(vitals), vitals::), evaluating LLM output quality, scoring AI responses, testing RAG retrieval accuracy, or benchmarking prompt changes in R
 ---
 
 # vitals: LLM Evaluation and Testing

@@ -62,7 +62,16 @@ skills/r-{package}/
 
 **Always include:** `references/API.md` + all vignettes from CRAN.
 
-**Description must include package name** so skill triggers when user mentions package or writes `library(package)`.
+**Description MUST follow this pattern** for reliable triggering:
+
+```yaml
+description: Use when code loads or uses {package} (library({package}), {package}::), [file-type triggers if applicable], [domain-specific triggers]
+```
+
+**Required elements:**
+1. Package name with `library()` and `::` call patterns (explicit tokens Claude matches on)
+2. Relevant file extensions if the package works with specific file types (.pmtiles, .parquet, .docx)
+3. Domain-specific problem descriptions (what the user is trying to do)
 
 ## SKILL.md Template Requirements
 

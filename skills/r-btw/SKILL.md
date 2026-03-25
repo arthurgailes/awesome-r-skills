@@ -1,6 +1,6 @@
 ---
 name: r-btw
-description: Use when providing R context (docs, data, git info) to LLMs, registering tools for ellmer chat sessions, or copying R object descriptions to clipboard
+description: Use when code loads or uses btw (library(btw), btw::), providing R session context to LLMs, registering tools for ellmer chat, or copying R object descriptions to clipboard
 ---
 
 # btw: Context Tools for R and LLMs

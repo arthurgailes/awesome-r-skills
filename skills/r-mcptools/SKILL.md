@@ -1,6 +1,6 @@
 ---
 name: r-mcptools
-description: Use when connecting AI agents (Claude Code, VS Code) to running R sessions, letting agents execute R code, or exposing R as MCP server
+description: Use when code loads or uses mcptools (library(mcptools), mcptools::), connecting AI agents to R sessions via MCP, or exposing R as an MCP server for Claude Code or VS Code
 ---
 
 # mcptools: R as Model Context Protocol Server

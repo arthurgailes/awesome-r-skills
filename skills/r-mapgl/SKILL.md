@@ -1,6 +1,6 @@
 ---
 name: r-mapgl
-description: Use when creating interactive WebGL maps in R with mapgl, mapboxgl, or maplibre packages, or when building Shiny apps with interactive maps
+description: Use when code loads or uses mapgl (library(mapgl), mapboxgl, maplibre), working with mapping in R, or building Shiny apps with interactive WebGL maps
 ---
 
 # mapgl: WebGL Maps in R
@@ -21,6 +21,7 @@ DO NOT write code until verifying all references above are read.
 ## When to Use
 
 **Choose mapgl for:**
+
 - Smooth zooming/panning with large datasets (>10k features)
 - Vector tiles and 3D terrain/buildings
 - Custom WebGL styling and real-time interactivity
@@ -58,14 +59,14 @@ mapboxgl(style = mapbox_style("light")) |>
 
 ## Quick Reference
 
-| Geometry | Function | Key params |
-|----------|----------|------------|
-| Polygon | `add_fill_layer()` | `fill_color`, `fill_opacity` |
-| Line | `add_line_layer()` | `line_color`, `line_width` |
-| Point | `add_circle_layer()` | `circle_color`, `circle_radius` |
-| Label | `add_symbol_layer()` | `text_field`, `icon_image` |
-| Density | `add_heatmap_layer()` | `heatmap_color`, `heatmap_radius` |
-| 3D | `add_fill_extrusion_layer()` | `fill_extrusion_height` |
+| Geometry | Function                     | Key params                        |
+| -------- | ---------------------------- | --------------------------------- |
+| Polygon  | `add_fill_layer()`           | `fill_color`, `fill_opacity`      |
+| Line     | `add_line_layer()`           | `line_color`, `line_width`        |
+| Point    | `add_circle_layer()`         | `circle_color`, `circle_radius`   |
+| Label    | `add_symbol_layer()`         | `text_field`, `icon_image`        |
+| Density  | `add_heatmap_layer()`        | `heatmap_color`, `heatmap_radius` |
+| 3D       | `add_fill_extrusion_layer()` | `fill_extrusion_height`           |
 
 ## Interactive Legends (v0.4.4+)
 

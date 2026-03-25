@@ -1,6 +1,6 @@
 ---
 name: r-ai
-description: Use when building LLM-powered R applications, implementing RAG workflows, or needing guidance on which R AI package to use (meta-skill for ellmer/btw/mcptools/ragnar/vitals)
+description: Use when code loads ellmer, btw, mcptools, ragnar, or vitals, building LLM-powered R applications, implementing RAG workflows, or choosing between R AI packages (meta-skill for ellmer/btw/mcptools/ragnar/vitals)
 ---
 
 # R AI Ecosystem (Meta-Skill)

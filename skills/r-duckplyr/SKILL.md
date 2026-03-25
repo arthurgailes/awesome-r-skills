@@ -1,6 +1,6 @@
 ---
 name: r-duckplyr
-description: Use when processing datasets >100k rows with dplyr syntax, using the duckplyr package in R, needing lazy evaluation, or working with larger-than-memory data files (Parquet, CSV)
+description: Use when code loads or uses duckplyr (library(duckplyr), duckplyr::), processing large datasets with dplyr syntax, working with Parquet files in R, or needing lazy evaluation for bigger-than-memory data
 ---
 
 # duckplyr: DuckDB-Backed dplyr

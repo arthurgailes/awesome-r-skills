@@ -1,6 +1,6 @@
 ---
 name: r-ragnar
-description: Use when implementing RAG (Retrieval Augmented Generation), searching documents with LLMs, creating vector stores, or embedding documents for semantic search
+description: Use when code loads or uses ragnar (library(ragnar), ragnar::), implementing RAG in R, creating vector stores, embedding documents for semantic search, or building retrieval pipelines
 ---
 
 # ragnar: Retrieval Augmented Generation in R

@@ -1,6 +1,6 @@
 ---
 name: r-mapping
-description: Use when creating interactive maps in R, working with large spatial datasets, or needing guidance on which R mapping package to use (meta-skill for freestiler/mapgl)
+description: Use when code loads mapgl or freestiler, working with .pmtiles files, creating interactive maps in R, choosing between R mapping packages, or working with large spatial datasets for visualization
 ---
 
 # R Mapping Ecosystem (Meta-Skill)
@@ -28,7 +28,7 @@ DO NOT write code until verifying all references above are read.
 | **freestiler** | Convert large spatial data (>10k features) to vector tiles | `/r-freestiler` |
 | **mapgl** | Create interactive WebGL maps, add layers, build Shiny apps | `/r-mapgl` |
 
-**Navigation:** When you know which package you need, invoke the specific skill above.
+**REQUIRED:** After reading this skill, you MUST invoke the relevant sub-skill (`r-freestiler` or `r-mapgl`) before writing any code. If the task involves `.pmtiles` files, invoke `r-freestiler`. If the task involves map display, invoke `r-mapgl`. For pipelines, invoke both.
 
 ## When NOT to Use
 

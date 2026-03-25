@@ -13,3 +13,4 @@ screenshot_example.R
 docs
 .env
 *.db
+tests/skill-triggering/output/

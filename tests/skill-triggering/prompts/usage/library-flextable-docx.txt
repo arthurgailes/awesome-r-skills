@@ -1,0 +1,10 @@
+I need to create a summary table and export it to a Word document. Here's what I have:
+
+```r
+library(flextable)
+
+ft <- flextable(summary_data)
+save_as_docx(ft, path = "report.docx")
+```
+
+How do I add conditional formatting to highlight cells where value > threshold?

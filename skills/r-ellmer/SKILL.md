@@ -1,6 +1,6 @@
 ---
 name: r-ellmer
-description: Use when chatting with LLMs from R, creating chatbots, extracting structured data from text, or needing multi-provider LLM access (OpenAI, Claude, Ollama, etc.)
+description: Use when code loads or uses ellmer (library(ellmer), chat_openai, chat_claude, chat_ollama), chatting with LLMs from R, building chatbots, or extracting structured data from text with LLMs
 ---
 
 # ellmer: R Interface to Large Language Models

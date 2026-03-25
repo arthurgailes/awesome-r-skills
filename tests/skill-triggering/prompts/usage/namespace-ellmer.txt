@@ -1,0 +1,8 @@
+I'm trying to extract structured data from customer emails. Here's my current code:
+
+```r
+chat <- ellmer::chat_claude()
+result <- chat$extract_data(email_text, type = customer_schema)
+```
+
+The extraction isn't picking up phone numbers reliably. How can I improve this?

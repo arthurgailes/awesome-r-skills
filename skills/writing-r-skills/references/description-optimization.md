@@ -32,6 +32,30 @@ Store in `description-evals.json`:
 }
 ```
 
+## R Package Skill Description Template
+
+For R package skills, descriptions MUST include explicit code-recognition tokens:
+
+```yaml
+description: Use when code loads or uses {package} (library({package}), {package}::), [file-type triggers], [domain triggers]
+```
+
+**Why:** Descriptions like "Use when creating interactive maps" are action-oriented but miss recognition signals. When a user's prompt contains `pacman::p_load(mapgl)` or `library(collapse)`, Claude needs explicit package-name tokens in the description to match on. Leading with "code loads or uses {package}" ensures the package name appears as a matchable trigger.
+
+**Required elements:**
+1. `library()` and `::` patterns with the package name
+2. File extensions the package works with (.pmtiles, .parquet, .docx)
+3. Domain-specific problem descriptions
+
+**Example:**
+```yaml
+# Good: explicit recognition tokens + domain triggers
+description: Use when code loads or uses freestiler, working with .pmtiles files, converting spatial data to vector tilesets in R, or preparing tiles for mapgl/MapLibre visualization
+
+# Bad: action-oriented, misses code-recognition signals
+description: Use when creating PMTiles vector tilesets from large spatial datasets, using the freestiler package in R
+```
+
 ## Should Trigger Patterns
 
 **Direct symptoms:**

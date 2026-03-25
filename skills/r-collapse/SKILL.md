@@ -1,6 +1,6 @@
 ---
 name: r-collapse
-description: Use when performing fast grouped/weighted statistical operations, panel data analysis, using the collapse package in R, or when improving dplyr performance would be beneficial.
+description: Use when code loads or uses collapse (library(collapse), collapse::), performing fast grouped or weighted statistics in R, or seeking faster alternatives to dplyr aggregation
 ---
 
 # collapse: Fast Data Transformation
