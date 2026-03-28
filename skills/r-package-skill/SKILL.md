@@ -1,30 +1,21 @@
 ---
 name: r-package-skill
-description: Use when gathering R package documentation (CRAN, pkgdown, vignettes) for skill creation. Invoke AFTER writing-r-skills is loaded.
+description: Use when creating, editing, or validating R package skills, gathering R package documentation (CRAN, pkgdown, vignettes) for skill creation
 ---
 
 # R Package Skill Creation
 
-<MANDATORY-PREREQUISITE>
-This skill requires writing-r-skills context. If you have not yet invoked writing-r-skills:
+## Overview
 
-**STOP. Invoke writing-r-skills NOW.**
+Single entry point for creating R package skills using TDD methodology. Pulls documentation from CRAN/pkgdown, writes a tested skill, and iterates until it passes.
 
-Do NOT skip this. Do NOT rationalize that you "understand TDD". Invoke the writing-r-skills Skill tool, then return here.
+See `references/anthropic-best-practices.md` for Anthropic's official guidance on writing concise, well-structured skills (token efficiency, progressive disclosure, reference organization).
 
-If you already invoked writing-r-skills, proceed below.
-</MANDATORY-PREREQUISITE>
+## When NOT to Use
 
-## Red Flags
-
-Common rationalizations for skipping writing-r-skills (all incorrect):
-- "I understand TDD" → TDD knowledge ≠ this process. Invoke the skill.
-- "This is just doc gathering" → ALL skill creation uses TDD. Invoke the skill.
-- "I already read it before" → Skills evolve. Invoke to load current version.
-
-**If you skipped writing-r-skills: STOP and invoke it now.**
-
----
+- Package is simple/well-known (tidyverse core, base R)
+- One-off usage -- just read the help
+- Goal skill already exists that references this package
 
 ## Installation Path Selection
 
@@ -32,65 +23,55 @@ Common rationalizations for skipping writing-r-skills (all incorrect):
 
 ```
 Where should I install the skill?
-  1. Plugin directory (./skills/r-{package}/) — for contributing to this plugin repo
-  2. Personal directory (~/.claude/skills/r-{package}/) — for your own use
-  3. Custom path — specify your own location
+  1. Plugin directory (./skills/r-{package}/) -- for contributing to this plugin repo
+  2. Personal directory (~/.claude/skills/r-{package}/) -- for your own use
+  3. Custom path -- specify your own location
 ```
 
 **You MUST present these choices and wait for the user's answer before proceeding.** Do NOT default to any option silently. If the user's original message already specifies a path, use that instead of asking.
 
-## Overview
-
-This skill covers R-specific documentation gathering. The actual skill creation methodology (TDD, structure, testing, grading, optimization, packaging) comes from writing-r-skills.
-
-## When NOT to Use
-
-- Package is simple/well-known (tidyverse core, base R)
-- One-off usage - just read the help
-- Goal skill already exists that references this package
+See `references/installation-paths.md` for agent-specific paths (Claude Code, Codex, OpenCode).
 
 ## R Documentation Sources
 
 **Primary sources (gather first):**
-- **CRAN reference manual**: `cran.r-project.org/web/packages/{pkg}/` → references/API.md (REQUIRED)
-- **Vignettes**: CRAN vignettes → references/{vignette-name}.md
+- **CRAN reference manual**: `cran.r-project.org/web/packages/{pkg}/` -> references/API.md (REQUIRED)
+- **Vignettes**: CRAN vignettes -> references/{vignette-name}.md
 - **btw tools** (if R running): `btw_tool_docs_*()` for function help
 
-**Fallback sources (only if baseline test fails after GREEN phase):**
+**Fallback sources (only if baseline test fails):**
 - **pkgdown site**: `{author}.github.io/{pkg}/` for articles/examples
 - **Web search**: GitHub issues, R-bloggers for real-world patterns
 
-**Strategy:** Start with CRAN + vignettes + btw. If baseline still fails, add fallback sources in REFACTOR phase.
+See `references/doc-gathering.md` for detailed source priority and extraction workflow.
 
-## Required Structure for R Package Skills
+## Required Structure
 
 ```
 {install-path}/r-{package}/
-  SKILL.md              # <500 words (writing-r-skills defines format)
+  SKILL.md              # <500 words
   references/
     API.md              # REQUIRED: Complete CRAN reference manual
     vignette-name.md    # Include all CRAN vignettes
     advanced.md         # Optional: Add in REFACTOR if tests need it
 ```
 
-Where `{install-path}` is the directory chosen by the user (see Installation Path Selection above).
-
 **Always include:** `references/API.md` + all vignettes from CRAN.
 
-**Description MUST follow this pattern** for reliable triggering:
+## SKILL.md Template Requirements
+
+**Description MUST include explicit code-recognition tokens:**
 
 ```yaml
 description: Use when code loads or uses {package} (library({package}), {package}::), [file-type triggers if applicable], [domain-specific triggers]
 ```
 
-**Required elements:**
-1. Package name with `library()` and `::` call patterns (explicit tokens Claude matches on)
-2. Relevant file extensions if the package works with specific file types (.pmtiles, .parquet, .docx)
-3. Domain-specific problem descriptions (what the user is trying to do)
+Required elements:
+1. Package name with `library()` and `::` call patterns
+2. Relevant file extensions (.pmtiles, .parquet, .docx)
+3. Domain-specific problem descriptions
 
-## SKILL.md Template Requirements
-
-**Every generated SKILL.md must include a mandatory context block immediately after Overview:**
+**Every generated SKILL.md must include a mandatory context block after Overview:**
 
 ```markdown
 ## Overview
@@ -100,61 +81,80 @@ description: Use when code loads or uses {package} (library({package}), {package
 <MANDATORY-CONTEXT>
 Before using this skill, you MUST read:
 
-□ `references/API.md` - Complete function reference
-□ `references/getting-started.md` - Usage patterns and examples
-□ `references/[other-key-doc].md` - [specific guidance]
+- `references/API.md` - Complete function reference
+- `references/getting-started.md` - Usage patterns and examples
 
 DO NOT write code until verifying all references above are read.
 </MANDATORY-CONTEXT>
 ```
 
-**Checkpoint list must:**
-- List ALL files in `references/` (except truly optional advanced docs)
-- Use checkbox format (`□`) for clear verification
-- Include brief description of what each reference contains
-
 **Quick Reference table must be COMPLETE:**
 - Show ALL important parameters, even if optional/advanced
 - Mark tiers: required (no mark), `(opt)` optional, `(adv)` advanced
-- DO NOT hide parameters that affect performance/output size
-- Example: For tiling functions, MUST show zoom parameters even if they have defaults
+- DO NOT hide parameters that affect performance/output size (e.g., zoom levels, batch sizes)
 
-## R-Specific Test Cases
+See `references/description-optimization.md` for triggering accuracy testing.
 
-When testing R package skills (using methodology from writing-r-skills):
+## R-Specific Testing
+
+**Use R validators** (in `lib/r-validators/` at repository root):
+- `plot-validator.R` -- ggplot2/mapgl visualizations
+- `spatial-validator.R` -- sf/spatial operations
+- `html-validator.R` -- flextable/Shiny outputs
+- `numerical-validator.R` -- collapse/regression results
 
 **Test for:**
 - Correct function names (e.g., `fmean()` not `mean()` for collapse)
 - Correct package selection (recognizes when to use package)
 - Parameter understanding (knows defaults, common gotchas)
 - Pattern recognition (uses package idioms correctly)
+- Agent reads ALL `references/` before writing code (not just SKILL.md)
 
-**Use R validators** (located in `lib/r-validators/` at repository root):
-- `plot-validator.R` - Check ggplot2/mapgl visualizations
-- `spatial-validator.R` - Validate sf/spatial operations
-- `html-validator.R` - Check flextable/Shiny outputs
-- `numerical-validator.R` - Verify collapse/regression results
-
-See writing-r-skills for how validators integrate with grading agents.
+**Test infrastructure:** See `references/testing.md` for evals.json format, `references/grading.md` for grading workflow, `references/improvement-loop.md` for iteration.
 
 ## R Execution Patterns
 
 **Prefer ad hoc code over script files:**
 - Default: `Rscript -e "code"` or mcptools MCP
-- Only create scripts if user requests OR code is long-running (hours+)
+- Only create scripts if user requests OR code is long-running
 
 **If scripts are unavoidable:**
 - Label as temp: `temp_*.R` or use `tempfile()`
 - Clean up: `on.exit(unlink("temp_script.R"))` or `file.remove()`
-- Never leave `download_data.R`, `analysis.R`, etc. cluttering the project
 
 ## Workflow
 
-Follow writing-r-skills TDD methodology:
+Follow RED-GREEN-REFACTOR (see `superpowers:writing-skills` for general TDD methodology).
 
-**RED Phase:** Run baseline scenario without skill
-**Doc Gathering:** Fetch CRAN + vignettes + btw tools (primary sources)
-**GREEN Phase:** Write minimal SKILL.md with gathered docs
-**REFACTOR Phase:** If tests fail, add fallback sources (pkgdown, web search) and iterate
+**RED Phase:** Run baseline scenario without skill. Document what the agent gets wrong.
 
-See writing-r-skills for complete TDD workflow details.
+**Doc Gathering:** Fetch CRAN + vignettes + btw tools (primary sources).
+
+**GREEN Phase:** Write minimal SKILL.md + references/ addressing baseline failures.
+
+**REFACTOR Phase:**
+- If tests fail, add fallback sources (pkgdown, web search) and iterate
+- Verify agents read ALL `references/` before writing code
+- Verify Quick Reference didn't hide critical parameters
+- Iterate until pass_rate >= 90% AND no improvement for 2 iterations
+
+## R-Specific Checklist
+
+In addition to the general skill creation checklist from `superpowers:writing-skills`:
+
+- [ ] `references/API.md` contains complete CRAN reference manual
+- [ ] All CRAN vignettes included as `references/*.md`
+- [ ] `<MANDATORY-CONTEXT>` block lists ALL reference files with checkboxes
+- [ ] Quick Reference shows ALL important parameters (including performance-critical ones)
+- [ ] Description includes `library()` and `::` code-recognition tokens
+- [ ] R validators referenced where applicable (plot, spatial, html, numerical)
+
+## Common Mistakes
+
+| Mistake | Fix |
+|---------|-----|
+| Missing `references/API.md` | REQUIRED for every package skill. Extract from CRAN manual. |
+| Quick Reference hides parameters | Show ALL params that affect performance/output. Mark optional with `(opt)`. |
+| Agents skip references | Add `<MANDATORY-CONTEXT>` block with checkbox list. |
+| Description too generic | Include `library({pkg})` and `{pkg}::` tokens for code recognition. |
+| Skipping baseline test | Run without skill first. You don't know what to teach without seeing failures. |

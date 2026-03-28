@@ -75,10 +75,9 @@ For example:
 
 ### Skill Generators
 
-| Skill                                                | Description                                       |
-| ---------------------------------------------------- | ------------------------------------------------- |
-| [r-package-skill](skills/r-package-skill/SKILL.md)   | Generate a skill from any R package documentation |
-| [writing-r-skills](skills/writing-r-skills/SKILL.md) | Build skills from scratch using TDD methodology   |
+| Skill                                              | Description                                       |
+| -------------------------------------------------- | ------------------------------------------------- |
+| [r-package-skill](skills/r-package-skill/SKILL.md) | Generate a skill from any R package documentation |
 
 ### Package Skills
 
@@ -173,7 +172,7 @@ Grading agents evaluate each test run, score assertions, and drive the improveme
 
 ## Contributing
 
-New skills follow the TDD methodology in [writing-r-skills](skills/writing-r-skills/SKILL.md):
+New skills follow the TDD methodology in [r-package-skill](skills/r-package-skill/SKILL.md):
 
 1. **Baseline test** - Run realistic scenario without the skill
 2. **Minimal skill** - Write just enough to pass

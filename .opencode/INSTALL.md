@@ -46,7 +46,6 @@ Ask OpenCode: "What R skills do you have?"
 | r-flextable      | Publication-ready tables                                                           |
 | r-ai             | LLM chat (ellmer), RAG (ragnar), agent integration (mcptools), evaluation (vitals) |
 | r-package-skill  | Extract R package docs into skills                                                 |
-| writing-r-skills | TDD methodology for skill creation                                                 |
 
 ## Skill Precedence
 

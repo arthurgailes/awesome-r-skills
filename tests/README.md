@@ -1,15 +1,13 @@
 # Test Suite for R Skills
 
-This directory contains test cases for the three integrated skills in the r-package-skills plugin.
+This directory contains test cases for skills in the r-package-skills plugin.
 
 ## Structure
 
 ```
 tests/
   r-package-skill/
-    evals.json          # 3 test cases for R package skill creation
-  writing-r-skills/
-    evals.json          # 3 test cases for universal skill methodology
+    evals.json          # 8 test cases for R package skill creation
   r-freestiler/
     evals.json          # 2 test cases for reference-reading and parameter intelligence
   skill-triggering/     # Simple trigger tests (bash scripts)
@@ -18,7 +16,7 @@ tests/
 
 ## Test Cases Summary
 
-### r-package-skill (3 tests)
+### r-package-skill (8 tests)
 
 1. **ggplot2-plot-validation**: Tests if skill creation handles plot validation patterns
    - Creates skills/r-ggplot2/SKILL.md and references/API.md
@@ -35,21 +33,27 @@ tests/
    - Verifies data.table syntax patterns (:=, .SD, .N, DT[i,j,by])
    - Checks Common Mistakes section exists
 
-### writing-r-skills (3 tests)
+4. **installation-path-prompt**: Tests that agent presents numbered installation path choices
+   - Must present 3 options (plugin, personal, custom)
+   - Must wait for user response before creating files
 
-1. **skill-structure-validation**: Tests skill structure validation
+5. **installation-path-explicit**: Tests that agent skips prompt when path is specified
+   - Recognizes "personal skills directory" as ~/.claude/skills/
+   - Proceeds directly without presenting choices
+
+6. **skill-structure-validation**: Tests skill structure validation
    - Validates YAML frontmatter (name, description)
    - Checks required sections exist
    - Verifies word count < 500
    - Confirms references/ organization
 
-2. **improvement-loop-scenario**: Tests iteration workflow
+7. **improvement-loop-scenario**: Tests iteration workflow
    - Creates evals.json with test cases
    - Spawns with-skill and baseline subagents
    - Grades outputs and identifies failures
    - Suggests targeted improvements
 
-3. **description-triggering-check**: Tests description triggering accuracy
+8. **description-triggering-check**: Tests description triggering accuracy
    - Evaluates whether r-collapse description triggers correctly
    - Tests with should-trigger, should-not-trigger, and ambiguous queries
    - Suggests description improvements if needed
@@ -72,7 +76,7 @@ tests/
 
 ## Running Tests
 
-Tests will be executed using the methodology from writing-r-skills:
+Tests use TDD methodology (see `skills/r-package-skill/SKILL.md`):
 
 1. **Spawn subagents**: Create workspace/iteration-N/eval-{name}/ directories
 2. **Run with-skill and baseline**: Save outputs to separate directories
@@ -82,15 +86,8 @@ Tests will be executed using the methodology from writing-r-skills:
 
 ## Expected Outcomes
 
-After running this minimal test suite:
+After running this test suite:
 
 - Know which skills work and which don't
 - Have evidence-based list of what needs fixing
 - Can prioritize improvements based on actual failures (not hypothetical issues)
-
-## Next Steps
-
-1. Run these tests (Priority #2 from design doc)
-2. Analyze failures (which assertions fail, why)
-3. Fix broken functionality (Priority #3)
-4. Only then consider elaborate infrastructure (commands, hooks, etc.)

@@ -8,12 +8,12 @@ R skills plugin for AI coding agents (Claude Code, Codex, OpenCode). Core value:
 
 ## Skill Types
 
-1. **Skill generators** (`r-package-skill`, `writing-r-skills`): Tools to create new skills
+1. **Skill generator** (`r-package-skill`): Creates new skills from R package docs
 2. **Package skills** (`r-collapse`, `r-mapgl`, etc.): Reference docs for specific R packages
 
 ## Creating Skills
 
-**Use TDD methodology** from `skills/writing-r-skills/SKILL.md`:
+**Use TDD methodology** from `skills/r-package-skill/SKILL.md`:
 
 1. Run pressure scenario WITHOUT skill (baseline)
 2. Write minimal skill addressing failures
@@ -36,13 +36,13 @@ description: Use when [triggering conditions]. Third person, no workflow summary
 - **Update README.md** when adding a new skill (add to skills table)
 - Required sections: Overview, When to Use, Quick Reference, Common Mistakes, When NOT to Use
 
-See `skills/writing-r-skills/anthropic-best-practices.md` for Anthropic's official guidance.
+For general skill-writing methodology, see `superpowers:writing-skills`.
 
 ## Adding Package Skills to Plugin
 
 **When user says "add [or write] a package skill" or "add skills/r-{package}":**
 
-- Read all contents of `skills/r-package-skill` and `skills/writing-r-skills`
+- Read all contents of `skills/r-package-skill`
 - Add to `./skills/r-{package}/` in THIS repository (the plugin itself)
 - Update `README.md` with new skill entry
 - This is DISTINCT from users adding skills to their own `~/.claude/skills/` locally
@@ -96,7 +96,6 @@ Each returns JSON with `valid`, `message`, and domain-specific fields.
 skills/                  # Each skill: SKILL.md + optional references/
   r-{package}/           # Package skills
   r-package-skill/       # Skill generator (creates new skills)
-  writing-r-skills/      # TDD methodology for skill creation
 agents/grader.md         # Grader agent instructions for evaluating test outputs
 lib/r-validators/        # R scripts for domain-specific validation
 tests/                   # Test cases and triggering tests

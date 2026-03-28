@@ -42,7 +42,6 @@ New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.agents\skills\r-package
 | r-flextable      | Publication-ready tables                                                           |
 | r-ai             | LLM chat (ellmer), RAG (ragnar), agent integration (mcptools), evaluation (vitals) |
 | r-package-skill  | Extract R package docs into skills                                                 |
-| writing-r-skills | TDD methodology for skill creation                                                 |
 
 ## Updating
 
