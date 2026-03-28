@@ -36,7 +36,7 @@ description: Use when [triggering conditions]. Third person, no workflow summary
 - **Update README.md** when adding a new skill (add to skills table)
 - Required sections: Overview, When to Use, Quick Reference, Common Mistakes, When NOT to Use
 
-For general skill-writing methodology, see `superpowers:writing-skills`.
+See `skills/r-package-skill/SKILL.md` for complete workflow and references.
 
 ## Adding Package Skills to Plugin
 

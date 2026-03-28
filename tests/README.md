@@ -7,7 +7,7 @@ This directory contains test cases for skills in the r-package-skills plugin.
 ```
 tests/
   r-package-skill/
-    evals.json          # 8 test cases for R package skill creation
+    evals.json          # 9 test cases for R package skill creation
   r-freestiler/
     evals.json          # 2 test cases for reference-reading and parameter intelligence
   skill-triggering/     # Simple trigger tests (bash scripts)
@@ -16,7 +16,7 @@ tests/
 
 ## Test Cases Summary
 
-### r-package-skill (8 tests)
+### r-package-skill (9 tests)
 
 1. **ggplot2-plot-validation**: Tests if skill creation handles plot validation patterns
    - Creates skills/r-ggplot2/SKILL.md and references/API.md
@@ -57,6 +57,12 @@ tests/
    - Evaluates whether r-collapse description triggers correctly
    - Tests with should-trigger, should-not-trigger, and ambiguous queries
    - Suggests description improvements if needed
+
+9. **reads-all-references-before-creating**: Tests that agent reads r-package-skill references before acting
+   - Must read doc-gathering.md before fetching package docs
+   - Must read anthropic-best-practices.md before writing SKILL.md
+   - Must read description-optimization.md before writing description
+   - Must not skip straight to creating output files
 
 ### r-freestiler (2 tests)
 
