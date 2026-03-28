@@ -26,6 +26,19 @@ Common rationalizations for skipping writing-r-skills (all incorrect):
 
 ---
 
+## Installation Path Selection
+
+**Before gathering docs, ask the user where to install the skill:**
+
+```
+Where should I install the skill?
+  1. Plugin directory (./skills/r-{package}/) — for contributing to this plugin repo
+  2. Personal directory (~/.claude/skills/r-{package}/) — for your own use
+  3. Custom path — specify your own location
+```
+
+**You MUST present these choices and wait for the user's answer before proceeding.** Do NOT default to any option silently. If the user's original message already specifies a path, use that instead of asking.
+
 ## Overview
 
 This skill covers R-specific documentation gathering. The actual skill creation methodology (TDD, structure, testing, grading, optimization, packaging) comes from writing-r-skills.
@@ -52,13 +65,15 @@ This skill covers R-specific documentation gathering. The actual skill creation 
 ## Required Structure for R Package Skills
 
 ```
-skills/r-{package}/
+{install-path}/r-{package}/
   SKILL.md              # <500 words (writing-r-skills defines format)
   references/
     API.md              # REQUIRED: Complete CRAN reference manual
     vignette-name.md    # Include all CRAN vignettes
     advanced.md         # Optional: Add in REFACTOR if tests need it
 ```
+
+Where `{install-path}` is the directory chosen by the user (see Installation Path Selection above).
 
 **Always include:** `references/API.md` + all vignettes from CRAN.
 

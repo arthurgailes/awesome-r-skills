@@ -103,6 +103,49 @@
           "check": "description field contains 'data.table'"
         }
       ]
+    },
+    {
+      "id": 4,
+      "name": "installation-path-prompt",
+      "prompt": "Create a skill for the glue package",
+      "expected_output": "Agent presents numbered choices (1, 2, 3) for installation path before proceeding with skill creation. Must not silently default to any path.",
+      "files": [],
+      "assertions": [
+        {
+          "type": "qualitative",
+          "description": "Presents numbered installation path choices",
+          "check": "Agent output contains numbered options (1, 2, 3) for installation path: plugin directory (./skills/), personal directory (~/.claude/skills/), and custom path"
+        },
+        {
+          "type": "qualitative",
+          "description": "Waits for user response before creating files",
+          "check": "Agent does NOT create any skill files before the user selects an installation path option"
+        },
+        {
+          "type": "qualitative",
+          "description": "Does not default silently to any path",
+          "check": "Agent explicitly asks the user to choose, not just mentioning paths in passing"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "installation-path-explicit",
+      "prompt": "Create a skill for the glue package in my personal skills directory",
+      "expected_output": "Agent recognizes the user already specified a path and does NOT ask for installation path choice. Proceeds directly with ~/.claude/skills/ as the target.",
+      "files": [],
+      "assertions": [
+        {
+          "type": "qualitative",
+          "description": "Skips installation path prompt when path is specified",
+          "check": "Agent does NOT present numbered choices since the user already specified 'personal skills directory'"
+        },
+        {
+          "type": "qualitative",
+          "description": "Uses correct personal directory",
+          "check": "Agent targets ~/.claude/skills/r-glue/ for the skill installation"
+        }
+      ]
     }
   ]
 }

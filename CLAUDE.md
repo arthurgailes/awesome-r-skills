@@ -52,6 +52,39 @@ See `skills/writing-r-skills/anthropic-best-practices.md` for Anthropic's offici
 - **Plugin development** (this context): Creating skills in `./skills/` for distribution
 - **User usage**: End users installing from marketplace to their local environment
 
+## Testing
+
+### Skill-triggering tests (bash scripts)
+
+```bash
+# Run all triggering tests
+cd tests/skill-triggering && ./run-all-tests.sh
+
+# Run single triggering test
+./tests/skill-triggering/run-test.sh r-mapgl ./tests/skill-triggering/prompts/usage/mapgl-library-call.txt
+```
+
+These verify skills trigger from natural language (no explicit `/skill-name`). Prompts live in `tests/skill-triggering/prompts/{creation,usage}/`. Output goes to `tests/skill-triggering/output/{timestamp}/`.
+
+### Eval-based tests (evals.json)
+
+Each skill's test cases are in `tests/{skill-name}/evals.json`. Assertion types: `file_exists`, `code_pattern`, `qualitative`, `execution`, `domain_validator`.
+
+Tests run via TDD methodology: spawn with-skill and baseline subagents, grade outputs with `agents/grader.md`, save `grading.json`, iterate until pass_rate >= 90%.
+
+### R validators
+
+Domain-specific validation scripts in `lib/r-validators/`:
+
+```bash
+Rscript lib/r-validators/plot-validator.R path/to/code.R
+Rscript lib/r-validators/spatial-validator.R path/to/code.R
+Rscript lib/r-validators/html-validator.R path/to/output.html
+Rscript lib/r-validators/numerical-validator.R path/to/code.R
+```
+
+Each returns JSON with `valid`, `message`, and domain-specific fields.
+
 ## R Conventions
 
 - `|>` not `%>%`
@@ -61,14 +94,16 @@ See `skills/writing-r-skills/anthropic-best-practices.md` for Anthropic's offici
 
 ```
 skills/                  # Each skill: SKILL.md + optional references/
+  r-{package}/           # Package skills
+  r-package-skill/       # Skill generator (creates new skills)
+  writing-r-skills/      # TDD methodology for skill creation
+agents/grader.md         # Grader agent instructions for evaluating test outputs
+lib/r-validators/        # R scripts for domain-specific validation
+tests/                   # Test cases and triggering tests
+  {skill-name}/evals.json
+  skill-triggering/      # Bash-based natural language trigger tests
 .claude-plugin/          # Plugin marketplace metadata
-  marketplace.json       # Claude Code marketplace config
-  plugin.json           # Plugin metadata
-.codex/INSTALL.md       # Codex installation instructions
-.opencode/INSTALL.md    # OpenCode installation instructions
-refs/                   # Research materials (gitignored)
-  docs/                 # Package vignettes, extracted docs
-  clone/                # Cloned repos for reference
+refs/                    # Research materials (gitignored)
 ```
 
 ## Plugin Distribution
