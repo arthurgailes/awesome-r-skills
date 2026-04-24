@@ -1,0 +1,106 @@
+name: Monthly skills refresh
+
+on:
+  schedule:
+    - cron: '0 9 1 * *'   # 09:00 UTC, 1st of each month
+  workflow_dispatch:      # manual trigger for testing
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write         # push branch
+      pull-requests: write    # open draft PR
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: anthropics/claude-code-action@v1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: "--max-turns 60"
+          prompt: |
+            Monthly R skills refresh for this repo. You are running inside a GitHub
+            Actions workflow on the default branch. One PR per run. No auto-merge,
+            no deletions. If nothing changed, exit cleanly without opening a PR.
+
+            Setup:
+            1. Set git identity:
+                 git config user.name  "github-actions[bot]"
+                 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            2. Create branch: BRANCH="skills-refresh/$(date -u +%Y-%m)"; git checkout -b "$BRANCH".
+
+            Per-skill refresh. For each dir in:
+              r-btw, r-collapse, r-duckplyr, r-duckspatial, r-ellmer, r-flextable,
+              r-freestiler, r-mapgl, r-mcptools, r-ragnar, r-vitals
+
+              a. Fetch https://cran.r-project.org/web/packages/{pkg}/index.html
+                 (version, vignette list, URL field).
+              b. Fetch the pkgdown reference index. URL is in the CRAN page's URL
+                 field; if not resolvable, try https://walker-data.github.io/{pkg}/reference/index.html
+                 or https://{pkg}.r-lib.org/reference/index.html.
+              c. Diff against skills/r-{pkg}/SKILL.md and skills/r-{pkg}/references/API.md.
+              d. Apply mechanical edits only: add new functions to the Quick
+                 Reference table and to API.md with their upstream descriptions.
+                 Deprecations, renames, and signature shifts go to the PR punch
+                 list -- DO NOT auto-edit those.
+              e. If nothing changed, skip this skill entirely.
+              f. If a fetch fails, skip that skill and note the failure in the PR.
+
+            r-package-skill consistency check:
+              Read skills/r-package-skill/SKILL.md and every skills/r-package-skill/references/*.md.
+              Compare against the skill-creator plugin at
+              ~/.claude/plugins/cache/claude-plugins-official/skill-creator/*/SKILL.md
+              (and its references/). If that cache is not present in the runner,
+              skip this step and note it in the PR. Compare on:
+              - evals.json schema (text/passed/evidence)
+              - parallel with-skill + baseline in the same turn
+              - description optimization (train/held-out split)
+              - stopping criteria (pass_rate >= 90% AND no improvement for 2 iterations)
+              - grader / analyst pass on benchmark.json
+              Auto-apply mechanical updates; flag semantic drift in the PR punch list.
+
+            House rules (from CLAUDE.md):
+              - native pipe |> (never %>%)
+              - ASCII-only
+              - required sections: Overview, When to Use, Quick Reference, Common Mistakes, When NOT to Use
+              - SKILL.md under 500 lines
+
+            Commit + PR:
+              If no files changed across all skills: print a one-line summary, do
+              NOT push, do NOT open a PR, and exit with code 0.
+
+              Otherwise:
+                git add -A
+                git commit -m "chore(skills): monthly refresh $(date -u +%Y-%m)"
+                git push -u origin "$BRANCH"
+                gh pr create --draft --base master --head "$BRANCH" \
+                  --title "chore(skills): monthly refresh $(date -u +%Y-%m)" \
+                  --body-file <generated-body.md>
+
+              PR body structure:
+                ## Summary
+                N of 12 skills changed this month.
+
+                ## Auto-applied edits
+                - r-<pkg>: <what changed> (<pkg> <version>)
+                - ...
+
+                ## Needs human review
+                - r-<pkg>: <description with enough context>
+                - ...
+
+                ## No changes
+                - r-<pkg>, r-<pkg>, ...
+
+                ## Verification
+                - [ ] tests/skill-triggering/run-all-tests.sh passes on branch (run locally)
+                - [ ] Eyeball the diff
+
+            Constraints:
+              - no --force, no --amend, no deletions
+              - no changes outside skills/ (and README.md ONLY if a skill's headline feature changed)
+              - do not merge; draft PR only
