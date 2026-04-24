@@ -11,15 +11,13 @@ description: Use when code loads or uses ragnar (library(ragnar), ragnar::), imp
 
 **Install:** `install.packages("ragnar")`
 
-<MANDATORY-CONTEXT>
-Before using this skill, you MUST read:
+## References
 
-□ `references/API.md` - Complete function reference
-□ `references/package-docs.md` - Vector store setup and usage
-□ `references/rag.md` - RAG patterns and ellmer integration
+Read `references/API.md` before writing code.
 
-DO NOT write code until verifying all references above are read.
-</MANDATORY-CONTEXT>
+- `references/API.md` - Complete function reference
+- `references/package-docs.md` - Vector store setup and usage
+- `references/rag.md` - RAG patterns and ellmer integration
 
 ## When to Use
 

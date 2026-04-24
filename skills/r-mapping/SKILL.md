@@ -13,13 +13,11 @@ description: Use when code loads mapgl or freestiler, working with .pmtiles file
 
 **API keys:** Mapbox styles require `MAPBOX_PUBLIC_TOKEN`; MapLibre works without keys (CARTO/OpenFreeMap)
 
-<MANDATORY-CONTEXT>
-Before using this skill, you MUST read:
+## References
 
-□ `references/integration-patterns.md` - How freestiler and mapgl work together
+- `references/integration-patterns.md` - How freestiler and mapgl work together
 
-DO NOT write code until verifying all references above are read.
-</MANDATORY-CONTEXT>
+For per-package API docs, invoke the corresponding package skill (`/r-freestiler`, `/r-mapgl`).
 
 ## When to Use Which Package
 

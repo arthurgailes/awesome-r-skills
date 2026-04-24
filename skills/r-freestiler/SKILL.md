@@ -9,17 +9,15 @@ description: Use when code loads or uses freestiler, working with .pmtiles files
 
 **freestiler converts spatial data into PMTiles vector tilesets.** Rust-powered tool for creating `.pmtiles` from sf objects, files, or DuckDB SQL.
 
-<MANDATORY-CONTEXT>
-Before using this skill, you MUST read:
+## References
 
-□ `references/API.md` - Complete function reference with all parameters
-□ `references/getting-started.md` - Usage patterns and parameter examples
-□ `references/zoom-strategy.md` - Zoom level guidance by geometry type
-□ `references/workflows.md` - Complete workflows and integration patterns
-□ `references/mapping.md` - Visualization and server configuration
+Read `references/API.md` before writing code.
 
-DO NOT write code until verifying all references above are read.
-</MANDATORY-CONTEXT>
+- `references/API.md` - Complete function reference with all parameters
+- `references/getting-started.md` - Usage patterns and parameter examples
+- `references/zoom-strategy.md` - Zoom level guidance by geometry type
+- `references/workflows.md` - Complete workflows and integration patterns
+- `references/mapping.md` - Visualization and server configuration
 
 ## When to Use
 

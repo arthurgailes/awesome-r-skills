@@ -9,14 +9,12 @@ description: Use when code loads or uses mapgl (library(mapgl), mapboxgl, maplib
 
 **mapgl wraps Mapbox GL JS and MapLibre GL JS for R.** Use it for smooth, GPU-accelerated interactive maps with vector tiles, 3D terrain, and Shiny integration.
 
-<MANDATORY-CONTEXT>
-Before using this skill, you MUST read:
+## References
 
-□ `references/API.md` - Complete function reference and layer types
-□ `references/styling.md` - Map styling, colors, and visual properties
+Read `references/API.md` before writing code.
 
-DO NOT write code until verifying all references above are read.
-</MANDATORY-CONTEXT>
+- `references/API.md` - Complete function reference and layer types
+- `references/styling.md` - Map styling, colors, and visual properties
 
 ## When to Use
 

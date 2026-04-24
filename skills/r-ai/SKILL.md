@@ -13,13 +13,11 @@ description: Use when code loads ellmer, btw, mcptools, ragnar, or vitals, build
 
 **API keys:** Set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` in `.Renviron`
 
-<MANDATORY-CONTEXT>
-Before using this skill, you MUST read:
+## References
 
-□ `references/integration-patterns.md` - How packages work together in workflows
+- `references/integration-patterns.md` - How packages work together in workflows
 
-DO NOT write code until verifying all references above are read.
-</MANDATORY-CONTEXT>
+For per-package API docs, invoke the corresponding package skill (`/r-ellmer`, `/r-btw`, `/r-mcptools`, `/r-ragnar`, `/r-vitals`).
 
 ## When to Use Which Package
 

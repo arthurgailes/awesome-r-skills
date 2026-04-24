@@ -13,14 +13,12 @@ description: Use when code loads or uses btw (library(btw), btw::), providing R 
 
 **Install:** `install.packages("btw")`
 
-<MANDATORY-CONTEXT>
-Before using this skill, you MUST read:
+## References
 
-□ `references/API.md` - Complete function reference
-□ `references/package-docs.md` - Tool registration and usage patterns
+Read `references/API.md` before writing code.
 
-DO NOT write code until verifying all references above are read.
-</MANDATORY-CONTEXT>
+- `references/API.md` - Complete function reference
+- `references/package-docs.md` - Tool registration and usage patterns
 
 ## When to Use
 

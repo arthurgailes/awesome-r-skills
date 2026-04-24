@@ -11,18 +11,16 @@ description: Use when code loads or uses flextable (library(flextable), flextabl
 
 Core principle: Separate data from display. Build from a data.frame, then layer formatting declaratively using selectors.
 
-<MANDATORY-CONTEXT>
-Before using this skill, you MUST read:
+## References
 
-□ `references/API.md` - Complete function reference
-□ `references/overview.md` - Core concepts and workflow
-□ `references/formatting.md` - Styling and appearance
-□ `references/layout.md` - Structure and merging
-□ `references/selectors.md` - Targeting cells for formatting
-□ `references/output.md` - Rendering to different formats
+Read `references/API.md` before writing code.
 
-DO NOT write code until verifying all references above are read.
-</MANDATORY-CONTEXT>
+- `references/API.md` - Complete function reference
+- `references/overview.md` - Core concepts and workflow
+- `references/formatting.md` - Styling and appearance
+- `references/layout.md` - Structure and merging
+- `references/selectors.md` - Targeting cells for formatting
+- `references/output.md` - Rendering to different formats
 
 ## When to Use
 

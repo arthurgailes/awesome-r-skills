@@ -11,13 +11,11 @@ description: Use when code loads or uses duckspatial (library(duckspatial), duck
 
 **Core principle:** Lazy evaluation keeps data outside R memory. Operations execute in DuckDB's query engine with optimization before results return.
 
-<MANDATORY-CONTEXT>
-Before using this skill, you MUST read:
+## References
 
-□ `references/API.md` - Complete function reference and spatial operations
+Read `references/API.md` before writing code.
 
-DO NOT write code until verifying all references above are read.
-</MANDATORY-CONTEXT>
+- `references/API.md` - Complete function reference and spatial operations
 
 ## When to Use
 

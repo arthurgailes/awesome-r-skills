@@ -13,11 +13,7 @@ R skills plugin for AI coding agents (Claude Code, Codex, OpenCode). Core value:
 
 ## Creating Skills
 
-**Use TDD methodology** from `skills/r-package-skill/SKILL.md`:
-
-1. Run pressure scenario WITHOUT skill (baseline)
-2. Write minimal skill addressing failures
-3. Re-test and close loopholes
+**Follow the workflow in `skills/r-package-skill/SKILL.md`:** capture intent, draft, test with-skill + baseline in parallel (same turn), grade, iterate until pass_rate >= 90% and no improvement for 2 iterations, then optimize description.
 
 **SKILL.md structure:**
 
@@ -70,7 +66,7 @@ These verify skills trigger from natural language (no explicit `/skill-name`). P
 
 Each skill's test cases are in `tests/{skill-name}/evals.json`. Assertion types: `file_exists`, `code_pattern`, `qualitative`, `execution`, `domain_validator`.
 
-Tests run via TDD methodology: spawn with-skill and baseline subagents, grade outputs with `agents/grader.md`, save `grading.json`, iterate until pass_rate >= 90%.
+Tests run in parallel (with-skill and baseline subagents in the same turn), are graded with `agents/grader.md`, results are saved to `grading.json` using `text`/`passed`/`evidence` fields, and iterate until pass_rate >= 90% and no improvement for 2 iterations.
 
 ### R validators
 

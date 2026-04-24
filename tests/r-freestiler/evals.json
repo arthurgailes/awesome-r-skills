@@ -33,9 +33,9 @@
     },
     {
       "id": 2,
-      "name": "mandatory-context-compliance",
+      "name": "reads-references-before-coding",
       "prompt": "Create vector tiles from this buildings dataset using freestiler. The data has 50,000 building footprints.",
-      "expected_output": "Agent reads MANDATORY-CONTEXT block references before writing code",
+      "expected_output": "Agent reads the skill's reference files (including zoom-strategy.md) before writing code",
       "files": [],
       "assertions": [
         {

@@ -17,7 +17,7 @@ Tests that verify package skills are triggered and apply intelligence from refer
 3. Applies appropriate `max_zoom = 10` for county data
 4. Does NOT use default zoom (0-14) that creates 10x larger tilesets
 
-**Why this test exists**: Prevents regression of the "intelligence gap" problem where skills provide correct API docs but fail to surface parameter guidance from reference files. Before the `<MANDATORY-CONTEXT>` fix, agents would skip reading references and generate bloated tilesets.
+**Why this test exists**: Prevents regression of the "intelligence gap" problem where skills provide correct API docs but fail to surface parameter guidance from reference files. Without these checks, agents would skip reading references and generate bloated tilesets.
 
 **Pass criteria**:
 - ✅ r-freestiler skill triggered

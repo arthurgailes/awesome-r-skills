@@ -1,136 +1,101 @@
-# Testing Infrastructure
+# Testing
 
-Complete guide to testing skills before deployment.
+How to test a skill before deploying. Absorbs grading guidance; no separate grading file.
 
-## Test Case Format
-
-Store test cases in `evals.json`:
+## Test Case Format (`evals.json`)
 
 ```json
 {
-  "skill_name": "example-skill",
+  "skill_name": "r-{package}",
   "evals": [
     {
       "id": 1,
       "name": "descriptive-test-name",
       "prompt": "User's task prompt",
-      "expected_output": "Description of expected result",
       "files": [],
       "assertions": [
-        {
-          "type": "code_pattern",
-          "description": "Uses correct function",
-          "check": "contains 'fmean()'"
-        },
-        {
-          "type": "execution",
-          "description": "Code runs without errors",
-          "check": "exit_code == 0"
-        },
-        {
-          "type": "qualitative",
-          "description": "Code is readable and follows conventions"
-        }
+        {"type": "code_pattern", "description": "Uses fmean()", "check": "contains 'fmean('"},
+        {"type": "execution",    "description": "Runs clean",   "check": "exit_code == 0"},
+        {"type": "file_exists",  "description": "Creates plot", "check": "outputs/plot.png exists"},
+        {"type": "qualitative",  "description": "Idiomatic code"},
+        {"type": "domain_validator", "description": "Valid plot", "validator": "plot-validator.R"}
       ]
     }
   ]
 }
 ```
 
-## Running Tests
+Give each eval a descriptive name (not just `eval-0`) and use that name for its workspace directory.
 
-**Step 1: Spawn subagents** (with-skill + baseline)
-- Create `workspace/iteration-1/eval-{name}/` for each test
-- Spawn with skill: save outputs to `with_skill/outputs/`
-- Spawn baseline: save outputs to `without_skill/outputs/` (or `old_skill/outputs/` if improving)
-- Capture timing.json (tokens, duration_ms from task notifications)
+## Run Test Cases
 
-**Step 2: Grade outputs**
-- Spawn grader agent (see agents/grader.md)
-- Check each assertion against outputs
-- Save grading.json with pass/fail per assertion
-
-**Step 3: Aggregate results**
-- Combine into benchmark.json
-- Calculate pass_rate, timing mean ± stddev, tokens
-- Compare with-skill vs baseline
-
-**Step 4: Iterate**
-- If pass_rate < 90%: analyze failures, improve skill
-- If pass_rate >= 90% AND no improvement for 2 iterations: DONE
-- Else: create iteration-N+1/ and re-test
-
-## Assertion Types
-
-### Code Pattern Matching
-
-Check if output contains string/pattern.
-
-```json
-{"type": "code_pattern", "description": "Uses collapse", "check": "contains 'library(collapse)'"}
-```
-
-### Execution Validation
-
-Check if code ran successfully.
-
-```json
-{"type": "execution", "description": "No errors", "check": "exit_code == 0"}
-```
-
-### Output Validation
-
-Check if expected files created.
-
-```json
-{"type": "file_exists", "description": "Creates plot", "check": "outputs/plot.png exists"}
-```
-
-### Qualitative
-
-Grader agent makes judgment call.
-
-```json
-{"type": "qualitative", "description": "Code is readable and follows conventions"}
-```
-
-### Domain Validators
-
-Call specialized validation scripts.
-
-```json
-{"type": "domain_validator", "description": "Valid plot", "validator": "plot-validator.R"}
-```
-
-For language-specific validators (R, Python, etc.), see language-specific skill creation guidance (e.g., r-package-skill for R validators).
-
-## Workspace Organization
+**Spawn with-skill AND baseline in the same turn.** Do not run with-skill first and return for baselines later -- the timing comparison breaks. If you are improving an existing skill instead of creating a new one, snapshot the old skill (`cp -r <skill> <workspace>/skill-snapshot/`) and point the baseline at the snapshot (`old_skill/outputs/`).
 
 ```
 workspace/
   iteration-1/
-    eval-descriptive-name/
+    eval-{name}/
       with_skill/
-        outputs/              # Generated files
-        timing.json          # {total_tokens, duration_ms}
-      without_skill/
+        outputs/         # generated files
+        timing.json      # {total_tokens, duration_ms, total_duration_seconds}
+      without_skill/     # or old_skill/ if improving
         outputs/
         timing.json
-      eval_metadata.json     # {eval_id, name, prompt, assertions}
-      grading.json          # {assertions: [{text, passed, evidence}]}
+      eval_metadata.json # {eval_id, eval_name, prompt, assertions}
+      grading.json
   iteration-2/
     ...
-  benchmark.json           # Aggregated results across evals
+  benchmark.json         # aggregated
 ```
+
+**Capture timing immediately.** Each subagent completion notification contains `total_tokens` and `duration_ms`. Save them to `timing.json` as they arrive -- the notification is the only place this data exists.
+
+## Grade
+
+For each run, check each assertion against the outputs. For programmatic assertions (`code_pattern`, `file_exists`, `execution`, `domain_validator`), write a script -- faster and reusable. For `qualitative`, judge fairly: clear problems, not style nits.
+
+`grading.json` MUST use the field names `text`, `passed`, `evidence` in its expectations array. Other variants (`name`/`met`/`details`) break downstream tooling.
+
+```json
+{
+  "eval_id": "collapse-grouped-stats",
+  "eval_name": "Grouped statistics with collapse",
+  "expectations": [
+    {"text": "Uses fmean() for grouped means", "passed": true,  "evidence": "fmean() called on line 5"},
+    {"text": "Code is readable",                "passed": true,  "evidence": "Clear names, logical flow"}
+  ],
+  "overall_pass": true,
+  "pass_count": 2,
+  "total_count": 2
+}
+```
+
+### Domain Validators (R)
+
+For R-specific assertions, call the validators in `lib/r-validators/` at repo root:
+
+```bash
+Rscript lib/r-validators/plot-validator.R outputs/code.R
+# -> {"valid": true, "layers": 3, "has_title": true}
+```
+
+Use the returned JSON as the `evidence` field.
+
+## Aggregate
+
+Combine per-eval `grading.json` + `timing.json` into a single `benchmark.json` for the iteration. For each configuration (with_skill, baseline), report `pass_rate`, and for time and tokens report `mean ± stddev` and the delta vs. baseline. Put the with_skill entry before its baseline.
+
+After aggregation, do an analyst pass: look for assertions that always pass (non-discriminating), high-variance evals (possibly flaky), and time/token tradeoffs. Surface these as `analyst_notes` in `benchmark.json` or alongside it.
 
 ## Stopping Criteria
 
-**Stop when BOTH:**
-1. pass_rate >= 90%
+Stop when BOTH:
+
+1. `pass_rate >= 90%`
 2. No improvement for 2 iterations
 
-**90% threshold:** High quality bar, allows for edge cases
+If either fails, analyze the failing assertions, edit the skill (add guidance, remove guidance agents ignored, rework Quick Reference), and rerun into `iteration-N+1/`.
 
-**2 iteration plateau:** Prevents endless iteration on diminishing returns
+## YAGNI
 
-If either condition fails, keep improving.
+If transcripts show agents consistently skipping a section, remove it and retest. If performance is unchanged, keep it removed.

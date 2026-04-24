@@ -58,11 +58,10 @@ tests/
    - Tests with should-trigger, should-not-trigger, and ambiguous queries
    - Suggests description improvements if needed
 
-9. **reads-all-references-before-creating**: Tests that agent reads r-package-skill references before acting
+9. **reads-references-before-creating**: Tests that agent reads r-package-skill references before acting
    - Must read doc-gathering.md before fetching package docs
-   - Must read anthropic-best-practices.md before writing SKILL.md
-   - Must read description-optimization.md before writing description
-   - Must not skip straight to creating output files
+   - Must read installation-paths.md before prompting for install path
+   - Generated description must contain library(pkg) / pkg:: tokens
 
 ### r-freestiler (2 tests)
 
@@ -72,23 +71,23 @@ tests/
    - Checks code includes max_zoom parameter
    - Confirms agent read zoom-strategy.md reference
 
-2. **mandatory-context-compliance**: Tests that <MANDATORY-CONTEXT> block works
+2. **reads-references-before-coding**: Tests that agent reads reference files before coding
    - Agent creates tileset for building footprints (small features)
    - Verifies max_zoom = 12-16 (appropriate for buildings)
    - Confirms agent demonstrates reading references before writing code
    - Tests that references/ docs are not skipped
 
-**Why these tests exist**: Prevents regression of the "intelligence gap" where skills provide correct API but fail to surface parameter guidance. Before the `<MANDATORY-CONTEXT>` fix, agents would skip references and generate bloated tilesets (195k+ tiles at zoom 11 for counties).
+**Why these tests exist**: Prevents regression of the "intelligence gap" where skills provide correct API docs but fail to surface parameter guidance. Without these checks, agents would skip reference files and generate bloated tilesets (195k+ tiles at zoom 11 for counties).
 
 ## Running Tests
 
-Tests use TDD methodology (see `skills/r-package-skill/SKILL.md`):
+Tests follow the workflow in `skills/r-package-skill/SKILL.md`:
 
-1. **Spawn subagents**: Create workspace/iteration-N/eval-{name}/ directories
-2. **Run with-skill and baseline**: Save outputs to separate directories
-3. **Grade outputs**: Check assertions, save grading.json
-4. **Aggregate results**: Create benchmark.json with pass rates
-5. **Iterate**: If pass_rate < 90%, improve skill and re-test
+1. **Spawn subagents in the same turn**: Create workspace/iteration-N/eval-{name}/ with `with_skill/` and `without_skill/` (or `old_skill/` when improving)
+2. **Capture timing immediately**: Save `total_tokens` and `duration_ms` to `timing.json` as each notification arrives
+3. **Grade outputs**: Check assertions, save `grading.json` using `text`/`passed`/`evidence`
+4. **Aggregate**: Build `benchmark.json` with pass_rate and time/tokens (mean +/- stddev, delta vs. baseline)
+5. **Iterate**: Stop when pass_rate >= 90% AND no improvement for 2 iterations
 
 ## Expected Outcomes
 

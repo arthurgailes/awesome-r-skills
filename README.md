@@ -155,11 +155,11 @@ Each skill is tested against realistic scenarios, graded by specialized validato
 
 ## How Skills Are Built
 
-Skills follow a test-driven workflow:
+Skills follow an eval-driven workflow:
 
-1. **RED**: Run a pressure scenario without the skill. Agent fails.
-2. **GREEN**: Write minimal skill addressing the failure. Agent passes.
-3. **REFACTOR**: Close loopholes, add edge cases, optimize.
+1. **Draft**: Capture intent, gather package docs, write SKILL.md + references.
+2. **Test**: Spawn with-skill and baseline subagents in the same turn; grade outputs.
+3. **Iterate**: Edit until pass_rate >= 90% and no improvement for 2 iterations, then tune description.
 
 Validators check domain-specific correctness:
 
@@ -172,11 +172,11 @@ Grading agents evaluate each test run, score assertions, and drive the improveme
 
 ## Contributing
 
-New skills follow the TDD methodology in [r-package-skill](skills/r-package-skill/SKILL.md):
+New skills follow the workflow in [r-package-skill](skills/r-package-skill/SKILL.md):
 
-1. **Baseline test** - Run realistic scenario without the skill
-2. **Minimal skill** - Write just enough to pass
-3. **Iterate** - Refine until grading agents consistently score 90%+
+1. **Draft** - Capture intent, gather docs, write SKILL.md + references/API.md + vignettes
+2. **Test** - Spawn with-skill and baseline subagents in parallel (same turn), grade outputs
+3. **Iterate** - Refine until pass_rate >= 90% and no improvement for 2 iterations, then optimize description
 
 Package skills go in `skills/r-{package}/`. Goal-oriented skills (workflows that span multiple packages) are preferred when they make sense.
 

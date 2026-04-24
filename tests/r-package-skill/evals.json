@@ -241,9 +241,9 @@
     },
     {
       "id": 9,
-      "name": "reads-all-references-before-creating",
+      "name": "reads-references-before-creating",
       "prompt": "Create a skill for the janitor package in ./skills/r-janitor/",
-      "expected_output": "Agent reads r-package-skill reference files (doc-gathering.md, anthropic-best-practices.md, description-optimization.md, installation-paths.md) before starting to gather package docs or write SKILL.md",
+      "expected_output": "Agent reads r-package-skill reference files (doc-gathering.md, installation-paths.md) before gathering docs or writing SKILL.md, and the generated description contains library(janitor) / janitor:: tokens.",
       "files": [],
       "assertions": [
         {
@@ -253,18 +253,13 @@
         },
         {
           "type": "qualitative",
-          "description": "Reads anthropic-best-practices.md before writing SKILL.md",
-          "check": "Agent transcript shows reading references/anthropic-best-practices.md before creating the skill's SKILL.md file"
-        },
-        {
-          "type": "qualitative",
-          "description": "Reads description-optimization.md before writing description",
-          "check": "Agent transcript shows reading references/description-optimization.md, and the generated description follows the library()/:: token pattern"
-        },
-        {
-          "type": "qualitative",
           "description": "Reads installation-paths.md before prompting user",
           "check": "Agent transcript shows reading references/installation-paths.md, and uses the correct prompt format with numbered choices"
+        },
+        {
+          "type": "code_pattern",
+          "description": "Generated description contains library()/:: tokens",
+          "check": "skills/r-janitor/SKILL.md description field contains both 'library(janitor)' and 'janitor::'"
         }
       ]
     }

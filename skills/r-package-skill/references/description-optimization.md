@@ -1,144 +1,78 @@
 # Description Optimization
 
-Optimize skill descriptions for triggering accuracy after skill functionality is verified.
+Tune a skill's `description` field for triggering accuracy **after** the skill's functionality is verified. The description is the primary mechanism Claude uses to decide whether to load the skill -- a skill that works but never triggers is useless.
 
-## Goal
+## R Package Description Template
 
-Skill works correctly → ensure it loads at the right times (and doesn't load at wrong times).
-
-## Test Query Format
-
-Generate 20 realistic user queries:
-- 10 SHOULD trigger skill
-- 10 SHOULD NOT trigger skill
-
-Store in `description-evals.json`:
-
-```json
-{
-  "skill_name": "example-skill",
-  "queries": [
-    {
-      "query": "How do I debug this pipe chain?",
-      "should_trigger": true,
-      "reason": "Direct symptom - pipe debugging"
-    },
-    {
-      "query": "Write a new REST API endpoint",
-      "should_trigger": false,
-      "reason": "Unrelated to debugging or pipes"
-    }
-  ]
-}
-```
-
-## R Package Skill Description Template
-
-For R package skills, descriptions MUST include explicit code-recognition tokens:
+R package skill descriptions MUST include code-recognition tokens:
 
 ```yaml
 description: Use when code loads or uses {package} (library({package}), {package}::), [file-type triggers], [domain triggers]
 ```
 
-**Why:** Descriptions like "Use when creating interactive maps" are action-oriented but miss recognition signals. When a user's prompt contains `pacman::p_load(mapgl)` or `library(collapse)`, Claude needs explicit package-name tokens in the description to match on. Leading with "code loads or uses {package}" ensures the package name appears as a matchable trigger.
+**Why:** Action-oriented descriptions ("Use when creating interactive maps") miss prompts that contain `library(mapgl)` or `pacman::p_load(mapgl)`. Leading with the package name as a recognition token ensures matches on import statements.
 
 **Required elements:**
-1. `library()` and `::` patterns with the package name
-2. File extensions the package works with (.pmtiles, .parquet, .docx)
-3. Domain-specific problem descriptions
+1. `library({pkg})` and `{pkg}::` patterns
+2. File extensions the package works with (`.pmtiles`, `.parquet`, `.docx`)
+3. Domain-specific problem language
 
-**Example:**
 ```yaml
-# Good: explicit recognition tokens + domain triggers
-description: Use when code loads or uses freestiler, working with .pmtiles files, converting spatial data to vector tilesets in R, or preparing tiles for mapgl/MapLibre visualization
+# Good: recognition tokens + domain triggers
+description: Use when code loads or uses freestiler, working with .pmtiles files, or preparing vector tiles for mapgl/MapLibre in R
 
-# Bad: action-oriented, misses code-recognition signals
-description: Use when creating PMTiles vector tilesets from large spatial datasets, using the freestiler package in R
+# Bad: action-oriented, misses recognition tokens
+description: Use when creating PMTiles vector tilesets from large spatial datasets
 ```
 
-## Should Trigger Patterns
+## Build a Trigger Eval Set (20 queries)
 
-**Direct symptoms:**
-- Exact error messages the skill addresses
-- Tool names mentioned in skill (ggplot2, dplyr)
-- Problem symptoms (flaky tests, slow queries)
+Write 20 realistic queries a real user might send. Split roughly 50/50 should-trigger / should-not-trigger.
 
-**Indirect symptoms:**
-- Related problems skill solves
-- Situations where skill applies
-- Contextual clues (working with spatial data → r-sf)
-
-**Edge cases to include:**
-- Variant phrasings of same problem
-- Related but distinct issues
-- Subtle symptoms that hint at skill relevance
-
-## Should NOT Trigger Patterns
-
-**Unrelated domains:**
-- Different technology stack
-- Different problem space
-- Different workflow stage
-
-**Similar but distinct:**
-- Same domain but different problem
-- Overlapping terminology but different context
-- Adjacent skills that should load instead
-
-**Edge cases to include:**
-- Queries that mention skill keywords but in wrong context
-- Problems that sound similar but aren't
-- Cases where different skill should load
-
-## Testing Descriptions
-
-1. Generate 20 queries (balanced should/shouldn't)
-2. Test current description against held-out set
-3. Calculate accuracy: (correct triggers + correct non-triggers) / 20
-4. If accuracy < 90%, analyze failures
-5. Update description to fix mis-triggers
-6. Re-test until >= 90% accuracy
-
-## Common Description Issues
-
-**Too broad:**
-- Description: "Use when working with data"
-- Problem: Triggers on everything
-- Fix: Add specific symptoms/contexts
-
-**Too narrow:**
-- Description: "Use when error message says 'could not find function fmean'"
-- Problem: Misses related issues
-- Fix: Include related symptoms, not just exact error
-
-**Wrong keywords:**
-- Description mentions implementation details (internal functions)
-- Problem: User queries use problem language, not solution language
-- Fix: Focus on problem symptoms, not solution mechanics
-
-## Iteration Pattern
-
-```
-Current accuracy: 75%
-False positives: 2 (loaded when shouldn't)
-False negatives: 3 (didn't load when should)
-
-Analysis:
-- FP: Description too broad on "data processing"
-- FN: Missing "slow performance" as symptom
-
-Update description:
-- Remove "data processing" → add "grouped statistics with collapse"
-- Add "slow aggregation" symptom
-
-Re-test → 90% accuracy → DONE
+```json
+[
+  {"query": "...", "should_trigger": true},
+  {"query": "...", "should_trigger": false}
+]
 ```
 
-## Stop When
+**Queries must be concrete and specific,** not abstract. Include file paths, column names, package names in code form, bits of backstory, typos, casual phrasing, mixed case.
 
-Description accuracy >= 90% on held-out test queries.
+Bad (too abstract): `"Plot some data"`, `"Use collapse"`
+Good: `"my teacher sent me a csv with 2M rows and i need to calc mean wage by industry and year, my laptop is dying running dplyr -- what else can i do"`
 
-If can't reach 90%, consider:
-- Skill scope too broad/narrow (redesign needed)
-- Overlaps with existing skills (merge or clarify boundaries)
-- Description length limit hit (prioritize most important triggers)
+**Should-trigger (8-10):**
+- Variant phrasings of the same intent (formal, casual)
+- Cases where the user doesn't name the package but clearly needs it
+- Uncommon use cases the skill handles
+- Cases where this skill competes with another and should win
+
+**Should-NOT-trigger (8-10):**
+- Near-misses that share keywords with the skill but need something different
+- Adjacent domains where a naive keyword match would fire
+- Cases where a different skill should load
+- **Not** obviously irrelevant queries -- those test nothing
+
+## Optimization Loop (train / held-out)
+
+Do not tune on the full eval set and declare victory -- you will overfit.
+
+1. Split the 20 queries 60/40 into train / held-out.
+2. Evaluate the current description on train (run each query 3x, compute trigger rate).
+3. Propose a revised description that fixes failing train queries.
+4. Evaluate the revised description on both train AND held-out.
+5. Keep the description with the highest **held-out** score (not train).
+6. Iterate up to ~5 revisions.
+
+Stop when the held-out score is >= 90% or stops improving.
+
+## Common Failure Modes
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| Triggers on unrelated queries (false positives) | Description too broad | Add specific symptoms / package name tokens |
+| Misses queries that name the package in code | No `library({pkg})` / `{pkg}::` token | Add both tokens |
+| Fires on sibling-package queries | Shares keywords with sibling skill | Add contrast: "...not dplyr / not data.table" |
+| Train improves, held-out doesn't | Overfitting to training queries | Pick the revision with best held-out score, not best train |
+
+If you can't reach 90% on held-out, the skill scope itself is the problem (too broad, too narrow, or overlaps with another skill). Fix the skill, not the description.

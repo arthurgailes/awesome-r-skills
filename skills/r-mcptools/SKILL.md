@@ -13,15 +13,13 @@ description: Use when code loads or uses mcptools (library(mcptools), mcptools::
 
 **Install:** `install.packages("mcptools")`
 
-<MANDATORY-CONTEXT>
-Before using this skill, you MUST read:
+## References
 
-□ `references/API.md` - Complete function reference
-□ `references/package-docs.md` - Setup and configuration
-□ `references/server.md` - MCP server setup and agent configuration
+Read `references/API.md` before writing code.
 
-DO NOT write code until verifying all references above are read.
-</MANDATORY-CONTEXT>
+- `references/API.md` - Complete function reference
+- `references/package-docs.md` - Setup and configuration
+- `references/server.md` - MCP server setup and agent configuration
 
 ## When to Use
 

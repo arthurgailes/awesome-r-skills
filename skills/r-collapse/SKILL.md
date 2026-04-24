@@ -11,17 +11,15 @@ description: Use when code loads or uses collapse (library(collapse), collapse::
 
 **Core principle:** Fast aggregation, transformation, and panel data operations through vectorized C code.
 
-<MANDATORY-CONTEXT>
-Before using this skill, you MUST read:
+## References
 
-□ `references/API.md` - Complete function reference
-□ `references/collapse-for-tidyverse-users.md` - Migration guide and patterns
-□ `references/collapse-documentation.md` - Core concepts and usage
-□ `references/collapse-and-sf.md` - Working with spatial data
-□ `references/collapse-object-handling.md` - Data structure handling
+Read `references/API.md` before writing code.
 
-DO NOT write code until verifying all references above are read.
-</MANDATORY-CONTEXT>
+- `references/API.md` - Complete function reference
+- `references/collapse-for-tidyverse-users.md` - Migration guide and patterns
+- `references/collapse-documentation.md` - Core concepts and usage
+- `references/collapse-and-sf.md` - Working with spatial data
+- `references/collapse-object-handling.md` - Data structure handling
 
 ## When to Use
 

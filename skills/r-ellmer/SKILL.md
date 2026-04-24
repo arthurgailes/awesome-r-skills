@@ -13,15 +13,13 @@ description: Use when code loads or uses ellmer (library(ellmer), chat_openai, c
 
 **API keys:** Set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` in `.Renviron`
 
-<MANDATORY-CONTEXT>
-Before using this skill, you MUST read:
+## References
 
-□ `references/API.md` - Complete function reference
-□ `references/getting-started.md` - Core workflow and chat patterns
-□ `references/tool-calling.md` - Tool registration and function calling
+Read `references/API.md` before writing code.
 
-DO NOT write code until verifying all references above are read.
-</MANDATORY-CONTEXT>
+- `references/API.md` - Complete function reference
+- `references/getting-started.md` - Core workflow and chat patterns
+- `references/tool-calling.md` - Tool registration and function calling
 
 ## When to Use
 
