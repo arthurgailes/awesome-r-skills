@@ -6,6 +6,7 @@ exploration
 exploration_log.md
 screenshots/
 *.pmtiles
+*.zip
 screenshot_example.R
 .Rproj.user
 .Rhistory
@@ -14,3 +15,4 @@ docs
 .env
 *.db
 tests/skill-triggering/output/
+workspace
