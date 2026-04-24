@@ -21,7 +21,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          model: "claude-opus-4-7"
           claude_args: "--max-turns 60"
           prompt: |
             Monthly R skills refresh for this repo. You are running inside a GitHub
