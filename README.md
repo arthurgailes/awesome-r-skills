@@ -57,6 +57,7 @@ Takes 10-12 minutes with 3-4 approval prompts. Skill appears at your chosen path
 **This plugin focuses on newer and lesser-known R packages** — not the popular ones AI models already know well.
 
 For example:
+
 - **dplyr** is excellent, but GPTs have thousands of training examples. No skill needed.
 - **collapse** (fast grouped operations) is powerful but newer. GPTs hallucinate its API without a skill.
 - **ellmer** (multi-provider LLM chat) shipped in 2024. GPTs have minimal references.
@@ -64,6 +65,7 @@ For example:
 **The goal: fill knowledge gaps, not duplicate existing training.** We include packages where agents consistently struggle or hallucinate without guidance.
 
 **You decide what matters.** Use `/r-package-skill` to generate skills for:
+
 - Internal packages your team built
 - Niche CRAN packages in your domain
 - GitHub packages not on CRAN
@@ -182,7 +184,7 @@ Package skills go in `skills/r-{package}/`. Goal-oriented skills (workflows that
 
 Each skill needs:
 
-- `SKILL.md` under 500 words (overview, when to use, common mistakes)
+- `SKILL.md` < 500 lines; Metadata (name + description) - (~100 words)
 - `references/` directory with detailed docs
 - Test cases in `tests/{skill-name}/evals.json`
 

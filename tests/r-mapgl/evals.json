@@ -1,0 +1,50 @@
+{
+  "skill_name": "r-mapgl",
+  "description": "Tests that r-mapgl skill produces idiomatic mapgl code for the three most error-prone patterns: data-driven continuous choropleth + legend, Shiny proxy filtering without re-render, and PMTiles source_layer alignment.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "continuous-choropleth-with-legend",
+      "prompt": "I have an sf object called `counties` with a numeric column `median_income` (values roughly 25000 to 125000). Write an R script using mapgl that renders a MapLibre choropleth of `counties` colored continuously by median_income and includes a matching legend. Use a light/no-token basemap. Save the full script to outputs/code.R.",
+      "files": [],
+      "assertions": [
+        {"type": "code_pattern", "description": "Uses maplibre() (no Mapbox token needed)", "check": "contains 'maplibre('"},
+        {"type": "code_pattern", "description": "Uses interpolate() for continuous data-driven fill", "check": "contains 'interpolate(' and 'fill_color = interpolate' OR fill_color passed interpolate()"},
+        {"type": "code_pattern", "description": "Specifies both values and stops in interpolate()", "check": "contains 'values =' and 'stops =' near interpolate call"},
+        {"type": "code_pattern", "description": "Adds a legend", "check": "contains 'add_legend(' or 'add_continuous_legend('"},
+        {"type": "code_pattern", "description": "Uses add_fill_layer with id and source", "check": "contains 'add_fill_layer(' and 'id =' and 'source ='"},
+        {"type": "code_pattern", "description": "Uses native pipe not magrittr", "check": "contains '|>' and does NOT contain '%>%'"},
+        {"type": "code_pattern", "description": "Uses a token-free style (carto_style/openfreemap_style) OR maplibre() default", "check": "contains 'carto_style(' OR 'openfreemap_style(' OR does not explicitly pass style (defaults OK)"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "shiny-proxy-filter",
+      "prompt": "Build a Shiny app using mapgl where users drag a numericInput('minpop', 'Minimum population', value=0) and an sf layer of cities (already loaded as `cities` with a `pop` column) filters in real time to show only cities with pop >= the input. The map should be MapLibre, use `carto_style('positron')`. The filter must update the existing map -- NOT re-render. Save to outputs/app.R.",
+      "files": [],
+      "assertions": [
+        {"type": "code_pattern", "description": "Uses maplibreOutput + renderMaplibre (not mapbox)", "check": "contains 'maplibreOutput(' and 'renderMaplibre('"},
+        {"type": "code_pattern", "description": "Uses maplibre_proxy (not re-render)", "check": "contains 'maplibre_proxy('"},
+        {"type": "code_pattern", "description": "Uses set_filter() on the proxy (not add_fill_layer again)", "check": "contains 'set_filter('"},
+        {"type": "code_pattern", "description": "Does NOT re-render on every input change", "check": "renderMaplibre block does NOT reference input$minpop (filter happens via proxy)"},
+        {"type": "code_pattern", "description": "Uses observeEvent or observe to wire the proxy update", "check": "contains 'observeEvent(' or 'observe('"},
+        {"type": "code_pattern", "description": "Filter expression uses a comparison with the pop column", "check": "set_filter call contains '>=' or 'pop' reference"},
+        {"type": "code_pattern", "description": "Uses native pipe", "check": "contains '|>' and does NOT contain '%>%'"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "pmtiles-source-layer-alignment",
+      "prompt": "I have a remote PMTiles archive at 'https://example.com/parcels.pmtiles'. The tileset was built with freestiler using layer_name='parcels'. Write an R script using mapgl that displays this tileset on a MapLibre map as a translucent blue fill layer. Save to outputs/code.R.",
+      "files": [],
+      "assertions": [
+        {"type": "code_pattern", "description": "Uses add_pmtiles_source()", "check": "contains 'add_pmtiles_source('"},
+        {"type": "code_pattern", "description": "add_fill_layer specifies source_layer matching the tileset layer_name", "check": "contains 'source_layer' and source_layer value is \"parcels\""},
+        {"type": "code_pattern", "description": "add_fill_layer references the pmtiles source by id", "check": "add_fill_layer source argument is a string id that matches add_pmtiles_source id"},
+        {"type": "code_pattern", "description": "Uses maplibre() (PMTiles with MapLibre is the no-token path)", "check": "contains 'maplibre('"},
+        {"type": "code_pattern", "description": "Has translucent fill (fill_opacity < 1)", "check": "contains 'fill_opacity' with numeric value < 1"},
+        {"type": "code_pattern", "description": "Uses native pipe", "check": "contains '|>' and does NOT contain '%>%'"}
+      ]
+    }
+  ]
+}

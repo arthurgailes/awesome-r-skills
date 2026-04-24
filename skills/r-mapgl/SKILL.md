@@ -1,126 +1,171 @@
 ---
 name: r-mapgl
-description: Use when code loads or uses mapgl (library(mapgl), mapboxgl, maplibre), working with mapping in R, or building Shiny apps with interactive WebGL maps
+description: Use when code loads or uses mapgl (library(mapgl), mapgl::), calls maplibre()/mapboxgl()/add_*_layer()/maplibre_proxy(), builds interactive WebGL maps in R, displays PMTiles on a map, or creates story maps / scrollytelling in R Shiny
 ---
 
-# mapgl: WebGL Maps in R
+# mapgl: Interactive WebGL Maps in R
 
 ## Overview
 
-**mapgl wraps Mapbox GL JS and MapLibre GL JS for R.** Use it for smooth, GPU-accelerated interactive maps with vector tiles, 3D terrain, and Shiny integration.
+**mapgl wraps Mapbox GL JS and MapLibre GL JS for interactive WebGL maps in R.** Data goes on a map as a **source** and is drawn by a **layer**. Typical pipe: `maplibre()` or `mapboxgl()` -> `add_*_layer()`; style with `interpolate()` / `match_expr()` / `step_expr()`; update reactively in Shiny with `maplibre_proxy()`.
 
 ## References
 
 Read `references/API.md` before writing code.
 
-- `references/API.md` - Complete function reference and layer types
-- `references/styling.md` - Map styling, colors, and visual properties
-
-## When to Use
-
-**Choose mapgl for:**
-
-- Smooth zooming/panning with large datasets (>10k features)
-- Vector tiles and 3D terrain/buildings
-- Custom WebGL styling and real-time interactivity
-- Shiny apps with dynamic map updates
-
-**API keys:** Mapbox requires `MAPBOX_PUBLIC_TOKEN`; MapLibre works without keys (CARTO/OpenFreeMap styles)
+- `references/API.md` -- Complete function reference (every `add_*`, `set_*`, `turf_*`, expression helper, legend, Shiny output).
+- `references/getting-started.md` -- Vignette: Mapbox vs MapLibre, styles, tokens, `*_view()`.
+- `references/layers-overview.md` -- Vignette: every layer type with full worked examples.
+- `references/shiny.md` -- Vignette: proxies, reactive map inputs, compare widgets.
+- `references/story-maps.md` -- Vignette: scrollytelling with `story_map()` / `on_section()`.
+- `references/turf.md` -- Vignette: client-side spatial ops (buffer, filter, intersect).
 
 ## When NOT to Use
 
-- Simple marker maps (use leaflet)
-- Static print maps (use tmap)
-- Need wider browser support (WebGL not available)
-- Quick exploratory visualization (tmap_mode("view") sufficient)
+- Simple marker maps with <1k points -- `leaflet` is lighter.
+- Static print maps -- `tmap` or `ggplot2 + sf`.
+- Non-spatial plots -- `ggplot2`.
+- Datasets >100k features -- tile first with `freestiler`, then `add_pmtiles_source()`.
+
+## API Keys
+
+- `maplibre()` + `carto_style()` / `openfreemap_style()` -- **no key**. Default style is `carto_style("voyager")`.
+- `mapboxgl()` / `mapbox_style()` -- set `MAPBOX_PUBLIC_TOKEN` in `.Renviron`.
+- `maptiler_style()` -- set `MAPTILER_API_KEY`.
+
+## Quick Reference
+
+### Create a map
+
+| Function | Purpose | Key parameters |
+|---|---|---|
+| `maplibre()` | MapLibre map | `style` (default `carto_style("voyager")`), `center`, `zoom`, `bearing`, `pitch`, `bounds`, `projection`, `...` (e.g. `scrollZoom=FALSE`, `maxZoom`) |
+| `mapboxgl()` | Mapbox map (needs token) | same args + `access_token` (opt), `parallels` (adv) |
+| `maplibre_view()` / `mapboxgl_view()` | Auto-styled view | `data` (sf/terra), `column` (opt), `n` (opt) |
+
+### Layers
+
+All take `map, id, source, source_layer` (opt, for vector/PMTiles), `popup` (opt), `tooltip` (opt), `hover_options` (opt), `filter` (opt), `before_id` (opt), `min_zoom`/`max_zoom` (opt).
+
+| Function | Most-used style params |
+|---|---|
+| `add_fill_layer()` | `fill_color`, `fill_opacity`, `fill_outline_color` |
+| `add_line_layer()` | `line_color`, `line_width`, `line_opacity`, `line_dasharray` (opt) |
+| `add_circle_layer()` | `circle_color`, `circle_radius`, `circle_stroke_color`, `circle_stroke_width`, `cluster_options` (opt) |
+| `add_heatmap_layer()` | `heatmap_weight`, `heatmap_intensity`, `heatmap_color`, `heatmap_radius` |
+| `add_symbol_layer()` | `icon_image`, `icon_size`, `text_field`, `text_size`, `text_color` |
+| `add_fill_extrusion_layer()` | `fill_extrusion_color`, `fill_extrusion_height`, `fill_extrusion_base`. **Use `projection="mercator"` on the map** -- globe has artifacts. |
+| `add_raster_layer()` | `raster_opacity`, `raster_color` (opt) |
+
+### Sources
+
+| Function | Use |
+|---|---|
+| `add_source(id, data)` | sf object or GeoJSON URL |
+| `add_vector_source(id, url|tiles, promote_id=NULL)` | Remote vector tiles |
+| `add_pmtiles_source(id, url, source_type="vector", maxzoom=22, promote_id=NULL)` | PMTiles archive |
+| `add_raster_source(id, url|tiles, tileSize=256, maxzoom=22)` | Remote raster tiles |
+| `add_raster_dem_source(id, url, tileSize=512)` | DEM for `set_terrain()` |
+| `add_image_source(id, url|data, coordinates)` | Single image or terra raster |
+
+`promote_id` is **required** on vector / PMTiles sources that need hover or `feature_click`.
+
+### Styling expressions (data-driven styling)
+
+| Function | Use |
+|---|---|
+| `interpolate(column, values, stops, type="linear", na_color=NULL)` | Continuous color/size |
+| `match_expr(column, values, stops, default="#cccccc")` | Categorical |
+| `step_expr(column, base, values, stops)` | Threshold classes |
+| `step_equal_interval()` / `step_quantile()` / `step_jenks()` | Auto classes + legend helpers (`get_legend_labels`, `get_legend_colors`, `get_breaks`) |
+| `interpolate_palette()` | Auto palette + breaks |
+| `get_column("name")` | Data-column reference inside any expression |
+
+### Camera, controls, legends
+
+- Camera: `fit_bounds(map, bbox, animate=FALSE)`, `fly_to(map, center, zoom)`, `ease_to()`, `jump_to()`, `set_view()`.
+- Controls: `add_navigation_control()`, `add_fullscreen_control()`, `add_scale_control()`, `add_geolocate_control()`, `add_layers_control(layers=NULL, collapsible=TRUE)`, `add_draw_control(rectangle=FALSE, show_measurements=FALSE)`, `add_geocoder_control()`.
+- Legends: `add_legend(legend_title, values, colors, type=c("continuous","categorical"), patch_shape="square", position="top-left", add=FALSE, layer_id=NULL, interactive=FALSE)`. Also `add_categorical_legend()`, `add_continuous_legend()`, `clear_legend()`.
+
+### Shiny
+
+- Output / render: `maplibreOutput("map", height="600px")` + `renderMaplibre({...})`. Same for `mapboxgl`.
+- Proxy (mutate without re-render): `maplibre_proxy("map")` / `mapboxgl_proxy("map")` inside `observeEvent()`.
+- Proxy-compatible: `set_filter()`, `set_paint_property()`, `set_layout_property()`, `set_style()`, `clear_layer()`, `add_*_layer()`, `fly_to()`, `fit_bounds()`, `add_markers()`.
+- Auto inputs: `input$<mapId>_click`, `..._feature_click`, `..._zoom`, `..._center`, `..._bbox`, `..._drawn_features`.
+- Compare widget: `compare(m1, m2, mode="swipe"|"sync")`; Shiny: `maplibreCompareOutput()` + `maplibre_compare_proxy(map_side="before"|"after")`.
+
+### Story maps & turf.js
+
+- Story: `story_map()` / `story_maplibre()` UI + `story_section(title, content, position="left")` + server `on_section(map_id, section_id, expr)`.
+- Client-side spatial: `turf_buffer()`, `turf_filter(predicate="intersects"|"within"|"contains"|"crosses"|"disjoint")`, `turf_intersect()`, `turf_union()`, `turf_difference()`, `turf_convex_hull()`, `turf_concave_hull()`, `turf_voronoi()`, `turf_centroid()`.
 
 ## Quick Start
 
 ```r
-library(mapgl)
-library(sf)
+library(mapgl); library(sf)
+nc <- st_read(system.file("shape/nc.shp", package = "sf"))
 
-# MapLibre (no API key)
-maplibre(style = carto_style("positron")) |>
-  fit_bounds(nc) |>
+maplibre(style = carto_style("positron"), bounds = nc) |>
   add_fill_layer(
     id = "counties",
     source = nc,
-    fill_color = "steelblue",
-    fill_opacity = 0.5
-  )
-
-# Mapbox (needs token)
-mapboxgl(style = mapbox_style("light")) |>
-  add_circle_layer(id = "points", source = my_sf, circle_color = "red")
+    fill_color = interpolate(
+      column = "BIR74",
+      values = c(500, 20000),
+      stops = c("#eff3ff", "#08519c"),
+      na_color = "lightgrey"
+    ),
+    fill_opacity = 0.7,
+    popup = "NAME",
+    hover_options = list(fill_color = "yellow")
+  ) |>
+  add_legend("Births (1974)",
+             values = c(500, 20000),
+             colors = c("#eff3ff", "#08519c"))
 ```
 
-## Quick Reference
-
-| Geometry | Function                     | Key params                        |
-| -------- | ---------------------------- | --------------------------------- |
-| Polygon  | `add_fill_layer()`           | `fill_color`, `fill_opacity`      |
-| Line     | `add_line_layer()`           | `line_color`, `line_width`        |
-| Point    | `add_circle_layer()`         | `circle_color`, `circle_radius`   |
-| Label    | `add_symbol_layer()`         | `text_field`, `icon_image`        |
-| Density  | `add_heatmap_layer()`        | `heatmap_color`, `heatmap_radius` |
-| 3D       | `add_fill_extrusion_layer()` | `fill_extrusion_height`           |
-
-## Interactive Legends (v0.4.4+)
-
-Filter data directly from legends. Categorical: click to toggle visibility. Continuous: drag handles to filter ranges. Use `draggable = TRUE` to reposition. Access state via `input$MAPID_legend_filter` in Shiny.
+## Shiny pattern (proxy, not re-render)
 
 ```r
-maplibre() |> add_continuous_legend(values = c(0, 100), colors = c("blue", "red"),
-                                     interactive = TRUE, draggable = TRUE)
-```
-
-## Shiny Integration
-
-```r
-ui <- fluidPage(maplibreOutput("map", height = "600px"))
-
+library(shiny); library(mapgl)
+ui <- fluidPage(sliderInput("min", "Min BIR74", 0, 22000, 500),
+                maplibreOutput("map", height = "600px"))
 server <- function(input, output, session) {
   output$map <- renderMaplibre({
-    maplibre(style = carto_style("positron")) |>
-      fit_bounds(data) |>
-      add_fill_layer(id = "layer1", source = data, fill_color = "blue")
+    maplibre(carto_style("positron"), bounds = nc) |>
+      add_fill_layer(id = "ct", source = nc, fill_color = "steelblue")
   })
-
-  # Update without redraw using proxy
-  observeEvent(input$color, {
+  observeEvent(input$min, {
     maplibre_proxy("map") |>
-      set_paint_property("layer1", "fill-color", input$color)
-  })
-
-  # Click events
-  observeEvent(input$map_feature_click, {
-    clicked <- input$map_feature_click  # $properties has attributes
+      set_filter("ct", list(">=", get_column("BIR74"), input$min))
   })
 }
 ```
 
-## Drawing & Controls
+## PMTiles pattern (large data)
 
-**Draw with measurements** (v0.4.1+): `add_draw_control(modes = c("point", "line", "polygon", "rectangle", "circle"), show_measurements = TRUE)`
-
-**Other controls**: `add_screenshot_control(resolution = 300)` for PNG export, `add_layers_control(groups = list(...))` for grouped layer toggles
+```r
+maplibre() |>
+  add_pmtiles_source(id = "src", url = "https://example.com/data.pmtiles") |>
+  add_fill_layer(id = "pm", source = "src",
+                 source_layer = "features",  # must match freestiler layer_name
+                 fill_color = "steelblue")
+```
 
 ## Common Mistakes
 
-1. **Wrong CRS:** Data must be WGS84 (EPSG:4326). Use `st_transform()` first
-2. **Large datasets without tiles:** Convert to PMTiles/MLT for >10k features (see `r-freestiler`)
-3. **Filter expressions as strings:** Must be lists: `list(">=", get_column("value"), 10)`
-4. **Proxy outside reactive:** `maplibre_proxy()` only works in observeEvent/reactive contexts
-5. **Layer order:** Later layers render on top; use `before_id` to insert below existing layers
+| Mistake | Fix |
+|---|---|
+| Using `%>%` | Use native `\|>`. |
+| Hard-coding colors for numeric data | `interpolate()` + matching `add_legend()`. |
+| `source_layer` omitted for vector/PMTiles | Required. Must match the tileset layer name. |
+| Re-rendering map on every input | Use `maplibre_proxy()` + `set_*` in `observeEvent()`. |
+| Missing `promote_id` for hover/feature_click | Set `promote_id` on `add_vector_source()` / `add_pmtiles_source()`. |
+| Fill-extrusion + globe projection | Set `projection = "mercator"`. |
+| `mapboxgl()` with no token | Use `maplibre()` for token-free maps. |
+| `circular_patches = TRUE` | Deprecated; use `patch_shape = "circle"`. |
 
-## Quick View & Testing
+## Resources
 
-**Rapid viz:** `maplibre_view(sf_object, column = "value")` for instant choropleth
-
-**Test with validator:** Use `lib/r-validators/plot-validator.R` to verify map output in tests
-
-## Reference Files
-
-- **API.md**: Complete function reference (120+ functions)
-- **styling.md**: Data-driven styling, basemap styles, controls, camera operations
+[Package site](https://walker-data.com/mapgl/) | [GitHub](https://github.com/walkerke/mapgl) | Sibling skills `r-freestiler` (tiles) and `r-mapping` (chooser).

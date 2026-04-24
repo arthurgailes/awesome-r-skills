@@ -1,447 +1,367 @@
 # mapgl API Reference
 
-Complete function reference for the mapgl package.
-
-**Current version:** 0.4.5 (Updated 2026-03-11)
-- **v0.4.5** (Latest): Esri styles, MLT format support, library updates
-- **v0.4.4**: Interactive legends, screenshot control, globe in compare view
-- **v0.4.1**: Drawing enhancements (rectangle/circle, measurements), grouped layers, OpenFreeMap
-- **v0.4.0**: Turf.js integration for client-side geospatial analysis
+Complete function reference for mapgl. Grouped by section. Unless otherwise noted, every layer/source function accepts a piped `map` object created with `maplibre()` or `mapboxgl()` (or a proxy from `maplibre_proxy()`/`mapboxgl_proxy()`).
 
 ## Creating Maps
 
-| Function | Purpose |
-|----------|---------|
-| `mapboxgl()` | Initialize a Mapbox GL Map |
-| `maplibre()` | Initialize a Maplibre GL Map |
-| `mapboxgl_view()` | Quick visualization of geometries with Mapbox GL |
-| `maplibre_view()` | Quick visualization of geometries with MapLibre GL |
+### `mapboxgl(style=NULL, center=c(0,0), zoom=0, bearing=0, pitch=0, projection="globe", parallels=NULL, access_token=NULL, bounds=NULL, width="100%", height=NULL, ...)`
 
-**Example:**
-```r
-library(mapgl)
+Initialize a Mapbox GL v3 map. Requires `MAPBOX_PUBLIC_TOKEN` unless you pass `access_token` directly. Arguments:
 
-# Basic map
-map <- maplibre(center = c(-74.5, 40), zoom = 9)
+- `style`: Mapbox style URL (`mapbox_style("standard"|"streets"|"light"|"dark"|"satellite"|"satellite-streets"|"navigation-day-v1"|"navigation-night-v1"|"outdoors"|"standard-satellite")`).
+- `center`: `c(lng, lat)`.
+- `zoom`, `bearing`, `pitch`: camera initial state.
+- `projection`: `"mercator"`, `"globe"`, `"winkelTripel"`, `"albers"`, `"equalEarth"`, `"equirectangular"`, `"lambertConformalConic"`, `"naturalEarth"`. Use `"mercator"` when you need fill-extrusion.
+- `parallels`: `c(lat1, lat2)` for albers / lambertConformalConic.
+- `bounds`: sf, `st_bbox()` output, or `c(xmin, ymin, xmax, ymax)`.
+- `width`, `height`: widget dims.
+- `...`: extra Mapbox GL JS Map options, e.g., `scrollZoom=FALSE`, `maxZoom`, `minZoom`, `maxBounds`, `dragRotate`, `touchZoomRotate`.
 
-# Quick view of sf object
-maplibre_view(nc)
-```
+### `maplibre(style=carto_style("voyager"), center=c(0,0), zoom=0, bearing=0, pitch=0, projection="globe", bounds=NULL, width="100%", height=NULL, ...)`
 
-## Adding Layers
+Initialize a MapLibre GL map. No token needed by default (CARTO tiles). Same argument semantics as `mapboxgl()` minus `access_token`/`parallels`.
 
-| Function | Purpose |
-|----------|---------|
-| `add_layer()` | Add a layer to a map from a source |
-| `add_fill_layer()` | Add a fill layer to a map |
-| `add_line_layer()` | Add a line layer to a map |
-| `add_circle_layer()` | Add a circle layer to a Mapbox GL map |
-| `add_heatmap_layer()` | Add a heatmap layer to a Mapbox GL map |
-| `add_fill_extrusion_layer()` | Add a fill-extrusion layer to a Mapbox GL map |
-| `add_raster_layer()` | Add a raster layer to a Mapbox GL map |
-| `add_symbol_layer()` | Add a symbol layer to a map |
-| `add_view()` | Add a visualization layer to an existing map |
+### `mapboxgl_view(data, ...)` / `maplibre_view(data, column=NULL, n=5, palette=NULL, ...)`
 
-**Example:**
-```r
-map |>
-  add_source("data", data = sf_object) |>
-  add_fill_layer(
-    source = "data",
-    fill_color = "blue",
-    fill_opacity = 0.6
-  )
-```
+One-call visualization from sf or terra. Auto-detects geometry type, classifies `column` if supplied, adds a legend.
 
-## Data Sources
+### `add_view(map, data, column=NULL, ...)`
 
-| Function | Purpose |
-|----------|---------|
-| `add_source()` | Add a GeoJSON or sf source to a Mapbox GL or Maplibre GL map |
-| `add_vector_source()` | Add a vector tile source to a Mapbox GL or Maplibre GL map |
-| `add_raster_source()` | Add a raster tile source to a Mapbox GL or Maplibre GL map |
-| `add_raster_dem_source()` | Add a raster DEM source to a Mapbox GL or Maplibre GL map |
-| `add_image_source()` | Add an image source to a Mapbox GL or Maplibre GL map |
-| `add_video_source()` | Add a video source to a Mapbox GL or Maplibre GL map |
-| `add_h3j_source()` | Add a hexagon source from the H3 geospatial indexing system |
-| `add_pmtiles_source()` | Add a PMTiles source (v0.4.5: supports PMTiles and MLT formats) |
+Add a `*_view`-style auto-styled layer onto an existing map.
 
-**PMTiles example:**
-```r
-# PMTiles (Protomaps standard)
-map |>
-  add_pmtiles_source("tiles", url = "path/to/tiles.pmtiles") |>
-  add_fill_layer(source = "tiles", source_layer = "layer_name")
+## Layers
 
-# MapLibre Tiles (MLT) format (v0.4.5+)
-map |>
-  add_pmtiles_source("mlt_tiles", url = "path/to/tiles.mlt") |>
-  add_fill_layer(source = "mlt_tiles", source_layer = "layer_name")
-```
+All layers share these arguments (listed once here, not repeated per function):
 
-## Map Controls
+- `map`, `id` (unique string), `source` (source id string, sf object, or a `list(type=..., data=...)`).
+- `source_layer`: required for vector tile / PMTiles sources.
+- `popup`, `tooltip`: column name to render on click / hover.
+- `hover_options`: named list of paint-property overrides when feature is hovered.
+- `filter`: expression list filtering features.
+- `before_id`: insert below a named layer.
+- `visibility`: `"visible"` or `"none"`.
+- `slot`: for Mapbox Standard style slots.
+- `min_zoom`, `max_zoom`: layer zoom range.
 
-| Function | Purpose |
-|----------|---------|
-| `add_navigation_control()` | Add a navigation control to a map |
-| `add_fullscreen_control()` | Add a fullscreen control to a map |
-| `add_scale_control()` | Add a scale control to a map |
-| `add_layers_control()` | Add a layers control to the map (v0.4.1: supports grouped layers) |
-| `add_draw_control()` | Add a draw control to a map (v0.4.1: rectangle/circle modes, measurements) |
-| `add_geocoder_control()` | Add a geocoder control to a map |
-| `add_reset_control()` | Add a reset control to a map |
-| `add_geolocate_control()` | Add a geolocate control to a map |
-| `add_globe_control()` | Add a globe control to a map |
-| `add_screenshot_control()` | Add a screenshot control to a map (v0.4.4: PNG export with resolution control) |
-| `add_control()` | Add a custom control to a map |
-| `clear_controls()` | Clear controls from a Mapbox GL or Maplibre GL map in a Shiny app |
+### `add_fill_layer()`
 
-**Example:**
-```r
-map |>
-  add_navigation_control() |>
-  add_fullscreen_control() |>
-  add_scale_control() |>
-  add_screenshot_control(resolution = 300)
+Paint args: `fill_color`, `fill_opacity`, `fill_outline_color`, `fill_antialias=TRUE`, `fill_emissive_strength`, `fill_pattern`, `fill_pattern_cross_fade`, `fill_sort_key`, `fill_translate`, `fill_translate_anchor="map"`, `fill_z_offset`.
 
-# Drawing with measurements (v0.4.1+)
-map |>
-  add_draw_control(
-    modes = c("point", "line", "polygon", "rectangle", "circle"),
-    show_measurements = TRUE,
-    measurement_units = "both"  # "metric", "imperial", or "both"
-  )
+### `add_line_layer()`
 
-# Grouped layers control (v0.4.1+)
-map |>
-  add_layers_control(
-    groups = list(
-      "Base Layers" = c("layer1", "layer2"),
-      "Overlays" = c("layer3", "layer4")
-    ),
-    collapsed = TRUE
-  )
-```
+`line_color`, `line_width`, `line_opacity`, `line_blur`, `line_cap` (`"butt"|"round"|"square"`), `line_dasharray`, `line_gap_width`, `line_gradient`, `line_join` (`"bevel"|"round"|"miter"`), `line_miter_limit`, `line_offset`, `line_pattern`, `line_sort_key`, `line_translate`, `line_translate_anchor="map"`, `line_trim_color`, `line_trim_offset`, `line_trim_fade_range`, `line_elevation_ground_scale`, `line_elevation_reference` (`"none"|"sea"|"ground"|"hd-road-markup"`), `line_emissive_strength`, `line_occlusion_opacity`, `line_pattern_cross_fade`, `line_round_limit`, `line_z_offset`.
+
+### `add_circle_layer()`
+
+`circle_color`, `circle_radius`, `circle_opacity`, `circle_blur`, `circle_emissive_strength`, `circle_pitch_alignment`, `circle_pitch_scale`, `circle_sort_key`, `circle_stroke_color`, `circle_stroke_opacity`, `circle_stroke_width`, `circle_translate`, `circle_translate_anchor="map"`, `cluster_options` (from `cluster_options()`).
+
+### `add_heatmap_layer()`
+
+`heatmap_weight`, `heatmap_intensity`, `heatmap_color`, `heatmap_radius`, `heatmap_opacity`.
+
+### `add_symbol_layer()`
+
+Icon: `icon_image`, `icon_size`, `icon_color`, `icon_halo_blur`, `icon_halo_color`, `icon_halo_width`, `icon_opacity`, `icon_offset`, `icon_rotate`, `icon_anchor`, `icon_allow_overlap`, `icon_ignore_placement`, `icon_optional`, `icon_padding`, `icon_keep_upright`, `icon_pitch_alignment`, `icon_rotation_alignment`, `icon_text_fit`, `icon_text_fit_padding`, `icon_translate`, `icon_translate_anchor`, `icon_image_cross_fade`, `icon_emissive_strength`, `icon_occlusion_opacity`, `icon_color_brightness_max/min/contrast/saturation`. Text: `text_field`, `text_color`, `text_size`, `text_font`, `text_anchor`, `text_halo_blur`, `text_halo_color`, `text_halo_width`, `text_letter_spacing`, `text_line_height`, `text_max_angle`, `text_max_width`, `text_offset`, `text_opacity`, `text_optional`, `text_padding`, `text_pitch_alignment`, `text_radial_offset`, `text_rotate`, `text_rotation_alignment`, `text_transform`, `text_translate`, `text_translate_anchor`, `text_variable_anchor`, `text_writing_mode`, `text_justify`, `text_keep_upright`, `text_allow_overlap`, `text_ignore_placement`, `text_emissive_strength`, `text_occlusion_opacity`. Symbol layout: `symbol_placement` (`"point"|"line"|"line-center"`), `symbol_spacing`, `symbol_sort_key`, `symbol_avoid_edges`, `symbol_z_elevate`, `symbol_z_order`, `symbol_z_offset`. Plus `cluster_options`.
+
+### `add_fill_extrusion_layer()`
+
+`fill_extrusion_color`, `fill_extrusion_height`, `fill_extrusion_base`, `fill_extrusion_opacity`, `fill_extrusion_pattern`, `fill_extrusion_vertical_gradient=TRUE`, `fill_extrusion_cast_shadows=TRUE`, `fill_extrusion_ambient_occlusion_intensity`, `fill_extrusion_ambient_occlusion_radius`, `fill_extrusion_emissive_strength`, `fill_extrusion_cutoff_fade_range`, `fill_extrusion_translate`, `fill_extrusion_translate_anchor="map"`. **Set `projection="mercator"` on the map.**
+
+### `add_raster_layer()`
+
+`raster_opacity`, `raster_color`, `raster_color_mix`, `raster_color_range`, `raster_contrast`, `raster_saturation`, `raster_hue_rotate`, `raster_brightness_max`, `raster_brightness_min`, `raster_fade_duration`, `raster_resampling` (`"linear"|"nearest"`), `raster_emissive_strength`.
+
+### `add_layer(map, layer)`
+
+Low-level: attach a raw style-spec layer list.
+
+## Sources
+
+### `add_source(map, id, data, ...)`
+
+`data`: sf object or URL to remote GeoJSON.
+
+### `add_vector_source(map, id, url=NULL, tiles=NULL, promote_id=NULL, ...)`
+
+Pass either `url` (TileJSON) or `tiles` (vector of tile URL templates). `promote_id` is required for hover or `feature_click` on vector tiles.
+
+### `add_raster_source(map, id, url=NULL, tiles=NULL, tileSize=256, maxzoom=22, ...)`
+
+Remote raster tile source.
+
+### `add_raster_dem_source(map, id, url, tileSize=512, maxzoom=NULL, ...)`
+
+DEM source for `set_terrain()`.
+
+### `add_image_source(map, id, url=NULL, data=NULL, coordinates=NULL, colors=NULL)`
+
+Single image or terra `SpatRaster`/`RasterLayer`. `coordinates`: list of four `c(lng, lat)` in clockwise order starting top-left; auto-extracted for raster data.
+
+### `add_video_source(map, id, urls, coordinates)`
+
+Looping video at fixed coordinates.
+
+### `add_pmtiles_source(map, id, url, source_type="vector", maxzoom=22, tilesize=256, promote_id=NULL, ...)`
+
+PMTiles archive (protomaps). `source_type="raster"` for raster PMTiles (MapLibre only).
+
+### `add_h3j_source(map, id, url)`
+
+H3 hexagon source.
+
+## Map controls
+
+### `add_navigation_control(map, show_compass=TRUE, show_zoom=TRUE, visualize_pitch=FALSE, position="top-right", orientation="vertical")`
+
+### `add_fullscreen_control(map, position="top-right")`
+
+### `add_scale_control(map, position="bottom-left", unit="metric"|"imperial"|"nautical", max_width=100)`
+
+### `add_geolocate_control(map, position="top-right", ...)`
+
+Geolocation (fit to user).
+
+### `add_layers_control(map, position="top-left", layers=NULL, collapsible=TRUE, use_icon=TRUE, background_color=NULL, active_color=NULL, hover_color=NULL, active_text_color=NULL, inactive_text_color=NULL, margin_top=NULL, margin_right=NULL, margin_bottom=NULL, margin_left=NULL)`
+
+`layers` may be a character vector of IDs, a named list `list("Label" = "id")`, or a nested list for grouping.
+
+### `add_draw_control(map, position="top-left", freehand=FALSE, simplify_freehand=FALSE, rectangle=FALSE, radius=FALSE, orientation="vertical", source=NULL, point_color="#3bb2d0", line_color="#3bb2d0", fill_color="#3bb2d0", fill_opacity=0.1, active_color="#fbb03b", vertex_radius=5, line_width=2, download_button=FALSE, download_filename="drawn-features", show_measurements=FALSE, measurement_units="metric"|"imperial"|"both", ...)`
+
+Drawn features land in `input$<mapId>_drawn_features`.
+
+### `add_geocoder_control(map, position="top-right", placeholder="Search", collapsed=FALSE, ...)`
+
+### `add_reset_control()`, `add_globe_control()`, `add_screenshot_control()`, `add_control(map, html, position)`
+
+### `clear_controls(map_proxy)`
+
+Remove all controls (Shiny proxy).
 
 ## Legends
 
-| Function | Purpose |
-|----------|---------|
-| `add_legend()` | Add legends to Mapbox GL and MapLibre GL maps |
-| `add_categorical_legend()` | Add categorical legends (v0.4.4: interactive toggle, draggable) |
-| `add_continuous_legend()` | Add continuous legends (v0.4.4: interactive filtering, draggable) |
-| `legend_style()` | Create custom styling for map legends |
-| `clear_legend()` | Clear legends from a map |
+### `add_legend(map, legend_title, values=NULL, colors=NULL, type=c("continuous","categorical"), patch_shape="square", position="top-left", sizes=NULL, add=FALSE, unique_id=NULL, width=NULL, layer_id=NULL, margin_top=NULL, margin_right=NULL, margin_bottom=NULL, margin_left=NULL, style=NULL, target=NULL, interactive=FALSE, filter_column=NULL, filter_values=NULL, classification=NULL, breaks=NULL, draggable=FALSE, circular_patches=FALSE)`
 
-**Example:**
-```r
-# Basic continuous legend
-map |>
-  add_continuous_legend(
-    values = c(0, 100),
-    colors = c("blue", "red"),
-    title = "Population"
-  )
+`patch_shape`: `"square"`, `"circle"`, `"line"`, `"hexagon"`, raw SVG, or sf object. `interactive=TRUE` + `filter_column` makes legend items filter their layer on click. `classification`/`breaks` auto-extract from `step_equal_interval()` etc.
 
-# Interactive legends (v0.4.4+)
-map |>
-  add_continuous_legend(
-    layer_id = "data_layer",
-    values = c(0, 100),
-    colors = c("blue", "red"),
-    interactive = TRUE,      # Enable dual-handle range filtering
-    draggable = TRUE,        # Allow repositioning
-    title = "Population"
-  )
+### `add_categorical_legend(...)` / `add_continuous_legend(...)`
 
-# Categorical with toggle (v0.4.4+)
-map |>
-  add_categorical_legend(
-    values = c("Type A", "Type B"),
-    colors = c("red", "blue"),
-    interactive = TRUE       # Click to show/hide layers
-  )
+Thin wrappers around `add_legend()` with `type` preset.
 
-# Shiny: Access filter state
-observeEvent(input$map_legend_filter, {
-  range <- input$map_legend_filter  # Current filtered range
-})
-```
+### `legend_style(background_color=NULL, text_color=NULL, title_color=NULL, font_family=NULL, font_weight=NULL, ...)`
 
-**Features (v0.4.4+):**
-- Interactive filtering for continuous legends (drag dual handles)
-- Toggle visibility for categorical legends (with visual indicators)
-- Draggable positioning with mouse or touch
-- Smart number formatting (K/M notation)
-- Full Shiny integration for filter state access
-- Works with GeoJSON, vector tiles, and PMTiles sources
+Styling payload for `add_legend(style=...)`.
+
+### `clear_legend(map_proxy, legend_ids=NULL)`
 
 ## Markers
 
-| Function | Purpose |
-|----------|---------|
-| `add_markers()` | Add markers to a Mapbox GL or Maplibre GL map |
-| `clear_markers()` | Clear markers from a map in a Shiny session |
+### `add_markers(map, data, color="red", rotation=0, popup=NULL, marker_id=NULL, draggable=FALSE, ...)`
 
-**Example:**
-```r
-map |>
-  add_markers(
-    lng = c(-74.5, -74.6),
-    lat = c(40, 40.1),
-    popup = c("Location A", "Location B")
-  )
-```
+`data`: `c(lng,lat)`, list of length-2 vectors, or sf POINT object.
 
-## Styling Helpers
+### `clear_markers(map_proxy)`
 
-| Function | Purpose |
-|----------|---------|
-| `mapbox_style()` | Get Mapbox Style URL (requires MAPBOX_PUBLIC_TOKEN) |
-| `maptiler_style()` | Get MapTiler Style URL (requires API key) |
-| `carto_style()` | Get CARTO Style URL (free, no key required) |
-| `openfreemap_style()` | Get OpenFreeMap Style URL (v0.4.1+, free, no key) |
-| `esri_style()` | Get Esri ArcGIS Basemap Style URL (v0.4.5+, requires ArcGIS API key) |
-| `esri_open_style()` | Get Esri Open Basemap Style URL (v0.4.5+, no key required) |
-| `interpolate()` | Create an interpolation expression |
-| `match_expr()` | Create a match expression |
-| `step_expr()` | Create a step expression |
-| `get_column()` | Get column or property for use in mapping |
-| `concat()` | Create a concatenation expression |
-| `number_format()` | Create a number formatting expression |
-| `cluster_options()` | Prepare cluster options for circle layers |
-| `palette_to_lut()` | Convert R color palette to mapgl LUT |
+## Static export
 
-**Basemap Styles:**
-```r
-# Mapbox (needs token)
-mapboxgl(style = mapbox_style("streets"))
+### `save_map(map, filename, width=800, height=600, ...)` / `print_map(map, width=800, height=600, ...)`
 
-# CARTO (free)
-maplibre(style = carto_style("positron"))
+Render widget to PNG via chromote. Requires the `chromote` and `webshot2` ecosystems.
 
-# OpenFreeMap (v0.4.1+, free, open-source)
-maplibre(style = openfreemap_style("liberty"))
+## Style helpers
 
-# Esri (v0.4.5+)
-maplibre(style = esri_style("streets"))       # Needs ArcGIS API key
-maplibre(style = esri_open_style("topo"))     # Free, no key
-```
+### `mapbox_style(style_name)`
 
-**Data-driven styling:**
-```r
-# Continuous (interpolate)
-fill_color = interpolate(
-  get_column("population"),
-  values = c(0, 1000, 5000),
-  palette = "viridis"
-)
+`"standard"`, `"standard-satellite"`, `"streets"`, `"outdoors"`, `"light"`, `"dark"`, `"satellite"`, `"satellite-streets"`, `"navigation-day-v1"`, `"navigation-night-v1"`.
 
-# Categorical (match)
-fill_color = match_expr(
-  get_column("type"),
-  values = c("A", "B", "C"),
-  stops = c("red", "green", "blue"),
-  default = "gray"
-)
-```
+### `maptiler_style(style_name)`
 
-## Data Classification
+Needs `MAPTILER_API_KEY`. `"basic"`, `"bright"`, `"dataviz"`, `"backdrop"`, `"basic-v2"`, `"streets"`, `"outdoor"`, `"satellite"`, `"topo"`, `"toner"`, `"hybrid"`.
 
-| Function | Purpose |
-|----------|---------|
-| `step_equal_interval()` | Step expressions with automatic classification |
-| `step_quantile()` | Step expressions with automatic classification |
-| `step_jenks()` | Step expressions with automatic classification |
-| `interpolate_palette()` | Create interpolation expression with automatic palette and breaks |
-| `get_legend_labels()` | Extract information from classification objects |
-| `get_legend_colors()` | Extract information from classification objects |
-| `get_breaks()` | Extract information from classification objects |
+### `carto_style(style_name)`
 
-**Example:**
-```r
-# Automatic classification
-fill_color = step_jenks(
-  get_column("value"),
-  n_breaks = 5,
-  palette = "Blues"
-)
-```
+`"voyager"`, `"positron"`, `"dark-matter"`.
 
-## Camera and View
+### `openfreemap_style(style_name)`
 
-| Function | Purpose |
-|----------|---------|
-| `fit_bounds()` | Fit the map to a bounding box |
-| `fly_to()` | Fly to a given view |
-| `ease_to()` | Ease to a given view |
-| `jump_to()` | Jump to a given view |
-| `set_view()` | Set the map center and zoom level |
+`"bright"`, `"positron"`, `"liberty"`, `"dark"`, `"fiord"`.
 
-**Example:**
-```r
-# In Shiny with proxy
-maplibre_proxy("map") |>
-  fly_to(center = c(-74.5, 40), zoom = 12)
-```
+### `esri_style(style_name, api_key=NULL)` / `esri_open_style(style_name)`
 
-## Map Configuration
+Esri basemaps; `esri_style()` needs a key.
 
-| Function | Purpose |
-|----------|---------|
-| `set_style()` | Update the style of a map |
-| `set_projection()` | Set Projection for a Mapbox/Maplibre Map |
-| `set_terrain()` | Set terrain properties on a map |
-| `set_fog()` | Set fog on a Mapbox GL map |
-| `set_rain()` | Set rain effect on a Mapbox GL map |
-| `set_snow()` | Set snow effect on a Mapbox GL map |
-| `set_config_property()` | Set a configuration property for a Mapbox GL map |
+### `basemap_style()`
 
-**Example:**
-```r
-map |>
-  set_projection("globe") |>
-  set_terrain(source = "dem", exaggeration = 1.5)
-```
+Blank style for building from scratch.
 
-## Layer Management
+## Data-driven styling expressions
 
-| Function | Purpose |
-|----------|---------|
-| `set_filter()` | Set a filter on a map layer |
-| `set_paint_property()` | Set a paint property on a map layer |
-| `set_layout_property()` | Set a layout property on a map layer |
-| `set_tooltip()` | Set tooltip on a map layer |
-| `set_popup()` | Set popup on a map layer |
-| `set_source()` | Set source of a map layer |
-| `clear_layer()` | Clear layers from a map using a proxy |
-| `move_layer()` | Move a layer to a different z-position |
+### `interpolate(column=NULL, property=NULL, type="linear", values, stops, na_color=NULL)`
 
-**Example:**
-```r
-map |>
-  set_tooltip("layer-id", "{{property_name}}") |>
-  set_filter("layer-id", list("==", list("get", "type"), "residential"))
-```
+`type` can be `"linear"`, `list("exponential", base)`, or `list("cubic-bezier", x1, y1, x2, y2)`. `values` are numeric breakpoints; `stops` are output values (colors, sizes). `property="zoom"` to vary by zoom.
 
-## Shiny Integration
+### `match_expr(column=NULL, property=NULL, values, stops, default="#cccccc")`
 
-| Function | Purpose |
-|----------|---------|
-| `mapboxglOutput()` | Create a Mapbox GL output element for Shiny |
-| `maplibreOutput()` | Create a Maplibre GL output element for Shiny |
-| `renderMapboxgl()` | Render a Mapbox GL output element in Shiny |
-| `renderMaplibre()` | Render a Maplibre GL output element in Shiny |
-| `mapboxgl_proxy()` | Create a proxy object for a Mapbox GL map in Shiny |
-| `maplibre_proxy()` | Create a proxy object for a Maplibre GL map in Shiny |
-| `mapboxglCompareOutput()` | Create a Mapbox GL Compare output element for Shiny |
-| `maplibreCompareOutput()` | Create a Maplibre GL Compare output element for Shiny |
-| `renderMapboxglCompare()` | Render a Mapbox GL Compare output element in Shiny |
-| `renderMaplibreCompare()` | Render a Maplibre GL Compare output element in Shiny |
-| `mapboxgl_compare_proxy()` | Create a proxy object for a Mapbox GL Compare widget in Shiny |
-| `maplibre_compare_proxy()` | Create a proxy object for a Maplibre GL Compare widget in Shiny |
-| `enable_shiny_hover()` | Enable hover events for Shiny applications |
+Categorical.
 
-**Example:**
-```r
-# UI
-maplibreOutput("map")
+### `step_expr(column=NULL, property=NULL, base, values, stops, na_color=NULL)`
 
-# Server
-output$map <- renderMaplibre({
-  maplibre() |>
-    add_navigation_control()
-})
+Stepwise classes. `base` is the value before the first threshold.
 
-# Update with proxy
-maplibre_proxy("map") |>
-  add_source("data", data = reactive_data())
-```
+### `step_equal_interval(column, n=5, palette=viridisLite::viridis, na_color=NULL)` / `step_quantile(...)` / `step_jenks(...)`
 
-## Turf.js Spatial Operations
+Auto-classified step expressions. Pair with:
 
-| Function | Purpose |
-|----------|---------|
-| `turf_buffer()` | Turf.js Geospatial Operations for mapgl |
-| `turf_union()` | Union geometries |
-| `turf_intersect()` | Find intersection of two geometries |
-| `turf_difference()` | Find difference between two geometries |
-| `turf_filter()` | Spatial filter features by predicate |
-| `turf_convex_hull()` | Create convex hull |
-| `turf_concave_hull()` | Create concave hull |
-| `turf_voronoi()` | Create Voronoi diagram |
-| `turf_centroid()` | Calculate centroid of geometries |
-| `turf_center_of_mass()` | Calculate center of mass |
-| `turf_distance()` | Calculate distance between two features |
-| `turf_area()` | Calculate area of geometries |
+- `get_legend_labels(classification, digits=2, format="both"|"left"|"right")`
+- `get_legend_colors(classification)`
+- `get_breaks(classification)`
 
-**Example:**
-```r
-# Buffer features on the map
-buffered <- turf_buffer(features, distance = 1, units = "miles")
-```
+to feed `add_legend()`.
 
-## Advanced Features
+### `interpolate_palette(column, method="equal_interval"|"quantile"|"jenks", n=5, palette=viridisLite::viridis, na_color=NULL)`
 
-| Function | Purpose |
-|----------|---------|
-| `compare()` | Create a Compare widget (v0.4.4: globe projection support) |
-| `add_globe_minimap()` | Add a Globe Minimap to a map |
-| `add_image()` | Add an image to the map |
-| `get_drawn_features()` | Get drawn features from the map |
-| `add_features_to_draw()` | Add features to an existing draw control |
-| `clear_drawn_features()` | Clear all drawn features from a map |
-| `query_rendered_features()` | Query rendered features on a map in a Shiny session |
-| `get_queried_features()` | Get queried features from a map as an sf object |
+Auto-built `interpolate()` with breaks + palette.
 
-**Example:**
-```r
-# Drawing in Shiny (v0.4.1: enhanced with measurements)
-map |>
-  add_draw_control(
-    modes = c("polygon", "rectangle", "circle"),
-    show_measurements = TRUE,
-    measurement_units = "both"
-  )
+### `get_column(column)`
 
-# Get drawn features
-drawn <- get_drawn_features("map")
+Reference a source column inside any expression. Required when mixing columns with literals in nested expressions.
 
-# Compare maps (v0.4.4: globe projection supported)
-compare(
-  maplibre(style = carto_style("positron")) |> set_projection("globe"),
-  maplibre(style = carto_style("dark-matter")) |> set_projection("globe")
-)
-```
+### `concat(..., separator="")` / `number_format(x, locale=NULL, style=NULL, currency=NULL, min_fraction_digits=NULL, max_fraction_digits=NULL)`
 
-## Story Maps
+Compose popup/tooltip strings.
 
-| Function | Purpose |
-|----------|---------|
-| `story_map()` | Create a scrollytelling story map |
-| `story_maplibre()` | Create a scrollytelling story map with MapLibre |
-| `story_leaflet()` | Create a scrollytelling story map with Leaflet |
-| `story_section()` | Create a story section for story maps |
-| `on_section()` | Observe events on story map section transitions |
+### `cluster_options(cluster_max_zoom=14, cluster_radius=50, ...)`
 
-**Example:**
-```r
-story_maplibre() |>
-  story_section(
-    id = "intro",
-    content = "Welcome to the story",
-    center = c(-74.5, 40),
-    zoom = 9
-  )
-```
+Config payload for `add_circle_layer(cluster_options=...)`.
 
-## Documentation
+### `palette_to_lut(palette, n=256)`
 
-**Package site:** https://walker-data.com/mapgl/
-**GitHub:** https://github.com/walkerke/mapgl
+Convert an R palette to a mapgl LUT (for `raster_color` etc.).
 
-## Library Versions (v0.4.5)
+## Camera & view
 
-- **Mapbox GL JS:** v3.19.1
-- **MapLibre GL JS:** v5.19.0
-- **Turf.js:** v7.2.0
+### `fit_bounds(map, bbox, animate=FALSE, ...)`
+
+`bbox`: sf object, `st_bbox()`, or `c(xmin, ymin, xmax, ymax)`. Extra `...` are Mapbox/MapLibre camera options (e.g. `duration`, `padding`, `pitch`, `bearing`, `maxZoom`).
+
+### `fly_to(map, center, zoom=NULL, ...)` / `ease_to(map, center, zoom=NULL, ...)` / `jump_to(map, center, zoom=NULL, ...)`
+
+`...` passes through: `bearing`, `pitch`, `speed`, `curve`, `duration`, etc.
+
+### `set_view(map, center, zoom)`
+
+Set center/zoom without animation.
+
+## Map configuration
+
+### `set_style(map, style, config=NULL, diff=TRUE, preserve_layers=TRUE)`
+
+Switch basemap; `preserve_layers=TRUE` keeps user layers/sources.
+
+### `set_projection(map_proxy, projection)` / `set_terrain(map, source, exaggeration=1)` / `set_fog(map, ...)` / `set_rain(map, ...)` / `set_snow(map, ...)` / `set_config_property(map, import_id, property, value)`
+
+## Layer management (proxy + pipeline)
+
+### `set_filter(map, layer_id, filter)`
+
+`filter`: Mapbox expression list, e.g. `list(">=", get_column("pop"), 1000)` or `list("==", "cat", "A")`. Use `NULL` to remove.
+
+### `set_paint_property(map, layer_id, name, value)`
+
+e.g. `set_paint_property("ct", "fill-color", "#ff0000")`.
+
+### `set_layout_property(map, layer_id, name, value)`
+
+e.g. `set_layout_property("ct", "visibility", "none")`.
+
+### `set_tooltip(map, layer_id, tooltip)` / `set_popup(map, layer_id, popup)`
+
+Swap tooltip/popup column without re-creating the layer.
+
+### `set_source(map, layer_id, source)`
+
+Swap a layer's source.
+
+### `clear_layer(map_proxy, layer_id)`
+
+Remove a layer.
+
+### `move_layer(map_proxy, layer_id, before_id=NULL)`
+
+Change z-order.
+
+## Shiny integration
+
+### `mapboxglOutput(outputId, width="100%", height="400px")` / `maplibreOutput(...)`
+
+Output placeholder.
+
+### `renderMapboxgl(expr, env=parent.frame(), quoted=FALSE)` / `renderMaplibre(...)`
+
+Reactive render.
+
+### `mapboxgl_proxy(mapId, session=shiny::getDefaultReactiveDomain())` / `maplibre_proxy(...)`
+
+Proxy for mutation. Use inside `observeEvent()` / `observe()`. Most `set_*`, `add_*_layer`, `fly_to`, `fit_bounds`, `clear_*`, `add_markers` work on proxies.
+
+### Compare widget
+
+`mapboxglCompareOutput()`, `maplibreCompareOutput()`, `renderMapboxglCompare()`, `renderMaplibreCompare()`, `mapboxgl_compare_proxy(mapId, map_side="before"|"after")`, `maplibre_compare_proxy(...)`.
+
+### `compare(map1, map2, width="100%", height=NULL, elementId=NULL, mousemove=FALSE, orientation="vertical", mode="swipe"|"sync", swiper_color=NULL)`
+
+Non-Shiny compare widget.
+
+### `enable_shiny_hover(map)`
+
+Enable hover-related reactive inputs (`input$<mapId>_feature_hover`).
+
+### Auto-exposed Shiny inputs
+
+From any `maplibreOutput()`/`mapboxglOutput()` with `outputId = "map"`:
+
+- `input$map_center` -- list(lng, lat)
+- `input$map_zoom` -- numeric
+- `input$map_bbox` -- list(xmin, xmax, ymin, ymax)
+- `input$map_click` -- list(lng, lat, time)
+- `input$map_feature_click` -- list(id, properties, lng, lat)
+- `input$map_feature_hover` -- same (requires `enable_shiny_hover()`)
+- `input$map_drawn_features` -- GeoJSON FeatureCollection (with `add_draw_control()`)
+- `input$map_view_state` -- camera snapshot
+
+## Turf.js client-side spatial ops
+
+All accept a `layer_id` (existing map layer), `data` (sf), or raw coords; write to `source_id`. In Shiny, `input_id` also publishes results to `input$<mapId>_<input_id>`.
+
+- `turf_buffer(map, layer_id|data, radius, units="kilometers"|"miles"|"meters"|"degrees"|"radians", source_id, input_id=NULL)`
+- `turf_filter(map, layer_id, filter_layer_id|filter_data, predicate="intersects"|"within"|"contains"|"crosses"|"disjoint", source_id, input_id=NULL)`
+- `turf_union(map, layer_id_1, layer_id_2, source_id)`
+- `turf_intersect(map, layer_id, layer_id_2, source_id)`
+- `turf_difference(map, layer_id, layer_id_2, source_id)`
+- `turf_convex_hull(map, layer_id|data, source_id)`
+- `turf_concave_hull(map, layer_id|data, max_edge=Infinity, source_id)`
+- `turf_voronoi(map, layer_id|data, bbox=NULL, source_id)`
+- `turf_centroid(map, layer_id|data, source_id)`
+- `turf_center_of_mass(map, layer_id|data, source_id)`
+- `turf_distance(map, point1, point2, units="kilometers", input_id)` (Shiny only)
+- `turf_area(map, layer_id|data, units="meters", input_id)` (Shiny only)
+
+## Drawing & feature query
+
+- `get_drawn_features(map)`, `add_features_to_draw(map, data)`, `clear_drawn_features(map_proxy)`.
+- `query_rendered_features(map_proxy, geometry=NULL, layers=NULL, filter=NULL, input_id)`, `get_queried_features(map_proxy, input_id)` -- return features as sf via `input$<mapId>_<input_id>`.
+- `add_image(map, id, url|data, sdf=FALSE, pixelRatio=1)` -- register a sprite for `icon_image`.
+- `add_globe_minimap(map, position="bottom-right", ...)`.
+
+## Story maps
+
+### `story_map(map_id, sections, font_family=NULL, background_color=NULL, text_color=NULL, theme="light"|"dark", show_credits=TRUE, ...)` / `story_maplibre(...)` / `story_leaflet(...)`
+
+UI builder. `sections` is a named list of `story_section()` objects; names are section IDs used by `on_section()`.
+
+### `story_section(title, content, position="left"|"center"|"right", background_color=NULL, text_color=NULL, ...)`
+
+One scrolling section. `content` is Shiny UI (tags, inputs, outputs). `title=NULL` or `""` renders without a title.
+
+### `on_section(map_id, section_id, expr)`
+
+Server-side trigger run whenever the named section becomes active.
