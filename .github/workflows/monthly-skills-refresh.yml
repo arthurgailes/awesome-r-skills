@@ -9,6 +9,7 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     permissions:
+      id-token: write # OIDC token for claude-code-action
       contents: write # push branch
       pull-requests: write # open draft PR
     steps:
