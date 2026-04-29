@@ -311,23 +311,6 @@ Reads spatial metadata from a file without loading geometry data.
 
 ## Geometry Construction
 
-### ddbs_as_spatial(x, coords, crs = 4326, ...)
-Creates point geometries from coordinate columns.
-
-**Parameters:**
-- `x`: Data frame or duckspatial_df
-- `coords`: Character vector of coordinate column names (e.g., c("lon", "lat"))
-- `crs`: Coordinate reference system (default: WGS84)
-- `...`: Additional parameters
-
-**Returns:** duckspatial_df with point geometries
-
-**Usage:**
-```r
-points <- data |>
-  ddbs_as_spatial(coords = c("longitude", "latitude"))
-```
-
 ### ddbs_generate_points(x, n, ...)
 Produces n random points within each feature's bounding box.
 
@@ -459,15 +442,6 @@ Computes minimum enclosing shapes.
 - `...`: Additional parameters (concavity for concave_hull)
 
 **Returns:** duckspatial_df with hull geometries
-
-### ddbs_endpoint(x, ...)
-Retrieves last point of linestring geometries.
-
-**Parameters:**
-- `x`: duckspatial_df with linestring geometries
-- `...`: Additional parameters
-
-**Returns:** duckspatial_df with point geometries
 
 ### ddbs_exterior_ring(x, ...)
 Extracts outer boundary of polygon geometries.
