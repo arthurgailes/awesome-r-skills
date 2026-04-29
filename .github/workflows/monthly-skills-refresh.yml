@@ -25,7 +25,7 @@ jobs:
             libcurl4-openssl-dev \
             libssl-dev \
             libxml2-dev
-          Rscript -e 'install.packages(c("rvest","yaml","xml2"), repos="https://cloud.r-project.org")'
+          sudo Rscript -e 'install.packages(c("rvest","yaml","xml2"), repos="https://cloud.r-project.org")'
 
       - name: Extract package metadata
         run: Rscript lib/refresh/extract.R
