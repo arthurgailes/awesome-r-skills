@@ -17,16 +17,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
-
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          packages: |
-            rvest
-            yaml
-            xml2
+      - name: Install R and extractor dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            r-base-core \
+            libcurl4-openssl-dev \
+            libssl-dev \
+            libxml2-dev
+          Rscript -e 'install.packages(c("rvest","yaml","xml2"), repos="https://cloud.r-project.org")'
 
       - name: Extract package metadata
         run: Rscript lib/refresh/extract.R
