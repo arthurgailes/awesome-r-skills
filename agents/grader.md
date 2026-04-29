@@ -119,13 +119,13 @@ Use validator output as evidence in grading.json.
 
 ## Output Format
 
-Save results to `grading.json` in eval directory:
+Save results to `grading.json` in eval directory. The expectations array MUST use the field names `text`, `passed`, `evidence`, and the summary MUST use `passed`/`failed`/`total`/`pass_rate` -- variants like `assertions`/`overall_pass`/`pass_count` break downstream tooling (benchmark aggregation, viewer):
 
 ```json
 {
   "eval_id": "collapse-grouped-stats",
   "eval_name": "Grouped statistics with collapse",
-  "assertions": [
+  "expectations": [
     {
       "text": "Uses fmean() not mean()",
       "passed": true,
@@ -147,9 +147,12 @@ Save results to `grading.json` in eval directory:
       "evidence": "Clear variable names, proper indentation, comments explain TRA usage"
     }
   ],
-  "overall_pass": true,
-  "pass_count": 4,
-  "total_count": 4
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
 }
 ```
 

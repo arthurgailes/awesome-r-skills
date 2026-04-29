@@ -67,6 +67,27 @@ btw_this(globalenv())
 | Function | Purpose |
 |----------|---------|
 | `btw_task_create_readme()` | Execute workflow to generate polished README |
+| `btw_task()` | Run a pre-formatted btw task |
+| `btw_task_create_skill()` | Task: Create a Skill |
+
+## Skills Management
+
+| Function | Purpose |
+|----------|---------|
+| `install_btw_cli()` | Install the btw CLI |
+| `btw_agent_tool()` | Create a custom agent tool from a markdown file |
+| `btw_tool_skill()` | Tool: Load a skill |
+| `btw_skill_install_github()` | Install a skill from GitHub |
+| `btw_skill_install_package()` | Install a skill from an R package |
+
+**Example:**
+```r
+# Create a custom agent tool from a markdown spec
+tool <- btw_agent_tool("path/to/tool-spec.md")
+
+# Install a skill from GitHub
+btw_skill_install_github("user/repo")
+```
 
 ## Tools (for LLM Integration)
 

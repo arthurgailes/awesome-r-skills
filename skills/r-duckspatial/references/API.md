@@ -170,9 +170,12 @@ All follow pattern: `ddbs_<predicate>(x, y, ...)`
 
 - `ddbs_intersects()` - Geometries share any space
 - `ddbs_covers()` - x completely covers y (boundary can touch)
+- `ddbs_covered_by()` - x is covered by y (boundary can touch)
 - `ddbs_touches()` - Geometries share boundary but not interior
 - `ddbs_within()` - x is completely inside y
+- `ddbs_within_properly()` - x is properly within y (interior only)
 - `ddbs_contains()` - x completely contains y
+- `ddbs_contains_properly()` - x properly contains y (interior only)
 - `ddbs_overlaps()` - Geometries overlap but neither contains the other
 - `ddbs_crosses()` - Geometries cross (for lines)
 - `ddbs_equals()` - Geometries are spatially equal
@@ -268,6 +271,16 @@ Computes symmetric difference (parts unique to each).
 
 **Returns:** duckspatial_df with symmetric difference geometries
 
+### ddbs_crop(x, y, ...)
+Crops x geometries to the extent of y.
+
+**Parameters:**
+- `x`: duckspatial_df object to crop
+- `y`: duckspatial_df or bounding box to crop to
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df cropped to y extent
+
 ### ddbs_interpolate_aw(x, y, values, ...)
 Performs areal-weighted interpolation from x to y geometries.
 
@@ -285,24 +298,18 @@ result <- ddbs_interpolate_aw(census_tracts, neighborhoods,
                               values = "population")
 ```
 
-## Geometry Construction
+## Data Utilities
 
-### ddbs_as_spatial(x, coords, crs = 4326, ...)
-Creates point geometries from coordinate columns.
+### ddbs_read_meta(path, ...)
+Reads spatial metadata from a file without loading geometry data.
 
 **Parameters:**
-- `x`: Data frame or duckspatial_df
-- `coords`: Character vector of coordinate column names (e.g., c("lon", "lat"))
-- `crs`: Coordinate reference system (default: WGS84)
-- `...`: Additional parameters
+- `path`: Path to spatial file
+- `...`: Additional GDAL options
 
-**Returns:** duckspatial_df with point geometries
+**Returns:** Data frame with layer name, geometry type, CRS, feature count, and extent
 
-**Usage:**
-```r
-points <- data |>
-  ddbs_as_spatial(coords = c("longitude", "latitude"))
-```
+## Geometry Construction
 
 ### ddbs_generate_points(x, n, ...)
 Produces n random points within each feature's bounding box.
@@ -310,6 +317,15 @@ Produces n random points within each feature's bounding box.
 **Parameters:**
 - `x`: duckspatial_df object
 - `n`: Number of points per feature
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with point geometries
+
+### ddbs_as_points(x, ...)
+Converts non-point geometries to representative point geometries.
+
+**Parameters:**
+- `x`: duckspatial_df object
 - `...`: Additional parameters
 
 **Returns:** duckspatial_df with point geometries
@@ -323,6 +339,56 @@ Converts point geometries to QuadKey tile identifiers (Bing Maps tiles).
 - `...`: Additional parameters
 
 **Returns:** duckspatial_df with quadkey column
+
+## Line Operations
+
+### ddbs_line_startpoint(x, ...)
+Gets the first point of linestring geometries.
+
+**Parameters:**
+- `x`: duckspatial_df with linestring geometries
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with start point geometries
+
+### ddbs_line_endpoint(x, ...)
+Gets the last point of linestring geometries.
+
+**Parameters:**
+- `x`: duckspatial_df with linestring geometries
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with end point geometries
+
+### ddbs_line_interpolate(x, distance, ...)
+Interpolates a point at a given distance along each linestring.
+
+**Parameters:**
+- `x`: duckspatial_df with linestring geometries
+- `distance`: Distance along line (absolute or fraction 0-1)
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with interpolated point geometries
+
+### ddbs_line_merge(x, ...)
+Merges connected linestring segments into longer linestrings.
+
+**Parameters:**
+- `x`: duckspatial_df with linestring geometries
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with merged linestrings
+
+### ddbs_line_substring(x, start, end, ...)
+Extracts a substring of linestring between two distances.
+
+**Parameters:**
+- `x`: duckspatial_df with linestring geometries
+- `start`: Start distance (absolute or fraction 0-1)
+- `end`: End distance (absolute or fraction 0-1)
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with substring geometries
 
 ## Geometry Processing
 
@@ -377,15 +443,6 @@ Computes minimum enclosing shapes.
 
 **Returns:** duckspatial_df with hull geometries
 
-### ddbs_endpoint(x, ...)
-Retrieves last point of linestring geometries.
-
-**Parameters:**
-- `x`: duckspatial_df with linestring geometries
-- `...`: Additional parameters
-
-**Returns:** duckspatial_df with point geometries
-
 ### ddbs_exterior_ring(x, ...)
 Extracts outer boundary of polygon geometries.
 
@@ -438,6 +495,42 @@ Combines geometries without dissolving boundaries.
 
 **Returns:** duckspatial_df with combined geometries
 
+### ddbs_dump(x, ...)
+Explodes multi-geometry features into individual single-part geometries.
+
+**Parameters:**
+- `x`: duckspatial_df with multi-geometry types
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with single-part geometries (more rows)
+
+### ddbs_multi(x, ...)
+Wraps single-part geometries into their multi-type equivalents.
+
+**Parameters:**
+- `x`: duckspatial_df with single-part geometries
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with multi-type geometries
+
+### ddbs_maximum_inscribed_circle(x, ...)
+Computes the largest circle that fits within each polygon.
+
+**Parameters:**
+- `x`: duckspatial_df with polygon geometries
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with circle center points and radius
+
+### ddbs_minimum_rotated_rectangle(x, ...)
+Computes the minimum area bounding rectangle (may be rotated).
+
+**Parameters:**
+- `x`: duckspatial_df object
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with rectangle polygon geometries
+
 ### ddbs_voronoi(x, ...)
 Generates Voronoi diagram from point geometries.
 
@@ -446,6 +539,37 @@ Generates Voronoi diagram from point geometries.
 - `...`: Additional parameters
 
 **Returns:** duckspatial_df with Voronoi polygon geometries
+
+## Coordinate Accessors
+
+### Coordinate Extraction Functions
+Extract coordinate values from geometries:
+
+- `ddbs_x(x, ...)` - Extract X (longitude) coordinate
+- `ddbs_y(x, ...)` - Extract Y (latitude) coordinate
+- `ddbs_z(x, ...)` - Extract Z (elevation) coordinate
+- `ddbs_m(x, ...)` - Extract M (measure) coordinate
+
+### ddbs_locate_along(x, measure, ...)
+Returns point geometry at the given measure value along a linestring.
+
+**Parameters:**
+- `x`: duckspatial_df with linestring geometries
+- `measure`: M-value to locate
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with point geometries
+
+### ddbs_locate_between(x, start, end, ...)
+Returns geometry segments between two measure values.
+
+**Parameters:**
+- `x`: duckspatial_df with M-enabled linestring geometries
+- `start`: Start M-value
+- `end`: End M-value
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with linestring segments
 
 ## Coordinate Operations
 
@@ -464,6 +588,16 @@ Converts between coordinate reference systems.
 # Transform to UTM Zone 33N
 utm <- data |> ddbs_transform(crs = 32633)
 ```
+
+### ddbs_set_crs(x, crs, ...)
+Assigns a CRS to a geometry without reprojecting coordinates (use when CRS is missing or wrong).
+
+**Parameters:**
+- `x`: duckspatial_df object
+- `crs`: CRS to assign (EPSG code or proj4string)
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with new CRS metadata (coordinates unchanged)
 
 ### ddbs_flip_coordinates(x, ...)
 Swaps X and Y coordinate axes.
@@ -499,6 +633,15 @@ Repairs invalid geometries using ST_MakeValid.
 # Always validate before union operations
 valid_data <- data |> ddbs_make_valid()
 ```
+
+### ddbs_remove_repeated_points(x, ...)
+Removes consecutive duplicate vertices from geometries.
+
+**Parameters:**
+- `x`: duckspatial_df object
+- `...`: Additional parameters
+
+**Returns:** duckspatial_df with deduplicated vertices
 
 ### ddbs_simplify(x, tolerance, ...)
 Reduces geometry complexity using Douglas-Peucker algorithm.
@@ -602,6 +745,15 @@ Retrieves minimum bounding rectangle for each feature.
 - `...`: Additional parameters
 
 **Returns:** Data frame with xmin, ymin, xmax, ymax columns
+
+### ddbs_make_envelope(xmin, ymin, xmax, ymax, ...)
+Creates a rectangular envelope polygon from bounding coordinates.
+
+**Parameters:**
+- `xmin`, `ymin`, `xmax`, `ymax`: Bounding coordinates
+- `...`: Additional parameters (crs)
+
+**Returns:** duckspatial_df with rectangle polygon geometry
 
 ### ddbs_envelope(x, ...)
 Extracts axis-aligned bounding box as geometry.

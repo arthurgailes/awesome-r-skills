@@ -17,13 +17,27 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            rvest
+            yaml
+            xml2
+
+      - name: Extract package metadata
+        run: Rscript lib/refresh/extract.R
+
       - uses: anthropics/claude-code-action@v1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           show_full_output: true
-          claude_args: "--max-turns 60 --allowed-tools Bash,Read,Write,Edit,Glob,Grep,WebFetch"
+          claude_args: "--max-turns 40 --allowed-tools Bash,Read,Write,Edit,Glob,Grep"
           prompt: |
             Monthly R skills refresh for this repo. You are running inside a GitHub
             Actions workflow on the default branch. One PR per run. No auto-merge,
@@ -35,35 +49,23 @@ jobs:
                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             2. Create branch: BRANCH="skills-refresh/$(date -u +%Y-%m)"; git checkout -b "$BRANCH".
 
-            Per-skill refresh. For each dir in:
-              r-btw, r-collapse, r-duckplyr, r-duckspatial, r-ellmer, r-flextable,
-              r-freestiler, r-mapgl, r-mcptools, r-ragnar, r-vitals
+            Per-skill refresh. For each pkg in:
+              btw, collapse, duckplyr, duckspatial, ellmer, flextable,
+              freestiler, mapgl, mcptools, ragnar, vitals
 
-              a. Fetch https://cran.r-project.org/web/packages/{pkg}/index.html
-                 (version, vignette list, URL field).
-              b. Fetch the pkgdown reference index. URL is in the CRAN page's URL
-                 field; if not resolvable, try https://walker-data.github.io/{pkg}/reference/index.html
-                 or https://{pkg}.r-lib.org/reference/index.html.
-              c. Diff against skills/r-{pkg}/SKILL.md and skills/r-{pkg}/references/API.md.
-              d. Apply mechanical edits only: add new functions to the Quick
-                 Reference table and to API.md with their upstream descriptions.
-                 Deprecations, renames, and signature shifts go to the PR punch
-                 list -- DO NOT auto-edit those.
+              a. Read lib/refresh/inputs/{pkg}.txt (pre-extracted version and
+                 function list). If the file contains "error:", skip this skill
+                 and add a line to the PR's "Extraction failures" section.
+              b. Read skills/r-{pkg}/SKILL.md and skills/r-{pkg}/references/API.md.
+                 Diff the function list against the Quick Reference table and the
+                 API.md headings.
+              c. Apply mechanical edits only: add new functions to the Quick
+                 Reference table and to API.md with placeholder upstream
+                 descriptions. Mark them clearly so the human reviewer fills in
+                 the description prose.
+              d. Deprecations, renames, and signature shifts go to the PR
+                 punch list -- DO NOT auto-edit those.
               e. If nothing changed, skip this skill entirely.
-              f. If a fetch fails, skip that skill and note the failure in the PR.
-
-            r-package-skill consistency check:
-              Read skills/r-package-skill/SKILL.md and every skills/r-package-skill/references/*.md.
-              Compare against the skill-creator plugin at
-              ~/.claude/plugins/cache/claude-plugins-official/skill-creator/*/SKILL.md
-              (and its references/). If that cache is not present in the runner,
-              skip this step and note it in the PR. Compare on:
-              - evals.json schema (text/passed/evidence)
-              - parallel with-skill + baseline in the same turn
-              - description optimization (train/held-out split)
-              - stopping criteria (pass_rate >= 90% AND no improvement for 2 iterations)
-              - grader / analyst pass on benchmark.json
-              Auto-apply mechanical updates; flag semantic drift in the PR punch list.
 
             House rules (from CLAUDE.md):
               - native pipe |> (never %>%)
@@ -85,7 +87,7 @@ jobs:
 
               PR body structure:
                 ## Summary
-                N of 12 skills changed this month.
+                N of 11 skills changed this month.
 
                 ## Auto-applied edits
                 - r-<pkg>: <what changed> (<pkg> <version>)
@@ -93,6 +95,10 @@ jobs:
 
                 ## Needs human review
                 - r-<pkg>: <description with enough context>
+                - ...
+
+                ## Extraction failures
+                - r-<pkg>: <error message from inputs/{pkg}.txt>
                 - ...
 
                 ## No changes

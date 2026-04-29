@@ -41,6 +41,7 @@ Read `references/API.md` before writing code.
 | **Materialize**           | `ddbs_collect()` or `st_as_sf()`        | Brings data into R memory  |
 | **Spatial join**          | `ddbs_join(x, y, join, predicate)`      | join: left/inner/right/full|
 | **Spatial filter**        | `ddbs_filter(x, y, predicate)`          | Subset by spatial relation |
+| **Crop to extent**        | `ddbs_crop(x, y)`                       | Clip geometries to y extent|
 | **Areal interpolation**   | `ddbs_interpolate_aw(x, y, values)`     | Weight by overlap area     |
 | **Buffer**                | `ddbs_buffer(x, distance)`              | Distance in CRS units      |
 | **Union/dissolve**        | `ddbs_union(x)`                         | Merge into single geometry |

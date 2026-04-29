@@ -54,7 +54,7 @@ workspace/
 
 For each run, check each assertion against the outputs. For programmatic assertions (`code_pattern`, `file_exists`, `execution`, `domain_validator`), write a script -- faster and reusable. For `qualitative`, judge fairly: clear problems, not style nits.
 
-`grading.json` MUST use the field names `text`, `passed`, `evidence` in its expectations array. Other variants (`name`/`met`/`details`) break downstream tooling.
+`grading.json` MUST use the field names `text`, `passed`, `evidence` in its expectations array, and the summary MUST use `passed`/`failed`/`total`/`pass_rate`. Other variants (`name`/`met`/`details`, or `overall_pass`/`pass_count`/`total_count`) break downstream tooling.
 
 ```json
 {
@@ -64,9 +64,12 @@ For each run, check each assertion against the outputs. For programmatic asserti
     {"text": "Uses fmean() for grouped means", "passed": true,  "evidence": "fmean() called on line 5"},
     {"text": "Code is readable",                "passed": true,  "evidence": "Clear names, logical flow"}
   ],
-  "overall_pass": true,
-  "pass_count": 2,
-  "total_count": 2
+  "summary": {
+    "passed": 2,
+    "failed": 0,
+    "total": 2,
+    "pass_rate": 1.0
+  }
 }
 ```
 
