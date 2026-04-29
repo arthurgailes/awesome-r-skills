@@ -80,6 +80,12 @@ edit_btw_md()   # Edit context file
 - `use_btw_md()`: Create project context file
 - `edit_btw_md()`: Modify context file
 
+**Skills:**
+- `btw_agent_tool()`: Create agent tool from markdown file
+- `btw_task_create_skill()`: Create a new skill via task
+- `btw_skill_install_github()`: Install skill from GitHub
+- `btw_skill_install_package()`: Install skill from R package
+
 ## Advanced
 
 See `references/` for:

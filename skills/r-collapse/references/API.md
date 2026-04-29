@@ -10,11 +10,14 @@ Core grouped/weighted statistics:
 |----------|---------|
 | `fmean()` | Fast (grouped, weighted) mean |
 | `fmedian()` | Fast (grouped, weighted) median |
+| `fmode()` | Fast (grouped, weighted) mode |
 | `fsum()` | Fast (grouped, weighted) sum |
 | `fprod()` | Fast (grouped, weighted) product |
 | `fsd()`, `fvar()` | Fast standard deviation/variance |
 | `fmin()`, `fmax()` | Fast minimum/maximum |
 | `fnth()` | Fast nth element/quantile |
+| `fquantile()` | Fast quantile computation |
+| `frange()` | Fast range (min/max pair) |
 | `ffirst()`, `flast()` | Fast first/last value |
 | `fnobs()` | Fast number of observations |
 | `fndistinct()` | Fast number of distinct values |
@@ -43,10 +46,17 @@ All support:
 |----------|---------|
 | `fselect()` | Fast column selection |
 | `fsubset()` | Fast row subsetting |
+| `fsummarise()` / `fsummarize()` | Fast dplyr-style summarise |
+| `fmutate()` | Fast dplyr-style mutate |
+| `fslice()` / `fslicev()` | Fast dplyr-style slice |
 | `ftransform()` | Fast transformation |
 | `frename()` | Fast renaming |
 | `fcompute()` | Compute expressions |
 | `get_vars()`, `add_vars()` | Variable operations |
+| `roworder()` / `roworderv()` | Reorder rows |
+| `colorder()` / `colorderv()` | Reorder columns |
+| `rowbind()` | Fast row binding (rbind alternative) |
+| `join()` | Data frame joins |
 | `pivot()` | Reshaping (long/wide) |
 
 ## Data Aggregation
@@ -73,6 +83,16 @@ All support:
 | `W()`, `B()` | Within/between shortcuts |
 | `HDB()`, `HDW()` | Higher-dimensional operations |
 
+## Panel Data Indexing
+
+| Function | Purpose |
+|----------|---------|
+| `findex_by()` | Create indexed panel data frame |
+| `findex()` | Retrieve index from panel data frame |
+| `reindex()` | Re-attach index to data frame |
+| `is_irregular()` | Check if panel is irregularly spaced |
+| `to_plm()` | Convert to plm (panel linear model) format |
+
 ## Time Series and Panel Data
 
 | Function | Purpose |
@@ -80,9 +100,28 @@ All support:
 | `flag()` | Lag/lead values |
 | `fdiff()` | Differences |
 | `fgrowth()` | Growth rates |
+| `fcumsum()` | Fast cumulative sum |
 | `psmat()` | Panel series matrix |
 | `psacf()`, `pspacf()` | Panel autocorrelation |
 | `psccf()` | Panel cross-correlation |
+
+## Linear Models
+
+| Function | Purpose |
+|----------|---------|
+| `flm()` | Fast ordinary least squares (OLS) regression |
+| `fFtest()` | Fast F-test for model comparison |
+
+## Value Replacement and Recoding
+
+| Function | Purpose |
+|----------|---------|
+| `recode_num()` | Recode numeric values |
+| `recode_char()` | Recode character values |
+| `replace_na()` | Replace NA values |
+| `replace_inf()` | Replace Inf/-Inf values |
+| `replace_outliers()` | Replace outlier values |
+| `pad()` | Pad panel data to balanced |
 
 ## Summary Statistics
 
@@ -92,6 +131,7 @@ All support:
 | `qtab()` | Quick cross-tabulation |
 | `descr()` | Descriptive statistics |
 | `pwcor()`, `pwcov()` | Pairwise correlation/covariance |
+| `pwnobs()` | Pairwise number of observations |
 
 ## Quick Conversion
 
